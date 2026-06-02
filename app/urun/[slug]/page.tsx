@@ -1,0 +1,71 @@
+import type { Metadata } from "next";
+import { notFound } from "next/navigation";
+import Breadcrumb from "@/components/ui/Breadcrumb";
+import ProductDetailClient from "@/components/product/ProductDetailClient";
+import RelatedProducts from "@/components/product/RelatedProducts";
+import CustomerReviews from "@/components/product/CustomerReviews";
+import RecentlyViewed from "@/components/product/RecentlyViewed";
+import RecentlyViewedTracker from "@/components/product/RecentlyViewedTracker";
+import ProductJsonLd from "@/components/seo/ProductJsonLd";
+import { PRODUCTS, getProductBySlug } from "@/lib/data/products";
+import { CATEGORIES } from "@/lib/data/categories";
+
+type Params = { params: { slug: string } };
+
+export function generateStaticParams() {
+  return PRODUCTS.map((p) => ({ slug: p.slug }));
+}
+
+export function generateMetadata({ params }: Params): Metadata {
+  const product = getProductBySlug(params.slug);
+  if (!product) return { title: "Ürün bulunamadı" };
+  return {
+    title: product.name,
+    description: product.shortDescription,
+    openGraph: {
+      title: `${product.name} · Floria Garden`,
+      description: product.shortDescription,
+      type: "website",
+    },
+  };
+}
+
+export default function ProductDetailPage({ params }: Params) {
+  const product = getProductBySlug(params.slug);
+  if (!product) notFound();
+
+  const category = CATEGORIES.find((c) => c.slug === product.category);
+
+  return (
+    <article className="pt-28 md:pt-32 pb-20 md:pb-24">
+      <div className="container">
+        <Breadcrumb
+          items={[
+            { label: "Ürünler", href: "/urunler" },
+            ...(category
+              ? [{ label: category.name, href: `/koleksiyon/${category.slug}` }]
+              : []),
+            { label: product.name },
+          ]}
+          className="mb-10"
+        />
+
+        <ProductDetailClient product={product} />
+      </div>
+
+      <RecentlyViewedTracker productId={product.id} />
+
+      <CustomerReviews productId={product.id} />
+      <RelatedProducts productId={product.id} />
+
+      <div className="container">
+        <RecentlyViewed excludeId={product.id} />
+      </div>
+
+      {/* JSON-LD: Product + AggregateRating + Review */}
+      <ProductJsonLd product={product} />
+    </article>
+  );
+}
+
+export const dynamic = "force-static";

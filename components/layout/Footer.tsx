@@ -1,0 +1,181 @@
+import Link from "next/link";
+import { Instagram, MapPin, Phone, Mail, Clock } from "lucide-react";
+import BrandMark from "./BrandMark";
+import NewsletterForm from "@/components/forms/NewsletterForm";
+import { SITE, whatsappLink } from "@/lib/constants";
+
+const FOOTER_LINKS = [
+  {
+    title: "Koleksiyon",
+    items: [
+      { href: "/urunler", label: "Tüm Ürünler" },
+      { href: "/koleksiyon/buketler", label: "Buketler" },
+      { href: "/koleksiyon/kutuda-cicekler", label: "Kutuda Çiçekler" },
+      { href: "/koleksiyon/saksi-cicekleri", label: "Saksı Çiçekleri" },
+      { href: "/koleksiyon/kahve-ve-cicek-setleri", label: "Kahve & Çiçek Setleri" },
+    ],
+  },
+  {
+    title: "Kurumsal",
+    items: [
+      { href: "/hakkimizda", label: "Hakkımızda" },
+      { href: "/iletisim", label: "İletişim" },
+      { href: "/teslimat", label: "Teslimat Bilgileri" },
+      { href: "/sss", label: "Sıkça Sorulan Sorular" },
+    ],
+  },
+  {
+    title: "Yasal",
+    items: [
+      { href: "/kvkk", label: "KVKK Aydınlatma" },
+      { href: "/gizlilik", label: "Gizlilik Politikası" },
+      { href: "/cerez-politikasi", label: "Çerez Politikası" },
+      { href: "/mesafeli-satis", label: "Mesafeli Satış" },
+    ],
+  },
+];
+
+export default function Footer() {
+  return (
+    <footer className="relative mt-20 bg-coffee-deep text-cream/80 pb-20 lg:pb-0">
+      {/* Üst rose-gold şerit */}
+      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-rose-gold/60 to-transparent" />
+
+      {/* Newsletter şeridi */}
+      <div className="container pt-16 md:pt-20">
+        <div className="rounded-3xl bg-gradient-to-br from-bordo-700 to-wine p-8 md:p-12 grid md:grid-cols-2 gap-8 items-center border border-rose-gold/20">
+          <div>
+            <span className="eyebrow">Bülten</span>
+            <h3 className="mt-2 font-display text-3xl md:text-4xl text-cream">
+              Yeni koleksiyonlardan ilk siz haberdar olun
+            </h3>
+            <p className="mt-2 text-sm text-cream/70 leading-relaxed">
+              Sezonsal koleksiyonlar, özel kampanyalar ve atölye haberleri için
+              ayda bir e-postamızı alın.
+            </p>
+          </div>
+          <NewsletterForm />
+        </div>
+      </div>
+
+      <div className="container py-16 md:py-20">
+        <div className="grid gap-12 md:grid-cols-12">
+          {/* Marka */}
+          <div className="md:col-span-3 flex flex-col gap-6">
+            <BrandMark variant="light" withTagline />
+            <p className="max-w-sm text-sm leading-relaxed text-cream/65">
+              Floria Garden, {SITE.city}&apos;in yeni nesil butik çiçekçisi.
+              Premium çiçekler, özenli ambalaj ve aynı gün teslimat ile her ana
+              zarafet katıyoruz.
+            </p>
+
+            <div className="flex items-center gap-3 mt-2">
+              <a
+                href={SITE.instagram.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Instagram"
+                className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-cream/15 text-cream/80 hover:border-rose-gold hover:text-rose-gold transition-all duration-300"
+              >
+                <Instagram size={16} strokeWidth={1.6} />
+              </a>
+              <a
+                href="https://www.pinterest.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Pinterest"
+                className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-cream/15 text-cream/80 hover:border-rose-gold hover:text-rose-gold transition-all duration-300"
+              >
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden>
+                  <path d="M12 0C5.4 0 0 5.4 0 12c0 5.1 3.1 9.4 7.6 11.2-.1-1-.2-2.4 0-3.5l1.5-6.3s-.4-.8-.4-1.9c0-1.8 1-3.1 2.3-3.1 1.1 0 1.6.8 1.6 1.8 0 1.1-.7 2.7-1 4.2-.3 1.3.6 2.3 1.9 2.3 2.3 0 4-2.4 4-5.9 0-3.1-2.2-5.2-5.4-5.2-3.7 0-5.8 2.7-5.8 5.6 0 1.1.4 2.3.9 2.9.1.1.1.2.1.3l-.4 1.4c-.1.2-.2.3-.5.2-1.7-.8-2.7-3.2-2.7-5.2 0-4.2 3.1-8.1 8.8-8.1 4.6 0 8.2 3.3 8.2 7.7 0 4.6-2.9 8.3-6.9 8.3-1.4 0-2.6-.7-3.1-1.6l-.8 3.2c-.3 1.2-1.1 2.6-1.7 3.5C9.7 23.8 10.8 24 12 24c6.6 0 12-5.4 12-12S18.6 0 12 0Z" />
+                </svg>
+              </a>
+              <a
+                href="https://www.tiktok.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="TikTok"
+                className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-cream/15 text-cream/80 hover:border-rose-gold hover:text-rose-gold transition-all duration-300"
+              >
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden>
+                  <path d="M19.6 6.7c-1.5-.2-2.7-.9-3.6-2-.4-.5-.6-1.1-.7-1.7v-.3h-3.2v12.1c0 1.2-.8 2.2-1.9 2.5-1.5.4-2.9-.6-3.2-1.9-.2-1.3.7-2.6 2-2.9.4-.1.7-.1 1 0V9.3c-.5-.1-1-.1-1.5 0-2.8.3-5.1 2.7-5.2 5.5-.1 3 2.3 5.5 5.4 5.5 2.9 0 5.2-2.4 5.2-5.3V9.5c1.4 1 3.1 1.5 4.9 1.4V7.6c-.4.1-.8 0-1.2-.9Z" />
+                </svg>
+              </a>
+              <a
+                href={whatsappLink()}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="WhatsApp"
+                className="inline-flex items-center gap-2 rounded-full border border-cream/15 px-4 h-10 text-xs uppercase tracking-wider2 text-cream/80 hover:border-rose-gold hover:text-rose-gold transition-all duration-300"
+              >
+                WhatsApp
+              </a>
+            </div>
+          </div>
+
+          {/* Linkler */}
+          <div className="md:col-span-6 grid grid-cols-2 sm:grid-cols-3 gap-6">
+            {FOOTER_LINKS.map((group) => (
+              <div key={group.title} className="flex flex-col gap-4">
+                <h4 className="text-xs uppercase tracking-wider2 text-rose-gold">
+                  {group.title}
+                </h4>
+                <ul className="flex flex-col gap-3">
+                  {group.items.map((item) => (
+                    <li key={item.href}>
+                      <Link
+                        href={item.href}
+                        className="text-sm text-cream/70 hover:text-cream transition-colors duration-300"
+                      >
+                        {item.label}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+
+          {/* İletişim */}
+          <div className="md:col-span-3 flex flex-col gap-4">
+            <h4 className="text-xs uppercase tracking-wider2 text-rose-gold">
+              İletişim
+            </h4>
+            <ul className="flex flex-col gap-4 text-sm">
+              <li className="flex items-start gap-3 text-cream/75">
+                <MapPin size={16} strokeWidth={1.6} className="mt-0.5 flex-shrink-0 text-rose-gold" />
+                <span className="leading-relaxed">{SITE.address}</span>
+              </li>
+              <li className="flex items-start gap-3 text-cream/75">
+                <Phone size={16} strokeWidth={1.6} className="mt-0.5 flex-shrink-0 text-rose-gold" />
+                <a href={`tel:${SITE.phoneRaw}`} className="hover:text-cream">
+                  {SITE.phoneDisplay}
+                </a>
+              </li>
+              <li className="flex items-start gap-3 text-cream/75">
+                <Mail size={16} strokeWidth={1.6} className="mt-0.5 flex-shrink-0 text-rose-gold" />
+                <a href={`mailto:${SITE.email}`} className="hover:text-cream">
+                  {SITE.email}
+                </a>
+              </li>
+              <li className="flex items-start gap-3 text-cream/75">
+                <Clock size={16} strokeWidth={1.6} className="mt-0.5 flex-shrink-0 text-rose-gold" />
+                <span>{SITE.hours}</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Alt bar */}
+        <div className="mt-14 pt-8 border-t border-cream/10 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-cream/55">
+          <span>
+            © {new Date().getFullYear()} Floria Garden. Tüm hakları saklıdır.
+          </span>
+          <span className="tracking-wider2 uppercase text-rose-gold/80">
+            Flowers and Coffee
+          </span>
+        </div>
+      </div>
+    </footer>
+  );
+}

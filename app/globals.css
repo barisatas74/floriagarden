@@ -1,0 +1,180 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --color-bordo: 142 31 63;
+    --color-bordo-dark: 95 18 40;
+    --color-wine: 67 12 28;
+    --color-cream: 246 241 235;
+    --color-rose-gold: 201 164 106;
+    --color-coffee: 43 26 22;
+    /* SeasonalBanner görünür değilse 0px, görünürken ~44px */
+    --banner-h: 0px;
+    --mobile-bar-h: 64px;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    background-color: #ffffff;
+    color-scheme: light;
+  }
+
+  body {
+    @apply bg-white text-coffee font-sans;
+    /* Kenarlarda boydan boya uzanan zarif yaprak sarmaşıkları (repeat-y ile
+       dikey tekrar) + yumuşak renk yıkamaları. background-image olduğu için
+       DAİMA içeriğin arkasında, beyazın üstünde; z-index/tıklama sorunu yok. */
+    background-image:
+      url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='130'%20height='320'%3E%3Cg%20fill='none'%20stroke='%235F1228'%20stroke-opacity='0.12'%20stroke-width='1'%3E%3Cpath%20d='M70%200%20C%2045%2055%2095%20110%2070%20160%20C%2045%20210%2095%20265%2070%20320'/%3E%3Cellipse%20cx='90'%20cy='48'%20rx='5'%20ry='13'%20transform='rotate(40%2090%2048)'/%3E%3Cellipse%20cx='50'%20cy='95'%20rx='5'%20ry='13'%20transform='rotate(-40%2050%2095)'/%3E%3Cellipse%20cx='92'%20cy='150'%20rx='5'%20ry='13'%20transform='rotate(40%2092%20150)'/%3E%3Cellipse%20cx='50'%20cy='205'%20rx='5'%20ry='13'%20transform='rotate(-40%2050%20205)'/%3E%3Cellipse%20cx='92'%20cy='258'%20rx='5'%20ry='13'%20transform='rotate(40%2092%20258)'/%3E%3Cellipse%20cx='50'%20cy='305'%20rx='5'%20ry='13'%20transform='rotate(-40%2050%20305)'/%3E%3C/g%3E%3C/svg%3E"),
+      url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='130'%20height='320'%3E%3Cg%20fill='none'%20stroke='%23A3823F'%20stroke-opacity='0.16'%20stroke-width='1'%3E%3Cpath%20d='M60%200%20C%2085%2055%2035%20110%2060%20160%20C%2085%20210%2035%20265%2060%20320'/%3E%3Cellipse%20cx='40'%20cy='48'%20rx='5'%20ry='13'%20transform='rotate(-40%2040%2048)'/%3E%3Cellipse%20cx='80'%20cy='95'%20rx='5'%20ry='13'%20transform='rotate(40%2080%2095)'/%3E%3Cellipse%20cx='38'%20cy='150'%20rx='5'%20ry='13'%20transform='rotate(-40%2038%20150)'/%3E%3Cellipse%20cx='80'%20cy='205'%20rx='5'%20ry='13'%20transform='rotate(40%2080%20205)'/%3E%3Cellipse%20cx='38'%20cy='258'%20rx='5'%20ry='13'%20transform='rotate(-40%2038%20258)'/%3E%3Cellipse%20cx='80'%20cy='305'%20rx='5'%20ry='13'%20transform='rotate(40%2080%20305)'/%3E%3C/g%3E%3C/svg%3E"),
+      radial-gradient(circle at 0% 0%, rgba(201, 164, 106, 0.06), transparent 30%),
+      radial-gradient(circle at 100% 100%, rgba(142, 31, 63, 0.04), transparent 34%);
+    background-repeat: repeat-y, repeat-y, no-repeat, no-repeat;
+    background-position: right 8px top, left 8px top, 0 0, 100% 100%;
+    background-attachment: fixed, fixed, fixed, fixed;
+    background-size: 130px 320px, 130px 320px, auto, auto;
+    /* Üstte banner + altta mobil bar için boşluk */
+    padding-top: var(--banner-h);
+  }
+
+  /* Mobil alt çubuk için body padding-bottom — lg altında etkin */
+  @media (max-width: 1023px) {
+    body {
+      padding-bottom: var(--mobile-bar-h);
+    }
+  }
+
+  ::selection {
+    @apply bg-bordo text-cream;
+  }
+
+  h1, h2, h3, h4 {
+    @apply font-display tracking-tight;
+  }
+
+  /* Custom scrollbar — açık tema, gold tutamç */
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #F6F1EB;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, #C9A46A 0%, #A3823F 100%);
+    border-radius: 999px;
+    border: 2px solid #F6F1EB;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, #8E1F3F 0%, #5F1228 100%);
+  }
+}
+
+@layer components {
+  .container-narrow {
+    @apply container max-w-6xl;
+  }
+
+  .eyebrow {
+    @apply text-[0.72rem] uppercase tracking-ultra-wide text-rose-goldDark font-medium;
+    text-decoration-line: underline;
+    text-decoration-thickness: 1px;
+    text-decoration-color: rgba(201, 164, 106, 0.6);
+    text-underline-offset: 0.42em;
+  }
+
+  /* Açık tema: başlıklar koyu kahve. Bordo/koyu bir blokta text-cream ile override edilir. */
+  .heading-display {
+    @apply font-display text-4xl md:text-5xl lg:text-6xl leading-[1.05] tracking-tight text-coffee;
+  }
+
+  .heading-section {
+    @apply font-display text-3xl md:text-4xl lg:text-5xl leading-[1.1] tracking-tight text-coffee;
+  }
+
+  .text-eyebrow {
+    @apply text-xs uppercase tracking-wider2 font-medium;
+  }
+
+  .divider-gold {
+    @apply h-px w-12 bg-gradient-to-r from-rose-gold/0 via-rose-gold to-rose-gold/0;
+  }
+
+  /* "glass-dark" adı korunuyor ama artık AÇIK kart yüzeyi:
+     beyaz/krem zemin + yumuşak gold kenar + hafif gölge.
+     Böylece tema merkezi olarak çevrildi, içerik metni text-coffee olmalı. */
+  .glass-dark {
+    background: #ffffff;
+    border: 1px solid rgba(201, 164, 106, 0.28);
+    box-shadow: 0 16px 44px -28px rgba(95, 18, 40, 0.28);
+  }
+
+  /* Açık krem kart — ikincil yüzey */
+  .glass-cream {
+    background: rgba(246, 241, 235, 0.96);
+    border: 1px solid rgba(201, 164, 106, 0.3);
+    box-shadow: 0 16px 44px -28px rgba(95, 18, 40, 0.22);
+  }
+
+  /* Krem kart yüzeyi */
+  .surface-cream {
+    @apply bg-cream-soft text-coffee;
+  }
+
+  /* Reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .mask-radial {
+    -webkit-mask-image: radial-gradient(ellipse at center, black 55%, transparent 100%);
+    mask-image: radial-gradient(ellipse at center, black 55%, transparent 100%);
+  }
+
+  /* Bölüm dokuları — AÇIK tema. İsimler korunuyor, görsel olarak hepsi açık. */
+  .bg-section-bordo {
+    background-color: #ffffff;
+    background-image:
+      radial-gradient(circle at 15% 20%, rgba(201,164,106,0.10), transparent 45%),
+      radial-gradient(circle at 85% 80%, rgba(142,31,63,0.05), transparent 50%);
+  }
+
+  .bg-section-wine {
+    background-color: #F6F1EB;
+    background-image:
+      radial-gradient(circle at 80% 10%, rgba(201,164,106,0.12), transparent 45%),
+      radial-gradient(circle at 10% 90%, rgba(142,31,63,0.04), transparent 50%);
+  }
+
+  .bg-section-coffee {
+    background-color: #FBF8F4;
+    background-image:
+      radial-gradient(circle at 30% 20%, rgba(142,31,63,0.06), transparent 45%),
+      radial-gradient(circle at 70% 80%, rgba(201,164,106,0.10), transparent 50%);
+  }
+
+  /* Dekoratif nokta dokusu — açık zeminde daha koyu noktalar */
+  .bg-dots-gold {
+    background-image:
+      radial-gradient(rgba(142, 31, 63, 0.08) 1px, transparent 1px);
+    background-size: 22px 22px;
+  }
+}
