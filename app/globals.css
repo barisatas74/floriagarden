@@ -126,6 +126,17 @@
     @apply bg-cream-soft text-coffee;
   }
 
+  /* Ürün detayında sticky "Sepete Ekle" bar görünürken yüzen WhatsApp
+     butonunu gizle — çakışmayı önler. */
+  body.has-sticky-cta [data-floating-wa] {
+    opacity: 0;
+    transform: scale(0.7);
+    pointer-events: none;
+  }
+  [data-floating-wa] {
+    transition: opacity 0.3s ease, transform 0.3s ease;
+  }
+
   /* Reduced motion */
   @media (prefers-reduced-motion: reduce) {
     *,

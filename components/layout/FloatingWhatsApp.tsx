@@ -9,6 +9,7 @@ export default function FloatingWhatsApp() {
       href={whatsappLink()}
       target="_blank"
       rel="noopener noreferrer"
+      data-floating-wa
       aria-label="WhatsApp ile iletişime geç"
       initial={{ opacity: 0, scale: 0.6, y: 20 }}
       animate={{ opacity: 1, scale: 1, y: 0 }}

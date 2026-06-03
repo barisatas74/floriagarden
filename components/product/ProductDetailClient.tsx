@@ -11,7 +11,6 @@ import CardNoteInput from "./CardNoteInput";
 import DeliverySchedule from "./DeliverySchedule";
 import GiftWrapSelector, { GIFT_WRAP_PRICES } from "./GiftWrapSelector";
 import { useCart } from "@/components/cart/CartProvider";
-import { useToast } from "@/components/toast/ToastProvider";
 import { formatPrice } from "@/lib/utils/format";
 import { whatsappLink } from "@/lib/constants";
 import { getAverageRating } from "@/lib/data/reviews";
@@ -23,7 +22,6 @@ type Props = {
 
 export default function ProductDetailClient({ product }: Props) {
   const { addItem, openDrawer } = useCart();
-  const { toast } = useToast();
   const [quantity, setQuantity] = useState(1);
   const [cardNote, setCardNote] = useState("");
   const [region, setRegion] = useState<"gemlik" | "bursa" | "sehir-disi">(
@@ -38,6 +36,7 @@ export default function ProductDetailClient({ product }: Props) {
   const [added, setAdded] = useState(false);
   const [stickyVisible, setStickyVisible] = useState(false);
   const mainCtaRef = useRef<HTMLDivElement>(null);
+  const isSoldOut = product.stock === "tukendi";
 
   // Ana sepete-ekle alanı görünmediğinde sticky bar göster
   useEffect(() => {
@@ -53,10 +52,15 @@ export default function ProductDetailClient({ product }: Props) {
     return () => observer.disconnect();
   }, []);
 
+  // Sticky bar görünürken yüzen WhatsApp butonunu gizle (çakışmasın)
+  useEffect(() => {
+    document.body.classList.toggle("has-sticky-cta", stickyVisible && !isSoldOut);
+    return () => document.body.classList.remove("has-sticky-cta");
+  }, [stickyVisible, isSoldOut]);
+
   const { average, count } = getAverageRating(product.id);
   const wrapExtra = GIFT_WRAP_PRICES[giftWrap];
   const lineTotal = (product.price + wrapExtra) * quantity;
-  const isSoldOut = product.stock === "tukendi";
 
   const handleAdd = () => {
     if (isSoldOut) return;
@@ -76,11 +80,7 @@ export default function ProductDetailClient({ product }: Props) {
       quantity,
     );
     setAdded(true);
-    toast({
-      title: "Sepete eklendi",
-      description: `${product.name} × ${quantity}`,
-      tone: "success",
-    });
+    // Toast yok — drawer açılışı zaten geri bildirim (mobilde çakışmayı önler)
     setTimeout(() => {
       openDrawer();
       setAdded(false);
