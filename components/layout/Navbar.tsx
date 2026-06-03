@@ -4,12 +4,13 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
-import { Menu, X, UserPlus, LogIn } from "lucide-react";
+import { Menu, X, UserPlus, LogIn, MessageCircle } from "lucide-react";
 import BrandMark from "./BrandMark";
 import Button from "@/components/ui/Button";
 import CartButton from "@/components/cart/CartButton";
 import WishlistIconLink from "@/components/wishlist/WishlistIconLink";
 import SearchButton from "@/components/search/SearchButton";
+import { whatsappLink } from "@/lib/constants";
 import { cn } from "@/lib/utils/cn";
 
 /**
@@ -171,54 +172,41 @@ export default function Navbar() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
-            className="lg:hidden fixed inset-0 top-[72px] bg-bordo-dark/98 backdrop-blur-xl"
+            className="lg:hidden fixed inset-0 top-[72px] bg-bordo-dark"
           >
             <motion.nav
-              initial={{ y: -20, opacity: 0 }}
+              initial={{ y: -16, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
-              exit={{ y: -20, opacity: 0 }}
-              transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
-              className="container py-10 flex flex-col gap-2"
+              exit={{ y: -16, opacity: 0 }}
+              transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+              className="container h-full flex flex-col items-center justify-center gap-4 pb-24"
             >
-              {NAV_LINKS.map((link, i) => (
-                <motion.div
-                  key={link.href}
-                  initial={{ opacity: 0, x: -16 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.1 + i * 0.06, duration: 0.4 }}
-                >
-                  <Link
-                    href={link.href}
-                    onClick={(e) => {
-                      setOpen(false);
-                      if (link.href === "/") handleHomeClick(e, pathname);
-                    }}
-                    className="block py-4 font-display text-3xl text-cream hover:text-rose-goldLight transition-colors border-b border-cream/10"
-                  >
-                    {link.label}
-                  </Link>
-                </motion.div>
-              ))}
+              <span className="eyebrow mb-2">Floria Garden Hesabınız</span>
 
-              <motion.div
-                initial={{ opacity: 0, y: 16 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.45, duration: 0.45 }}
-                className="mt-8 flex flex-col gap-3"
+              <Link href="/uye-ol" onClick={() => setOpen(false)} className="w-full max-w-sm">
+                <Button variant="gold" size="lg" className="w-full">
+                  <UserPlus size={18} strokeWidth={1.7} />
+                  <span>Üye Ol</span>
+                </Button>
+              </Link>
+
+              <Link href="/giris" onClick={() => setOpen(false)} className="w-full max-w-sm">
+                <Button variant="outline-light" size="lg" className="w-full">
+                  <LogIn size={18} strokeWidth={1.7} />
+                  <span>Üye Girişi</span>
+                </Button>
+              </Link>
+
+              <a
+                href={whatsappLink()}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => setOpen(false)}
+                className="w-full max-w-sm inline-flex items-center justify-center gap-2 h-14 rounded-full bg-[#25D366] text-white text-base font-medium tracking-wide shadow-[0_10px_30px_-10px_rgba(37,211,102,0.6)] hover:brightness-105 transition-all"
               >
-                <Link href="/uye-ol" onClick={() => setOpen(false)}>
-                  <Button variant="gold" size="lg" className="w-full">
-                    <UserPlus size={18} strokeWidth={1.7} />
-                    <span>Üye Ol</span>
-                  </Button>
-                </Link>
-                <Link href="/giris" onClick={() => setOpen(false)}>
-                  <Button variant="outline-light" size="lg" className="w-full">
-                    <LogIn size={18} strokeWidth={1.7} />
-                    <span>Üye Girişi</span>
-                  </Button>
-                </Link>
-              </motion.div>
+                <MessageCircle size={18} strokeWidth={1.7} />
+                <span>WhatsApp&apos;tan Sipariş</span>
+              </a>
             </motion.nav>
           </motion.div>
         )}
