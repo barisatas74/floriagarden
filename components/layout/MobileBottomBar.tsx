@@ -2,12 +2,13 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { Home, LayoutGrid, MessageCircle, ShoppingBag } from "lucide-react";
+import { Home, LayoutGrid, Heart, ShoppingBag } from "lucide-react";
 import { useCart } from "@/components/cart/CartProvider";
-import { whatsappLink } from "@/lib/constants";
+import { useWishlist } from "@/components/wishlist/WishlistProvider";
 
 export default function MobileBottomBar() {
   const { totalQuantity, openDrawer } = useCart();
+  const { count: favCount } = useWishlist();
 
   return (
     <motion.nav
@@ -36,16 +37,19 @@ export default function MobileBottomBar() {
           <span className="text-[0.65rem] uppercase tracking-wider2">Ürün</span>
         </Link>
 
-        <a
-          href={whatsappLink()}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex flex-col items-center justify-center gap-1 text-cream/75 hover:text-rose-goldLight transition-colors"
-          aria-label="WhatsApp"
+        <Link
+          href="/favoriler"
+          className="relative flex flex-col items-center justify-center gap-1 text-cream/75 hover:text-rose-goldLight transition-colors"
+          aria-label={`Favoriler (${favCount} ürün)`}
         >
-          <MessageCircle size={18} strokeWidth={1.6} />
-          <span className="text-[0.65rem] uppercase tracking-wider2">Mesaj</span>
-        </a>
+          <Heart size={18} strokeWidth={1.6} />
+          <span className="text-[0.65rem] uppercase tracking-wider2">Favori</span>
+          {favCount > 0 && (
+            <span className="absolute top-1.5 right-[24%] min-w-[18px] h-[18px] px-1 inline-flex items-center justify-center rounded-full bg-rose-gold text-coffee text-[0.6rem] font-semibold">
+              {favCount > 9 ? "9+" : favCount}
+            </span>
+          )}
+        </Link>
 
         <button
           type="button"
