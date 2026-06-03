@@ -3,7 +3,7 @@
 import { useState, type FormEvent } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { Mail, Lock, User, Eye, EyeOff, Check } from "lucide-react";
+import { Mail, Lock, User, Eye, EyeOff, Check, Phone, Calendar } from "lucide-react";
 import Button from "@/components/ui/Button";
 import { useToast } from "@/components/toast/ToastProvider";
 
@@ -13,6 +13,8 @@ export default function AuthForm({ mode }: { mode: Mode }) {
   const isLogin = mode === "login";
   const { toast } = useToast();
   const [name, setName] = useState("");
+  const [phone, setPhone] = useState("");
+  const [birthDate, setBirthDate] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPass, setShowPass] = useState(false);
@@ -56,16 +58,49 @@ export default function AuthForm({ mode }: { mode: Mode }) {
 
         <form onSubmit={onSubmit} className="flex flex-col gap-4">
           {!isLogin && (
-            <Field icon={<User size={16} strokeWidth={1.6} />}>
-              <input
-                type="text"
-                required
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                placeholder="Ad Soyad"
-                className={inputBase}
-              />
-            </Field>
+            <>
+              <Field icon={<User size={16} strokeWidth={1.6} />}>
+                <input
+                  type="text"
+                  required
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder="Ad Soyad"
+                  className={inputBase}
+                />
+              </Field>
+
+              <Field icon={<Phone size={16} strokeWidth={1.6} />}>
+                <input
+                  type="tel"
+                  required
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                  placeholder="Telefon (örn: 0555 000 00 00)"
+                  className={inputBase}
+                />
+              </Field>
+
+              <div className="flex flex-col gap-1.5">
+                <label
+                  htmlFor="birth-date"
+                  className="text-[0.7rem] uppercase tracking-wider2 text-rose-goldDark pl-1"
+                >
+                  Doğum Tarihi
+                </label>
+                <Field icon={<Calendar size={16} strokeWidth={1.6} />}>
+                  <input
+                    id="birth-date"
+                    type="date"
+                    value={birthDate}
+                    onChange={(e) => setBirthDate(e.target.value)}
+                    max={new Date().toISOString().split("T")[0]}
+                    className={inputBase}
+                    style={{ colorScheme: "light" }}
+                  />
+                </Field>
+              </div>
+            </>
           )}
 
           <Field icon={<Mail size={16} strokeWidth={1.6} />}>
