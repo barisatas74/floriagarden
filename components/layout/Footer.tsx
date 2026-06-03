@@ -158,10 +158,10 @@ export default function Footer() {
             © {new Date().getFullYear()} Floria Garden. Tüm hakları saklıdır.
           </span>
           <a
-            href="https://www.instagram.com/bariscreativedesign"
+            href="https://www.bariscreativedesign.com/"
             target="_blank"
             rel="noopener noreferrer"
-            aria-label="Tasarım ve geliştirme: BarışCreativeDesign — Instagram"
+            aria-label="Tasarım ve geliştirme: BarışCreativeDesign"
             className="group inline-flex items-center gap-1.5 text-cream/55 hover:text-rose-goldLight transition-colors"
           >
             <span aria-hidden className="text-rose-gold/70 group-hover:text-rose-goldLight transition-colors">
@@ -182,7 +182,7 @@ export default function Footer() {
         aria-hidden
         dangerouslySetInnerHTML={{
           __html:
-            "<!-- Tasarım & Geliştirme: BarışCreativeDesign · instagram.com/bariscreativedesign -->",
+            "<!-- Tasarım & Geliştirme: BarışCreativeDesign · Web: https://www.bariscreativedesign.com/ · Instagram: https://www.instagram.com/bariscreativedesign -->",
         }}
       />
     </footer>
