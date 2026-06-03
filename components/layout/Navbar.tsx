@@ -61,6 +61,7 @@ export default function Navbar() {
   }, [open]);
 
   return (
+    <>
     <motion.header
       initial={{ y: -20, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
@@ -163,8 +164,9 @@ export default function Navbar() {
         </button>
         </div>
       </div>
+      </motion.header>
 
-      {/* Mobile menu */}
+      {/* Mobile menu — header DIŞINDA (transform hapsini önler) */}
       <AnimatePresence>
         {open && (
           <motion.div
@@ -172,7 +174,7 @@ export default function Navbar() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
-            className="lg:hidden fixed inset-0 top-[72px] bg-bordo-dark"
+            className="lg:hidden fixed inset-0 top-[72px] z-[60] bg-bordo-dark"
           >
             <motion.nav
               initial={{ y: -16, opacity: 0 }}
@@ -211,6 +213,6 @@ export default function Navbar() {
           </motion.div>
         )}
       </AnimatePresence>
-    </motion.header>
+    </>
   );
 }
