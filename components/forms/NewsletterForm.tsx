@@ -61,11 +61,11 @@ export default function NewsletterForm() {
           onChange={(e) => setEmail(e.target.value)}
           placeholder="ornek@eposta.com"
           aria-label="E-posta adresiniz"
-          className="flex-1 h-12 rounded-full bg-cream/5 border border-rose-gold/25 px-5 text-sm text-cream placeholder:text-cream/40 focus:outline-none focus:border-rose-gold focus:bg-cream/10 transition-colors"
+          className="flex-1 h-14 sm:h-12 rounded-full bg-cream/5 border border-rose-gold/25 px-5 text-base sm:text-sm text-cream placeholder:text-cream/40 focus:outline-none focus:border-rose-gold focus:bg-cream/10 transition-colors"
         />
         <button
           type="submit"
-          className="inline-flex items-center justify-center gap-2 h-12 px-6 rounded-full bg-rose-gold-gradient text-coffee text-sm font-medium tracking-wide shadow-glow hover:brightness-105 transition-all"
+          className="inline-flex items-center justify-center gap-2 h-14 sm:h-12 px-6 rounded-full bg-rose-gold-gradient text-coffee text-base sm:text-sm font-medium tracking-wide shadow-glow hover:brightness-105 transition-all"
         >
           <Send size={16} strokeWidth={1.7} />
           <span>Abone Ol</span>
