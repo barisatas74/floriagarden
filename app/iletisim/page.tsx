@@ -121,9 +121,9 @@ export default function ContactPage() {
                   >
                     <Button
                       size="md"
-                      className="w-full !bg-coffee/10 !text-coffee hover:!bg-coffee/20"
+                      className="w-full !bg-transparent !text-coffee !border-2 !border-coffee/40 hover:!bg-coffee hover:!text-cream hover:!border-coffee"
                     >
-                      <Instagram size={16} strokeWidth={1.7} />
+                      <Instagram size={16} strokeWidth={1.8} />
                       <span>Instagram</span>
                     </Button>
                   </a>
