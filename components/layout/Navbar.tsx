@@ -174,6 +174,7 @@ export default function Navbar() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
+            onClick={() => setOpen(false)}
             className="lg:hidden fixed inset-0 top-[72px] z-[60] bg-bordo-dark"
           >
             <motion.nav
