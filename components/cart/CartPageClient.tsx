@@ -54,7 +54,20 @@ export default function CartPageClient() {
           `${idx + 1}. ${i.name} × ${i.quantity} — ${formatPrice(i.price * i.quantity)}`,
         ];
         if (i.cardNote) parts.push(`   Kart notu: "${i.cardNote}"`);
-        if (i.deliveryDate) parts.push(`   Teslimat: ${i.deliveryDate} (${i.deliverySlot ?? "—"})`);
+        if (i.deliveryRegion) {
+          const regionLabel =
+            i.deliveryRegion === "gemlik"
+              ? "Gemlik içi"
+              : i.deliveryRegion === "bursa"
+                ? "Bursa"
+                : `Şehir dışı (kargo)${i.deliveryCity ? ` — ${i.deliveryCity}` : ""}`;
+          parts.push(`   Bölge: ${regionLabel}`);
+        }
+        if (i.deliveryRegion === "sehir-disi") {
+          if (i.deliveryDate) parts.push(`   Gönderim günü: ${i.deliveryDate}`);
+        } else if (i.deliveryDate) {
+          parts.push(`   Teslimat: ${i.deliveryDate} (${i.deliverySlot ?? "—"})`);
+        }
         if (i.giftWrap && i.giftWrap !== "standart") {
           parts.push(`   Paket: ${i.giftWrap === "premium" ? "Premium" : "Lüks kutu"}`);
         }

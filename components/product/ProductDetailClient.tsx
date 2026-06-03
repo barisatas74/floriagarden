@@ -26,6 +26,10 @@ export default function ProductDetailClient({ product }: Props) {
   const { toast } = useToast();
   const [quantity, setQuantity] = useState(1);
   const [cardNote, setCardNote] = useState("");
+  const [region, setRegion] = useState<"gemlik" | "bursa" | "sehir-disi">(
+    "gemlik",
+  );
+  const [city, setCity] = useState("");
   const [date, setDate] = useState("");
   const [slot, setSlot] = useState("12-15");
   const [giftWrap, setGiftWrap] = useState<"standart" | "premium" | "luks">(
@@ -63,8 +67,10 @@ export default function ProductDetailClient({ product }: Props) {
         price: product.price + wrapExtra,
         gradient: product.gradient,
         cardNote: cardNote.trim() || undefined,
+        deliveryRegion: region,
+        deliveryCity: region === "sehir-disi" ? city.trim() || undefined : undefined,
         deliveryDate: date || undefined,
-        deliverySlot: slot,
+        deliverySlot: region === "sehir-disi" ? undefined : slot,
         giftWrap,
       },
       quantity,
@@ -148,8 +154,12 @@ export default function ProductDetailClient({ product }: Props) {
         <div className="flex flex-col gap-7">
           <CardNoteInput value={cardNote} onChange={setCardNote} />
           <DeliverySchedule
+            region={region}
+            city={city}
             date={date}
             slot={slot}
+            onRegionChange={setRegion}
+            onCityChange={setCity}
             onDateChange={setDate}
             onSlotChange={setSlot}
           />
@@ -232,10 +242,13 @@ export default function ProductDetailClient({ product }: Props) {
         <div className="flex items-start gap-3 rounded-2xl bg-rose-gold/5 border border-rose-gold/20 p-4">
           <Truck size={20} strokeWidth={1.6} className="text-bordo flex-shrink-0 mt-0.5" />
           <div className="flex flex-col gap-1 text-sm">
-            <span className="text-coffee font-medium">Aynı gün teslimat — Gemlik</span>
+            <span className="text-coffee font-medium">
+              Gemlik &amp; Bursa aynı gün · Şehir dışına kargo
+            </span>
             <span className="text-coffee/65 text-xs leading-relaxed">
-              Saat 17:00&apos;dan önce verilen siparişler aynı gün teslim edilir.
-              Diğer bölgeler için WhatsApp&apos;ta bilgi alın.
+              Gemlik ve Bursa içi 17:00 öncesi siparişler aynı gün teslim edilir.
+              Türkiye geneline anlaşmalı kargoyla 1–3 iş günü içinde, takip
+              numaralı gönderim yapılır.
             </span>
           </div>
         </div>
