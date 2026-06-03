@@ -38,15 +38,15 @@ const ICONS = {
 } as const;
 
 const TONE_CLASSES: Record<ToastTone, string> = {
-  success: "border-rose-gold/40 bg-rose-gold/15",
-  info: "border-cream/20 bg-cream/10",
-  warning: "border-bordo-300/40 bg-bordo-300/15",
+  success: "border-rose-gold/50",
+  info: "border-coffee/15",
+  warning: "border-bordo/40",
 };
 
 const ICON_BG: Record<ToastTone, string> = {
   success: "bg-rose-gold-gradient text-coffee",
-  info: "bg-cream/15 text-coffee",
-  warning: "bg-bordo-300/30 text-bordo-200",
+  info: "bg-coffee/10 text-coffee",
+  warning: "bg-bordo text-cream",
 };
 
 export function ToastProvider({ children }: { children: ReactNode }) {

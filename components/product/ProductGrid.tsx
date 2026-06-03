@@ -89,8 +89,8 @@ export default function ProductGrid({ products, showToolbar = true }: Props) {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
           className={cn(
-            "grid gap-5 md:gap-6",
-            "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4",
+            "grid gap-3 sm:gap-5 md:gap-6",
+            "grid-cols-2 lg:grid-cols-3 xl:grid-cols-4",
           )}
         >
           {sorted.map((product, i) => (

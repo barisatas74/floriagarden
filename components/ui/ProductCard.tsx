@@ -79,7 +79,7 @@ export default function ProductCard({ product, index }: Props) {
         </Link>
 
         {/* Lookbook numarası */}
-        <span className="absolute top-4 left-4 z-10 font-display text-sm tracking-wide text-bordo/70 group-hover:text-cream/90 transition-colors duration-500 pointer-events-none">
+        <span className="absolute top-3 left-3 sm:top-4 sm:left-4 z-10 font-display text-xs sm:text-sm tracking-wide text-bordo/70 group-hover:text-cream/90 transition-colors duration-500 pointer-events-none">
           No. {no}
         </span>
 
@@ -112,29 +112,29 @@ export default function ProductCard({ product, index }: Props) {
       </div>
 
       {/* İçerik — sade */}
-      <div className="relative flex flex-1 flex-col p-5">
+      <div className="relative flex flex-1 flex-col p-4 sm:p-5">
         <Link href={`/urun/${product.slug}`}>
-          <h3 className="font-display text-xl text-coffee group-hover:text-cream leading-snug transition-colors duration-500">
+          <h3 className="font-display text-base sm:text-xl text-coffee group-hover:text-cream leading-snug transition-colors duration-500 line-clamp-1">
             {product.name}
           </h3>
         </Link>
-        <p className="mt-1.5 text-sm text-coffee/55 group-hover:text-cream/70 leading-relaxed line-clamp-1 transition-colors duration-500">
+        <p className="mt-1 sm:mt-1.5 text-xs sm:text-sm text-coffee/55 group-hover:text-cream/70 leading-relaxed line-clamp-1 transition-colors duration-500">
           {product.shortDescription}
         </p>
 
         {/* Alt satır: fiyat + aksiyonlar */}
-        <div className="mt-5 pt-4 border-t border-rose-gold/15 group-hover:border-cream/20 flex items-center justify-between gap-3 transition-colors duration-500">
-          <span className="font-display text-2xl text-bordo group-hover:text-rose-goldLight transition-colors duration-500">
+        <div className="mt-3 sm:mt-5 pt-3 sm:pt-4 border-t border-rose-gold/15 group-hover:border-cream/20 flex items-center justify-between gap-2 transition-colors duration-500">
+          <span className="font-display text-lg sm:text-2xl text-bordo group-hover:text-rose-goldLight transition-colors duration-500">
             {formatPrice(product.price)}
           </span>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5 sm:gap-2">
             <a
               href={whatsappLink(askMessage)}
               target="_blank"
               rel="noopener noreferrer"
               aria-label={`${product.name} için WhatsApp'tan sor`}
-              className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-rose-gold/30 text-bordo group-hover:border-cream/40 group-hover:text-cream hover:!bg-cream/15 transition-colors duration-300"
+              className="hidden sm:inline-flex h-10 w-10 items-center justify-center rounded-full border border-rose-gold/30 text-bordo group-hover:border-cream/40 group-hover:text-cream hover:!bg-cream/15 transition-colors duration-300"
             >
               <MessageCircle size={16} strokeWidth={1.7} />
             </a>
@@ -144,7 +144,7 @@ export default function ProductCard({ product, index }: Props) {
               disabled={isSoldOut}
               aria-label={isSoldOut ? "Stokta yok" : `${product.name} sepete ekle`}
               className={cn(
-                "inline-flex h-10 w-10 items-center justify-center rounded-full transition-all duration-300 disabled:opacity-40 disabled:pointer-events-none",
+                "inline-flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-full transition-all duration-300 disabled:opacity-40 disabled:pointer-events-none",
                 added
                   ? "bg-sage-deep text-cream"
                   : "bg-bordo-gradient text-cream group-hover:bg-rose-gold-gradient group-hover:text-coffee shadow-soft hover:shadow-glow hover:brightness-110",
