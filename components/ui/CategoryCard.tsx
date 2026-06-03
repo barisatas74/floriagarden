@@ -50,7 +50,7 @@ export default function CategoryCard({ category }: Props) {
           <h3 className="font-display text-xl md:text-2xl text-coffee leading-tight">
             {category.name}
           </h3>
-          <p className="mt-2 text-sm text-coffee/60 leading-relaxed">
+          <p className="mt-2 text-sm text-coffee/60 leading-relaxed line-clamp-2">
             {category.description}
           </p>
 

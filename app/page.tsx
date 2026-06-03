@@ -1,14 +1,12 @@
+import Hero from "@/components/sections/Hero";
+import FeaturedCategories from "@/components/sections/FeaturedCategories";
 import LocalBusinessJsonLd from "@/components/seo/LocalBusinessJsonLd";
 
 export default function HomePage() {
   return (
     <>
-      {/* Anasayfa şimdilik boş — kendi tasarımın için hazır.
-          Eski bölümler components/sections/ altında duruyor:
-          Hero, TrustStrip, FeaturedCategories, FlowersAndCoffee,
-          InstagramGallery, AboutSection, ContactSection */}
-      <div className="min-h-[60vh]" />
-
+      <Hero />
+      <FeaturedCategories />
       <LocalBusinessJsonLd />
     </>
   );

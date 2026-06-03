@@ -220,46 +220,17 @@ export default function Hero() {
                 </span>
               </div>
 
-              {/* İnce alt çerçeve — tek detay */}
-              <div className="absolute inset-x-6 bottom-6 h-px bg-gradient-to-r from-transparent via-rose-gold/50 to-transparent" />
-            </div>
-
-            {/* Yüzen etiket — imza koleksiyon */}
-            <motion.div
-              initial={{ opacity: 0, y: 20, x: -10 }}
-              animate={{ opacity: 1, y: 0, x: 0 }}
-              transition={{ delay: 0.9, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-              className="absolute -bottom-6 -left-4 md:-left-10 glass-cream rounded-2xl p-4 pr-6 flex items-center gap-3 shadow-card"
-            >
-              <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-bordo text-cream">
-                <Sparkles size={16} strokeWidth={1.7} />
-              </span>
-              <div className="flex flex-col leading-tight">
-                <span className="text-[0.65rem] uppercase tracking-wider2 text-coffee/55">
-                  İmza Koleksiyon
-                </span>
-                <span className="text-sm font-medium text-coffee">
+              {/* Görsel blok içi: imza koleksiyon etiketi (taşma riski yok) */}
+              <div className="absolute top-4 left-4 inline-flex items-center gap-2 rounded-full bg-white/90 backdrop-blur px-3 py-1.5 shadow-soft">
+                <Sparkles size={13} strokeWidth={1.7} className="text-bordo" />
+                <span className="text-[0.65rem] uppercase tracking-wider2 text-coffee">
                   Kahve & Çiçek Setleri
                 </span>
               </div>
-            </motion.div>
 
-            {/* Yüzen etiket — teslimat */}
-            <motion.div
-              initial={{ opacity: 0, y: 20, x: 10 }}
-              animate={{ opacity: 1, y: 0, x: 0 }}
-              transition={{ delay: 1.1, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-              className="absolute -top-4 -right-4 md:-right-8 bg-bordo rounded-full pl-3 pr-5 py-2 flex items-center gap-2 shadow-card"
-            >
-              <span className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-rose-gold-gradient text-coffee">
-                <Truck size={13} strokeWidth={1.8} />
-              </span>
-              <span className="text-xs text-cream">
-                Gemlik içi{" "}
-                <strong className="font-semibold text-rose-goldLight">aynı gün</strong>{" "}
-                teslimat
-              </span>
-            </motion.div>
+              {/* İnce alt çerçeve — tek detay */}
+              <div className="absolute inset-x-6 bottom-6 h-px bg-gradient-to-r from-transparent via-rose-gold/50 to-transparent" />
+            </div>
           </motion.div>
         </div>
 
