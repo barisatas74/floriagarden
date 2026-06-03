@@ -47,23 +47,24 @@ export default function CartDrawer() {
     <AnimatePresence>
       {state.drawerOpen && (
         <>
-          {/* Overlay */}
+          {/* Overlay — blur yok (mobilde takılmayı önler) */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.3 }}
+            transition={{ duration: 0.25 }}
             onClick={closeDrawer}
-            className="fixed inset-0 z-[60] bg-coffee-deep/70 backdrop-blur-sm"
+            className="fixed inset-0 z-[60] bg-coffee-deep/65"
             aria-hidden
           />
 
-          {/* Drawer */}
+          {/* Drawer — GPU dostu transform animasyonu */}
           <motion.aside
             initial={{ x: "100%" }}
             animate={{ x: 0 }}
             exit={{ x: "100%" }}
-            transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+            transition={{ type: "tween", duration: 0.32, ease: [0.22, 1, 0.36, 1] }}
+            style={{ willChange: "transform" }}
             className="fixed top-0 right-0 bottom-0 z-[61] w-full sm:w-[440px] max-w-full bg-white border-l border-rose-gold/20 shadow-card flex flex-col"
             role="dialog"
             aria-modal="true"

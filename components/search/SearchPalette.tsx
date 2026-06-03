@@ -159,15 +159,15 @@ export default function SearchPalette({ open, onClose }: Props) {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.25 }}
             onClick={onClose}
-            className="fixed inset-0 z-[80] bg-coffee-deep/80 backdrop-blur-md"
+            className="fixed inset-0 z-[80] bg-coffee-deep/75"
             aria-hidden
           />
           <motion.div
-            initial={{ opacity: 0, y: -20, scale: 0.96 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: -20, scale: 0.96 }}
-            transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-            className="fixed left-1/2 -translate-x-1/2 top-20 md:top-28 z-[81] w-[calc(100%-2rem)] max-w-2xl glass-dark rounded-3xl shadow-card overflow-hidden"
+            initial={{ opacity: 0, y: -16 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -16 }}
+            transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+            className="fixed inset-x-4 top-20 md:top-28 z-[81] mx-auto max-w-2xl bg-white border border-rose-gold/25 rounded-3xl shadow-card overflow-hidden"
             role="dialog"
             aria-modal="true"
             aria-label="Arama"
