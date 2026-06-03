@@ -9,17 +9,21 @@ type Props = {
   variant?: "light" | "dark";
   className?: string;
   withTagline?: boolean;
+  /** Tıklamada ek işlem (örn. mobil menüyü kapat) */
+  onClick?: () => void;
 };
 
 export default function BrandMark({
   variant = "light",
   className,
   withTagline = false,
+  onClick,
 }: Props) {
   const isLight = variant === "light";
   const pathname = usePathname();
 
   const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    onClick?.();
     if (pathname === "/") {
       e.preventDefault();
       window.scrollTo({ top: 0, behavior: "smooth" });

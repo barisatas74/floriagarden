@@ -84,7 +84,7 @@ export default function Navbar() {
       />
 
       <div className="container flex items-center justify-between h-[72px] md:h-20">
-        <BrandMark variant="light" withTagline />
+        <BrandMark variant="light" withTagline onClick={() => setOpen(false)} />
 
         {/* Desktop nav */}
         <nav className="hidden lg:flex items-center gap-9">
