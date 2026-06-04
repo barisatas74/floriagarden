@@ -10,8 +10,10 @@ export type AdminCategory = {
   slug: string;
   name: string;
   description: string;
-  /** Görsel yer tutucu gradient (foto yükleme DB ile gelecek) */
+  /** Görsel yer tutucu gradient (foto yokken kullanılır) */
   gradient: string;
+  /** Yüklenen görsel (WebP data URL) — varsa gradient yerine kullanılır */
+  image?: string;
 };
 
 export type StockState = "var" | "az" | "tukendi";
@@ -27,8 +29,10 @@ export type AdminProduct = {
   stock: StockState;
   /** Opsiyonel rozet: "Yeni", "Çok Satan" vb. */
   badge?: string;
-  /** Görsel yer tutucu gradient */
+  /** Görsel yer tutucu gradient (foto yokken kullanılır) */
   gradient: string;
+  /** Yüklenen görsel (WebP data URL) — varsa gradient yerine kullanılır */
+  image?: string;
 };
 
 /** Üyeye özel üretilen kod — hem indirim hem takip için */

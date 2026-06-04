@@ -11,7 +11,7 @@ import {
   adminInput,
   adminLabel,
 } from "@/components/admin/AdminUI";
-import GradientPicker from "@/components/admin/GradientPicker";
+import ImageUpload from "@/components/admin/ImageUpload";
 import Button from "@/components/ui/Button";
 import { useToast } from "@/components/toast/ToastProvider";
 import { slugify, makeId } from "@/lib/admin/store";
@@ -47,6 +47,7 @@ export default function UrunlerPage() {
   const [badge, setBadge] = useState("");
   const [shortDescription, setShortDescription] = useState("");
   const [gradient, setGradient] = useState(DEFAULT_GRADIENT);
+  const [image, setImage] = useState<string | undefined>(undefined);
 
   const categoryName = (slug: string) =>
     data.categories.find((c) => c.slug === slug)?.name ?? "—";
@@ -60,6 +61,7 @@ export default function UrunlerPage() {
     setBadge("");
     setShortDescription("");
     setGradient(DEFAULT_GRADIENT);
+    setImage(undefined);
     setFormOpen(true);
   };
 
@@ -72,6 +74,7 @@ export default function UrunlerPage() {
     setBadge(p.badge ?? "");
     setShortDescription(p.shortDescription);
     setGradient(p.gradient);
+    setImage(p.image);
     setFormOpen(true);
   };
 
@@ -88,6 +91,7 @@ export default function UrunlerPage() {
       badge: badge.trim() || undefined,
       shortDescription: shortDescription.trim(),
       gradient,
+      image,
     };
 
     if (editTarget) {
@@ -141,10 +145,19 @@ export default function UrunlerPage() {
               key={p.id}
               className="flex items-center gap-4 p-4 sm:p-5 hover:bg-cream-soft/50 transition-colors"
             >
-              <div
-                className={`h-14 w-14 flex-shrink-0 rounded-2xl bg-gradient-to-br ${p.gradient}`}
-                aria-hidden
-              />
+              {p.image ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={p.image}
+                  alt={p.name}
+                  className="h-14 w-14 flex-shrink-0 rounded-2xl object-cover"
+                />
+              ) : (
+                <div
+                  className={`h-14 w-14 flex-shrink-0 rounded-2xl bg-gradient-to-br ${p.gradient}`}
+                  aria-hidden
+                />
+              )}
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 flex-wrap">
                   <h3 className="font-display text-lg text-coffee leading-tight truncate">
@@ -299,7 +312,13 @@ export default function UrunlerPage() {
             />
           </div>
 
-          <GradientPicker value={gradient} onChange={setGradient} />
+          <ImageUpload
+            value={image}
+            onChange={setImage}
+            gradient={gradient}
+            onGradientChange={setGradient}
+            aspect={5 / 4}
+          />
 
           <div className="flex items-center justify-end gap-3 pt-1">
             <Button

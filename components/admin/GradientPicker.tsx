@@ -12,13 +12,15 @@ import { cn } from "@/lib/utils/cn";
 export default function GradientPicker({
   value,
   onChange,
+  hideLabel = false,
 }: {
   value: string;
   onChange: (v: string) => void;
+  hideLabel?: boolean;
 }) {
   return (
     <div>
-      <label className={adminLabel}>Görsel (gradient)</label>
+      {!hideLabel && <label className={adminLabel}>Görsel (gradient)</label>}
       <div className="grid grid-cols-4 gap-2.5">
         {GRADIENT_PRESETS.map((g) => {
           const active = value === g.value;
@@ -49,10 +51,11 @@ export default function GradientPicker({
           );
         })}
       </div>
-      <p className="mt-2 text-[0.7rem] text-coffee/45">
-        Şimdilik gradient yer tutucu. Gerçek fotoğraf yükleme veritabanı
-        bağlandığında eklenecek.
-      </p>
+      {!hideLabel && (
+        <p className="mt-2 text-[0.7rem] text-coffee/45">
+          Renk yer tutucu — fotoğraf yüklemek için yukarıdaki alanı kullanın.
+        </p>
+      )}
     </div>
   );
 }

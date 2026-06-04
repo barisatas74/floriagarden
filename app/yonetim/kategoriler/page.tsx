@@ -11,7 +11,7 @@ import {
   adminInput,
   adminLabel,
 } from "@/components/admin/AdminUI";
-import GradientPicker from "@/components/admin/GradientPicker";
+import ImageUpload from "@/components/admin/ImageUpload";
 import Button from "@/components/ui/Button";
 import { useToast } from "@/components/toast/ToastProvider";
 import { slugify } from "@/lib/admin/store";
@@ -30,12 +30,14 @@ export default function KategorilerPage() {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [gradient, setGradient] = useState(DEFAULT_GRADIENT);
+  const [image, setImage] = useState<string | undefined>(undefined);
 
   const openNew = () => {
     setEditTarget(null);
     setName("");
     setDescription("");
     setGradient(DEFAULT_GRADIENT);
+    setImage(undefined);
     setFormOpen(true);
   };
 
@@ -44,6 +46,7 @@ export default function KategorilerPage() {
     setName(c.name);
     setDescription(c.description);
     setGradient(c.gradient);
+    setImage(c.image);
     setFormOpen(true);
   };
 
@@ -56,6 +59,7 @@ export default function KategorilerPage() {
         name: name.trim(),
         description: description.trim(),
         gradient,
+        image,
       });
       toast({ title: "Kategori güncellendi", tone: "success" });
     } else {
@@ -72,6 +76,7 @@ export default function KategorilerPage() {
         name: name.trim(),
         description: description.trim(),
         gradient,
+        image,
       });
       toast({ title: "Kategori eklendi", tone: "success" });
     }
@@ -115,10 +120,19 @@ export default function KategorilerPage() {
               key={c.slug}
               className="flex items-center gap-4 p-4 sm:p-5 hover:bg-cream-soft/50 transition-colors"
             >
-              <div
-                className={`h-14 w-14 flex-shrink-0 rounded-2xl bg-gradient-to-br ${c.gradient}`}
-                aria-hidden
-              />
+              {c.image ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={c.image}
+                  alt={c.name}
+                  className="h-14 w-14 flex-shrink-0 rounded-2xl object-cover"
+                />
+              ) : (
+                <div
+                  className={`h-14 w-14 flex-shrink-0 rounded-2xl bg-gradient-to-br ${c.gradient}`}
+                  aria-hidden
+                />
+              )}
               <div className="flex-1 min-w-0">
                 <h3 className="font-display text-lg text-coffee leading-tight truncate">
                   {c.name}
@@ -186,7 +200,13 @@ export default function KategorilerPage() {
               className={`${adminInput} h-auto py-3 resize-none`}
             />
           </div>
-          <GradientPicker value={gradient} onChange={setGradient} />
+          <ImageUpload
+            value={image}
+            onChange={setImage}
+            gradient={gradient}
+            onGradientChange={setGradient}
+            aspect={5 / 4}
+          />
 
           <div className="flex items-center justify-end gap-3 pt-1">
             <Button

@@ -294,10 +294,19 @@ export default function AdminDashboard() {
                     key={p.id}
                     className="flex items-center gap-3 rounded-2xl border border-rose-gold/15 px-4 py-3"
                   >
-                    <div
-                      className={`h-9 w-9 flex-shrink-0 rounded-xl bg-gradient-to-br ${p.gradient}`}
-                      aria-hidden
-                    />
+                    {p.image ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        src={p.image}
+                        alt={p.name}
+                        className="h-9 w-9 flex-shrink-0 rounded-xl object-cover"
+                      />
+                    ) : (
+                      <div
+                        className={`h-9 w-9 flex-shrink-0 rounded-xl bg-gradient-to-br ${p.gradient}`}
+                        aria-hidden
+                      />
+                    )}
                     <div className="flex-1 min-w-0">
                       <p className="text-sm text-coffee leading-tight truncate">
                         {p.name}
