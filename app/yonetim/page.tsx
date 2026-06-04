@@ -19,8 +19,11 @@ import {
   Gift,
   Wrench,
   ExternalLink,
+  ClipboardList,
+  Wallet,
 } from "lucide-react";
 import { useAdminData } from "@/components/admin/AdminDataProvider";
+import { orderTotal } from "@/lib/admin/orders";
 import { useMaintenance } from "@/components/maintenance/useMaintenance";
 import {
   setStoredMaintenance,
@@ -123,22 +126,43 @@ export default function AdminDashboard() {
     [data.products],
   );
 
-  const stats = [
+  const revenue = data.orders
+    .filter((o) => o.status !== "iptal")
+    .reduce((s, o) => s + orderTotal(o), 0);
+
+  const stats: {
+    label: string;
+    value: string;
+    icon: typeof Tags;
+    href: string;
+  }[] = [
+    {
+      label: "Sipariş",
+      value: String(data.orders.length),
+      icon: ClipboardList,
+      href: "/yonetim/siparisler",
+    },
+    {
+      label: "Ciro",
+      value: formatPrice(revenue),
+      icon: Wallet,
+      href: "/yonetim/siparisler",
+    },
     {
       label: "Kategori",
-      value: data.categories.length,
+      value: String(data.categories.length),
       icon: Tags,
       href: "/yonetim/kategoriler",
     },
     {
       label: "Ürün",
-      value: data.products.length,
+      value: String(data.products.length),
       icon: Flower2,
       href: "/yonetim/urunler",
     },
     {
       label: "Üye",
-      value: data.members.length,
+      value: String(data.members.length),
       icon: Users,
       href: "/yonetim/uyeler",
     },
@@ -190,7 +214,7 @@ export default function AdminDashboard() {
       </div>
 
       {/* İstatistik kartları */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4 mb-8">
         {stats.map(({ label, value, icon: Icon, href }) => (
           <Link key={label} href={href}>
             <AdminCard className="p-6 h-full hover:border-rose-gold/45 hover:shadow-card transition-all duration-300 group">

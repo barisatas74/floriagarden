@@ -18,6 +18,7 @@ import type {
   GeneralCode,
   DeliveryZone,
   DeliveryStep,
+  Order,
 } from "@/lib/admin/types";
 import { buildSeed } from "@/lib/admin/seed";
 import { loadAdminData, saveAdminData, resetAdminData } from "@/lib/admin/store";
@@ -47,6 +48,10 @@ type AdminContextValue = {
   addDeliveryStep: (step: DeliveryStep) => void;
   updateDeliveryStep: (id: string, patch: Partial<DeliveryStep>) => void;
   removeDeliveryStep: (id: string) => void;
+  // Siparişler
+  addOrder: (order: Order) => void;
+  updateOrder: (id: string, patch: Partial<Order>) => void;
+  removeOrder: (id: string) => void;
   // Demo sıfırla
   reset: () => void;
 };
@@ -170,6 +175,19 @@ export function AdminDataProvider({ children }: { children: ReactNode }) {
       setData((d) => ({
         ...d,
         deliveryProcess: d.deliveryProcess.filter((s) => s.id !== id),
+      })),
+
+    addOrder: (order) =>
+      setData((d) => ({ ...d, orders: [order, ...d.orders] })),
+    updateOrder: (id, patch) =>
+      setData((d) => ({
+        ...d,
+        orders: d.orders.map((o) => (o.id === id ? { ...o, ...patch } : o)),
+      })),
+    removeOrder: (id) =>
+      setData((d) => ({
+        ...d,
+        orders: d.orders.filter((o) => o.id !== id),
       })),
 
     reset: () => setData(resetAdminData()),

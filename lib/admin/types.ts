@@ -96,6 +96,53 @@ export type DeliveryStep = {
   text: string;
 };
 
+export type OrderStatus =
+  | "yeni"
+  | "hazirlaniyor"
+  | "yolda"
+  | "teslim"
+  | "iptal";
+
+export type PaymentMethod = "nakit" | "havale" | "kapida";
+
+export type OrderItem = {
+  /** Bağlı ürün (opsiyonel) */
+  productId?: string;
+  name: string;
+  price: number;
+  quantity: number;
+};
+
+export type Order = {
+  id: string;
+  /** Okunabilir sipariş no, örn. FG-260604-417 */
+  orderNo: string;
+  /** Oluşturma tarihi (ISO) */
+  createdAt: string;
+  // Müşteri (gönderen)
+  customerName: string;
+  customerPhone: string;
+  // Alıcı
+  recipientName: string;
+  recipientPhone: string;
+  address: string;
+  /** Sürpriz: gönderen alıcıya açıklanmaz */
+  surprise: boolean;
+  // Ürünler
+  items: OrderItem[];
+  // Teslimat
+  deliveryZone: string;
+  /** Teslim tarihi (yyyy-mm-dd) */
+  deliveryDate: string;
+  deliverySlot: string;
+  // Ödeme + durum
+  payment: PaymentMethod;
+  status: OrderStatus;
+  // Kart notu + admin notu
+  cardNote: string;
+  adminNote: string;
+};
+
 /** localStorage'da tutulan tüm admin verisi */
 export type AdminData = {
   categories: AdminCategory[];
@@ -107,4 +154,6 @@ export type AdminData = {
   deliveryZones: DeliveryZone[];
   /** Teslimat süreci adımları */
   deliveryProcess: DeliveryStep[];
+  /** Siparişler (şimdilik manuel girilir) */
+  orders: Order[];
 };

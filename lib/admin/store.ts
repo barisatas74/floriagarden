@@ -38,6 +38,7 @@ export function loadAdminData(): AdminData {
       generalCodes: parsed.generalCodes ?? seed.generalCodes,
       deliveryZones: parsed.deliveryZones ?? seed.deliveryZones,
       deliveryProcess: parsed.deliveryProcess ?? seed.deliveryProcess,
+      orders: parsed.orders ?? seed.orders,
     };
   } catch {
     return buildSeed();

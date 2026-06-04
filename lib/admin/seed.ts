@@ -127,5 +127,7 @@ export function buildSeed(): AdminData {
     members: seedMembers.map((m) => ({ ...m, codes: [...m.codes] })),
     generalCodes: seedGeneralCodes.map((c) => ({ ...c })),
     ...seedDelivery(),
+    // Siparişler manuel girilir — boş başlar.
+    orders: [],
   };
 }

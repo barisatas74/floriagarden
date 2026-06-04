@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   LayoutDashboard,
+  ClipboardList,
   Tags,
   Flower2,
   Users,
@@ -22,6 +23,7 @@ import { cn } from "@/lib/utils/cn";
 
 const NAV = [
   { href: "/yonetim", label: "Özet", icon: LayoutDashboard, exact: true },
+  { href: "/yonetim/siparisler", label: "Siparişler", icon: ClipboardList },
   { href: "/yonetim/kategoriler", label: "Kategoriler", icon: Tags },
   { href: "/yonetim/urunler", label: "Ürünler", icon: Flower2 },
   { href: "/yonetim/uyeler", label: "Üyeler", icon: Users },
