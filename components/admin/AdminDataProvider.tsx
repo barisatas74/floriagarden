@@ -4,9 +4,11 @@ import {
   createContext,
   useContext,
   useEffect,
+  useRef,
   useState,
   type ReactNode,
 } from "react";
+import { useToast } from "@/components/toast/ToastProvider";
 import type {
   AdminData,
   AdminCategory,
@@ -42,8 +44,10 @@ type AdminContextValue = {
 const AdminContext = createContext<AdminContextValue | null>(null);
 
 export function AdminDataProvider({ children }: { children: ReactNode }) {
+  const { toast } = useToast();
   const [data, setData] = useState<AdminData>(() => buildSeed());
   const [hydrated, setHydrated] = useState(false);
+  const quotaWarned = useRef(false);
 
   // İlk yüklemede localStorage'dan oku (yoksa seed'ler)
   useEffect(() => {
@@ -51,10 +55,23 @@ export function AdminDataProvider({ children }: { children: ReactNode }) {
     setHydrated(true);
   }, []);
 
-  // Her değişiklikte kalıcılaştır (hidrasyon sonrası)
+  // Her değişiklikte kalıcılaştır (hidrasyon sonrası).
+  // Kayıt başarısızsa (örn. çok sayıda fotoğraf → kota dolu) kullanıcıyı uyar.
   useEffect(() => {
-    if (hydrated) saveAdminData(data);
-  }, [data, hydrated]);
+    if (!hydrated) return;
+    const ok = saveAdminData(data);
+    if (!ok && !quotaWarned.current) {
+      quotaWarned.current = true;
+      toast({
+        title: "Depolama sınırına ulaşıldı",
+        description:
+          "Tarayıcı belleği doldu. Daha az veya daha küçük fotoğraf kullanın; son değişiklik kaydedilemeyebilir.",
+        tone: "warning",
+      });
+    } else if (ok) {
+      quotaWarned.current = false;
+    }
+  }, [data, hydrated, toast]);
 
   const value: AdminContextValue = {
     data,

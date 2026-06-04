@@ -41,12 +41,15 @@ export function loadAdminData(): AdminData {
   }
 }
 
-export function saveAdminData(data: AdminData) {
-  if (typeof window === "undefined") return;
+/** Kaydı dener; başarısızsa (örn. kota dolu) false döner. */
+export function saveAdminData(data: AdminData): boolean {
+  if (typeof window === "undefined") return false;
   try {
     window.localStorage.setItem(ADMIN_STORAGE_KEY, JSON.stringify(data));
+    return true;
   } catch {
-    /* kota dolabilir — demo aşamasında yok sayılır */
+    // localStorage kotası dolmuş olabilir (özellikle çok sayıda fotoğrafla)
+    return false;
   }
 }
 

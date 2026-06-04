@@ -62,6 +62,7 @@ export default function ImageUpload({
   const [zoom, setZoom] = useState(1);
   const [areaPixels, setAreaPixels] = useState<Area | null>(null);
   const [busy, setBusy] = useState(false);
+  const [failed, setFailed] = useState(false);
 
   const onCropComplete = useCallback((_: Area, pixels: Area) => {
     setAreaPixels(pixels);
@@ -72,6 +73,7 @@ export default function ImageUpload({
     setCrop({ x: 0, y: 0 });
     setZoom(1);
     setAreaPixels(null);
+    setFailed(false);
     setEditing(true);
   };
 
@@ -88,11 +90,15 @@ export default function ImageUpload({
   const applyCrop = async () => {
     if (!source || !areaPixels) return;
     setBusy(true);
+    setFailed(false);
     try {
       const webp = await cropToWebp(source, areaPixels);
       onChange(webp);
       setEditing(false);
       setSource(null);
+    } catch {
+      // Görsel işlenemedi — düzenleme açık kalır, kullanıcı tekrar deneyebilir
+      setFailed(true);
     } finally {
       setBusy(false);
     }
@@ -151,6 +157,12 @@ export default function ImageUpload({
             Sürükleyerek konumlandırın, kaydırıcıyla yakınlaştırın. Kaydedince
             otomatik WebP&apos;e çevrilir.
           </p>
+
+          {failed && (
+            <p className="text-xs text-bordo">
+              Görsel işlenemedi. Lütfen başka bir fotoğraf deneyin.
+            </p>
+          )}
 
           <div className="flex items-center justify-end gap-2">
             <button
