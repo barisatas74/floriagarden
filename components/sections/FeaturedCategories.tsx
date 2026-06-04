@@ -1,5 +1,6 @@
 import SectionHeading from "@/components/ui/SectionHeading";
 import CategoryCard from "@/components/ui/CategoryCard";
+import CategoryCtaCard from "@/components/ui/CategoryCtaCard";
 import FadeIn from "@/components/motion/FadeIn";
 import { CATEGORIES } from "@/lib/data/categories";
 
@@ -23,6 +24,16 @@ export default function FeaturedCategories() {
               <CategoryCard category={category} />
             </FadeIn>
           ))}
+
+          {/* Son boş hücreyi dolduran özel tasarım CTA kartı */}
+          <FadeIn
+            key="cta"
+            delay={(CATEGORIES.length % 4) * 0.07}
+            y={28}
+            className="h-full"
+          >
+            <CategoryCtaCard />
+          </FadeIn>
         </div>
       </div>
     </section>

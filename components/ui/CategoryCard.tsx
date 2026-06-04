@@ -33,6 +33,12 @@ export default function CategoryCard({ category }: Props) {
             <FloralPlaceholder gradient={category.gradient} label={category.name} />
           </motion.div>
 
+          {/* Hover: bordo örtü — tüm kartlar üzerine gelince bordoya döner */}
+          <div
+            className="absolute inset-0 bg-bordo/0 group-hover:bg-bordo/55 transition-colors duration-500"
+            aria-hidden
+          />
+
           {/* Üst koleksiyon etiketi */}
           <span className="absolute top-4 left-4 inline-flex items-center rounded-full bg-white/90 backdrop-blur px-3 py-1 text-[0.6rem] uppercase tracking-wider2 text-bordo shadow-soft">
             Koleksiyon
@@ -47,7 +53,7 @@ export default function CategoryCard({ category }: Props) {
 
         {/* İçerik alanı — beyaz */}
         <div className="flex flex-1 flex-col p-5 md:p-6">
-          <h3 className="font-display text-xl md:text-2xl text-coffee leading-tight">
+          <h3 className="font-display text-xl md:text-2xl text-coffee leading-tight group-hover:text-bordo transition-colors duration-300">
             {category.name}
           </h3>
           <p className="mt-2 text-sm text-coffee/60 leading-relaxed line-clamp-2">
