@@ -30,6 +30,8 @@ export default function Hero() {
     <section className="relative overflow-hidden pt-28 md:pt-32 lg:pt-36 pb-20 md:pb-28 lg:pb-32">
       {/* Açık zemin + yumuşak gold/bordo glow */}
       <div className="absolute inset-0 bg-cream-soft" aria-hidden />
+      {/* Kenarlarda uzanan yaprak sarmaşıkları */}
+      <div className="absolute inset-0 edge-vines" aria-hidden />
       <div className="absolute inset-0 bg-dots-gold opacity-50" aria-hidden />
 
       <motion.div

@@ -10,6 +10,9 @@ export default function FeaturedCategories() {
       id="koleksiyon"
       className="relative py-20 md:py-28 lg:py-32 scroll-mt-24 bg-section-coffee overflow-hidden"
     >
+      {/* Kenarlarda uzanan yaprak sarmaşıkları */}
+      <div className="absolute inset-0 edge-vines pointer-events-none" aria-hidden />
+
       <div className="container relative flex flex-col gap-14">
         <SectionHeading
           theme="light"

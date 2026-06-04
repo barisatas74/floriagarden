@@ -51,6 +51,18 @@
     }
   }
 
+  /* Anasayfa bölümlerinde kenar sarmaşıkları: bölüm zemini opak olduğundan
+     gövdedeki sarmal görünmez; bu yüzden bölüme özel, içeriğin arkasında
+     duran bir katman olarak aynı motifi sağ/sol kenara basıyoruz. */
+  .edge-vines {
+    background-image:
+      url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='130'%20height='320'%3E%3Cg%20fill='none'%20stroke='%235F1228'%20stroke-opacity='0.12'%20stroke-width='1'%3E%3Cpath%20d='M70%200%20C%2045%2055%2095%20110%2070%20160%20C%2045%20210%2095%20265%2070%20320'/%3E%3Cellipse%20cx='90'%20cy='48'%20rx='5'%20ry='13'%20transform='rotate(40%2090%2048)'/%3E%3Cellipse%20cx='50'%20cy='95'%20rx='5'%20ry='13'%20transform='rotate(-40%2050%2095)'/%3E%3Cellipse%20cx='92'%20cy='150'%20rx='5'%20ry='13'%20transform='rotate(40%2092%20150)'/%3E%3Cellipse%20cx='50'%20cy='205'%20rx='5'%20ry='13'%20transform='rotate(-40%2050%20205)'/%3E%3Cellipse%20cx='92'%20cy='258'%20rx='5'%20ry='13'%20transform='rotate(40%2092%20258)'/%3E%3Cellipse%20cx='50'%20cy='305'%20rx='5'%20ry='13'%20transform='rotate(-40%2050%20305)'/%3E%3C/g%3E%3C/svg%3E"),
+      url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='130'%20height='320'%3E%3Cg%20fill='none'%20stroke='%23A3823F'%20stroke-opacity='0.16'%20stroke-width='1'%3E%3Cpath%20d='M60%200%20C%2085%2055%2035%20110%2060%20160%20C%2085%20210%2035%20265%2060%20320'/%3E%3Cellipse%20cx='40'%20cy='48'%20rx='5'%20ry='13'%20transform='rotate(-40%2040%2048)'/%3E%3Cellipse%20cx='80'%20cy='95'%20rx='5'%20ry='13'%20transform='rotate(40%2080%2095)'/%3E%3Cellipse%20cx='38'%20cy='150'%20rx='5'%20ry='13'%20transform='rotate(-40%2038%20150)'/%3E%3Cellipse%20cx='80'%20cy='205'%20rx='5'%20ry='13'%20transform='rotate(40%2080%20205)'/%3E%3Cellipse%20cx='38'%20cy='258'%20rx='5'%20ry='13'%20transform='rotate(-40%2038%20258)'/%3E%3Cellipse%20cx='80'%20cy='305'%20rx='5'%20ry='13'%20transform='rotate(40%2080%20305)'/%3E%3C/g%3E%3C/svg%3E");
+    background-repeat: repeat-y, repeat-y;
+    background-position: right 8px top, left 8px top;
+    background-size: 130px 320px, 130px 320px;
+  }
+
   ::selection {
     @apply bg-bordo text-cream;
   }
