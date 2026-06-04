@@ -45,6 +45,19 @@ export type MemberCode = {
   note?: string;
 };
 
+/** Tüm üyelerin kullanabileceği genel (kampanya) kod */
+export type GeneralCode = {
+  /** Kupon kodu, örn. BAHAR15 */
+  code: string;
+  discountType: "percent" | "fixed";
+  /** Yüzde için 0–100, sabit için ₺ tutarı */
+  discountValue: number;
+  /** Oluşturulma tarihi (ISO) */
+  createdAt: string;
+  /** Açıklama / kampanya notu (opsiyonel) */
+  note?: string;
+};
+
 export type Member = {
   id: string;
   name: string;
@@ -63,4 +76,6 @@ export type AdminData = {
   categories: AdminCategory[];
   products: AdminProduct[];
   members: Member[];
+  /** Tüm üyelerin kullanabileceği genel kodlar */
+  generalCodes: GeneralCode[];
 };

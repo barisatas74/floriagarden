@@ -1,6 +1,12 @@
 import { CATEGORIES } from "@/lib/data/categories";
 import { PRODUCTS } from "@/lib/data/products";
-import type { AdminData, AdminCategory, AdminProduct, Member } from "./types";
+import type {
+  AdminData,
+  AdminCategory,
+  AdminProduct,
+  Member,
+  GeneralCode,
+} from "./types";
 
 /**
  * Demo başlangıç verisi.
@@ -77,10 +83,21 @@ const seedMembers: Member[] = [
   },
 ];
 
+const seedGeneralCodes: GeneralCode[] = [
+  {
+    code: "BAHAR15",
+    discountType: "percent",
+    discountValue: 15,
+    createdAt: "2026-03-01T09:00:00+03:00",
+    note: "Bahar kampanyası — tüm üyeler",
+  },
+];
+
 export function buildSeed(): AdminData {
   return {
     categories: seedCategories(),
     products: seedProducts(),
     members: seedMembers.map((m) => ({ ...m, codes: [...m.codes] })),
+    generalCodes: seedGeneralCodes.map((c) => ({ ...c })),
   };
 }

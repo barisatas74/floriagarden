@@ -28,7 +28,14 @@ export function loadAdminData(): AdminData {
       window.localStorage.setItem(ADMIN_STORAGE_KEY, JSON.stringify(seed));
       return seed;
     }
-    return JSON.parse(raw) as AdminData;
+    const parsed = JSON.parse(raw) as Partial<AdminData>;
+    // Eski kayıtlarda olmayan alanları güvenle tamamla (örn. generalCodes).
+    return {
+      categories: parsed.categories ?? [],
+      products: parsed.products ?? [],
+      members: parsed.members ?? [],
+      generalCodes: parsed.generalCodes ?? [],
+    };
   } catch {
     return buildSeed();
   }
@@ -73,6 +80,12 @@ export function makeId(prefix = "id"): string {
   return `${prefix}-${Date.now().toString(36)}-${Math.random()
     .toString(36)
     .slice(2, 6)}`;
+}
+
+/** Genel kampanya kodu için rastgele öneri: FLORIA-XXXX. */
+export function generateGeneralCode(): string {
+  const rand = Math.random().toString(36).slice(2, 6).toUpperCase();
+  return `FLORIA-${rand}`;
 }
 
 /** Üyeye özel kod: FG-<baş harfler>-<rastgele>. */

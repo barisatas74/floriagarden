@@ -13,6 +13,7 @@ import type {
   AdminProduct,
   Member,
   MemberCode,
+  GeneralCode,
 } from "@/lib/admin/types";
 import { buildSeed } from "@/lib/admin/seed";
 import { loadAdminData, saveAdminData, resetAdminData } from "@/lib/admin/store";
@@ -31,6 +32,9 @@ type AdminContextValue = {
   // Üyeler
   addMemberCode: (memberId: string, code: MemberCode) => void;
   removeMemberCode: (memberId: string, code: string) => void;
+  // Genel kodlar
+  addGeneralCode: (code: GeneralCode) => void;
+  removeGeneralCode: (code: string) => void;
   // Demo sıfırla
   reset: () => void;
 };
@@ -101,6 +105,14 @@ export function AdminDataProvider({ children }: { children: ReactNode }) {
             ? { ...m, codes: m.codes.filter((c) => c.code !== code) }
             : m,
         ),
+      })),
+
+    addGeneralCode: (code) =>
+      setData((d) => ({ ...d, generalCodes: [code, ...d.generalCodes] })),
+    removeGeneralCode: (code) =>
+      setData((d) => ({
+        ...d,
+        generalCodes: d.generalCodes.filter((c) => c.code !== code),
       })),
 
     reset: () => setData(resetAdminData()),
