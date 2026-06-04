@@ -6,6 +6,8 @@ import type {
   AdminProduct,
   Member,
   GeneralCode,
+  DeliveryZone,
+  DeliveryStep,
 } from "./types";
 
 /**
@@ -93,11 +95,37 @@ const seedGeneralCodes: GeneralCode[] = [
   },
 ];
 
+const seedDeliveryZones: DeliveryZone[] = [
+  { id: "zone-gemlik-merkez", name: "Gemlik Merkez", eta: "60 — 120 dk", fee: "Ücretsiz", note: "100 ₺ üzeri siparişlerde" },
+  { id: "zone-gemlik-cevresi", name: "Gemlik Çevresi", eta: "120 — 180 dk", fee: "75 ₺", note: "Köy yerleşimleri dâhil" },
+  { id: "zone-bursa-merkez", name: "Bursa Merkez", eta: "Aynı gün", fee: "150 ₺", note: "17:00 öncesi siparişler" },
+  { id: "zone-cevre-ilceler", name: "Çevre İlçeler", eta: "1 — 2 iş günü", fee: "Mesafeye göre", note: "Anlaşmalı kurye" },
+];
+
+const seedDeliveryProcess: DeliveryStep[] = [
+  { id: "step-hazirlama", icon: "sparkles", title: "Sipariş hazırlama", text: "Atölyemizde çiçek şefimiz tarafından özenle hazırlanır." },
+  { id: "step-ambalaj", icon: "gift", title: "Lüks ambalaj", text: "Kadife, ipek ve doğal dokularla butik ambalaj yapılır." },
+  { id: "step-yolda", icon: "truck", title: "Yolda", text: "Isı kontrollü ekipmanlarla kuryemiz adrese yola çıkar." },
+  { id: "step-teslim", icon: "shield", title: "Elden teslim", text: "Çiçeğin tazeliği korunarak alıcıya elden teslim edilir." },
+];
+
+/** Yalnızca teslimat verisi (public sayfanın seed başlangıcı için). */
+export function seedDelivery(): {
+  deliveryZones: DeliveryZone[];
+  deliveryProcess: DeliveryStep[];
+} {
+  return {
+    deliveryZones: seedDeliveryZones.map((z) => ({ ...z })),
+    deliveryProcess: seedDeliveryProcess.map((s) => ({ ...s })),
+  };
+}
+
 export function buildSeed(): AdminData {
   return {
     categories: seedCategories(),
     products: seedProducts(),
     members: seedMembers.map((m) => ({ ...m, codes: [...m.codes] })),
     generalCodes: seedGeneralCodes.map((c) => ({ ...c })),
+    ...seedDelivery(),
   };
 }

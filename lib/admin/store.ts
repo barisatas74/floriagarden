@@ -29,12 +29,15 @@ export function loadAdminData(): AdminData {
       return seed;
     }
     const parsed = JSON.parse(raw) as Partial<AdminData>;
-    // Eski kayıtlarda olmayan alanları güvenle tamamla (örn. generalCodes).
+    // Eski kayıtlarda olmayan alanları seed varsayılanlarıyla güvenle tamamla.
+    const seed = buildSeed();
     return {
-      categories: parsed.categories ?? [],
-      products: parsed.products ?? [],
-      members: parsed.members ?? [],
-      generalCodes: parsed.generalCodes ?? [],
+      categories: parsed.categories ?? seed.categories,
+      products: parsed.products ?? seed.products,
+      members: parsed.members ?? seed.members,
+      generalCodes: parsed.generalCodes ?? seed.generalCodes,
+      deliveryZones: parsed.deliveryZones ?? seed.deliveryZones,
+      deliveryProcess: parsed.deliveryProcess ?? seed.deliveryProcess,
     };
   } catch {
     return buildSeed();

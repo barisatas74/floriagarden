@@ -75,6 +75,27 @@ export type Member = {
   codes: MemberCode[];
 };
 
+/** Teslimat bölgesi (süre + ücret) */
+export type DeliveryZone = {
+  id: string;
+  name: string;
+  /** Tahmini süre, örn. "60 — 120 dk" */
+  eta: string;
+  /** Ücret metni, örn. "Ücretsiz" veya "75 ₺" */
+  fee: string;
+  /** Alt açıklama, örn. "100 ₺ üzeri siparişlerde" */
+  note: string;
+};
+
+/** Teslimat süreci adımı */
+export type DeliveryStep = {
+  id: string;
+  /** İkon anahtarı (lib/admin/deliveryIcons) */
+  icon: string;
+  title: string;
+  text: string;
+};
+
 /** localStorage'da tutulan tüm admin verisi */
 export type AdminData = {
   categories: AdminCategory[];
@@ -82,4 +103,8 @@ export type AdminData = {
   members: Member[];
   /** Tüm üyelerin kullanabileceği genel kodlar */
   generalCodes: GeneralCode[];
+  /** Teslimat bölgeleri ve fiyatları */
+  deliveryZones: DeliveryZone[];
+  /** Teslimat süreci adımları */
+  deliveryProcess: DeliveryStep[];
 };

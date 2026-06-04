@@ -16,6 +16,8 @@ import type {
   Member,
   MemberCode,
   GeneralCode,
+  DeliveryZone,
+  DeliveryStep,
 } from "@/lib/admin/types";
 import { buildSeed } from "@/lib/admin/seed";
 import { loadAdminData, saveAdminData, resetAdminData } from "@/lib/admin/store";
@@ -37,6 +39,14 @@ type AdminContextValue = {
   // Genel kodlar
   addGeneralCode: (code: GeneralCode) => void;
   removeGeneralCode: (code: string) => void;
+  // Teslimat bölgeleri
+  addDeliveryZone: (zone: DeliveryZone) => void;
+  updateDeliveryZone: (id: string, patch: Partial<DeliveryZone>) => void;
+  removeDeliveryZone: (id: string) => void;
+  // Teslimat süreci
+  addDeliveryStep: (step: DeliveryStep) => void;
+  updateDeliveryStep: (id: string, patch: Partial<DeliveryStep>) => void;
+  removeDeliveryStep: (id: string) => void;
   // Demo sıfırla
   reset: () => void;
 };
@@ -130,6 +140,36 @@ export function AdminDataProvider({ children }: { children: ReactNode }) {
       setData((d) => ({
         ...d,
         generalCodes: d.generalCodes.filter((c) => c.code !== code),
+      })),
+
+    addDeliveryZone: (zone) =>
+      setData((d) => ({ ...d, deliveryZones: [...d.deliveryZones, zone] })),
+    updateDeliveryZone: (id, patch) =>
+      setData((d) => ({
+        ...d,
+        deliveryZones: d.deliveryZones.map((z) =>
+          z.id === id ? { ...z, ...patch } : z,
+        ),
+      })),
+    removeDeliveryZone: (id) =>
+      setData((d) => ({
+        ...d,
+        deliveryZones: d.deliveryZones.filter((z) => z.id !== id),
+      })),
+
+    addDeliveryStep: (step) =>
+      setData((d) => ({ ...d, deliveryProcess: [...d.deliveryProcess, step] })),
+    updateDeliveryStep: (id, patch) =>
+      setData((d) => ({
+        ...d,
+        deliveryProcess: d.deliveryProcess.map((s) =>
+          s.id === id ? { ...s, ...patch } : s,
+        ),
+      })),
+    removeDeliveryStep: (id) =>
+      setData((d) => ({
+        ...d,
+        deliveryProcess: d.deliveryProcess.filter((s) => s.id !== id),
       })),
 
     reset: () => setData(resetAdminData()),

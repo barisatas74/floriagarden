@@ -9,6 +9,7 @@ import {
   Tags,
   Flower2,
   Users,
+  Truck,
   LogOut,
   Menu,
   X,
@@ -24,6 +25,7 @@ const NAV = [
   { href: "/yonetim/kategoriler", label: "Kategoriler", icon: Tags },
   { href: "/yonetim/urunler", label: "Ürünler", icon: Flower2 },
   { href: "/yonetim/uyeler", label: "Üyeler", icon: Users },
+  { href: "/yonetim/teslimat", label: "Teslimat", icon: Truck },
 ];
 
 function isActive(pathname: string, href: string, exact?: boolean) {
