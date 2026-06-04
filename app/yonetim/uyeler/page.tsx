@@ -76,11 +76,12 @@ export default function UyelerPage() {
       .sort((a, b) => a.days - b.days);
   }, [data.members]);
 
-  // Doğum günü çok yakın olanlar (bugün veya yarın)
-  const imminentCount = useMemo(
-    () => upcomingBirthdays.filter((x) => x.days <= 1).length,
+  // Doğum günü çok yakın olanlar (önümüzdeki 3 gün içinde)
+  const soonBirthdays = useMemo(
+    () => upcomingBirthdays.filter((x) => x.days <= 3),
     [upcomingBirthdays],
   );
+  const soonCount = soonBirthdays.length;
 
   const openMemberFromBirthday = (id: string) => {
     setBirthdayOpen(false);
@@ -143,23 +144,23 @@ export default function UyelerPage() {
             Doğum Günü Yaklaşanlar
           </h2>
           <p className="text-sm text-coffee/55">
-            {imminentCount > 0
-              ? `${imminentCount} üyenin doğum günü bugün veya yarın`
+            {soonCount > 0
+              ? `${soonCount} üyenin doğum günü 3 gün içinde`
               : "Yaklaşan doğum günlerini görüntüleyin"}
           </p>
         </div>
         <div className="flex items-center gap-2.5 flex-shrink-0">
-          {/* Çok yakın (bugün/yarın) üye sayısı */}
+          {/* Önümüzdeki 3 gün içinde doğum günü olan üye sayısı */}
           <span
             className={`inline-flex items-center gap-1 rounded-full px-3 h-8 text-sm font-semibold tabular-nums ${
-              imminentCount > 0
+              soonCount > 0
                 ? "bg-bordo text-cream"
                 : "bg-cream-soft text-coffee/45 border border-rose-gold/20"
             }`}
-            aria-label={`${imminentCount} üyenin doğum günü çok yakın`}
+            aria-label={`${soonCount} üyenin doğum günü 3 gün içinde`}
           >
-            {imminentCount > 0 && <Gift size={13} strokeWidth={2} />}
-            {imminentCount}
+            {soonCount > 0 && <Gift size={13} strokeWidth={2} />}
+            {soonCount}
           </span>
           <span className="hidden sm:inline-flex items-center gap-0.5 text-sm font-medium text-rose-goldDark group-hover:text-bordo transition-colors">
             Gör
@@ -371,13 +372,13 @@ export default function UyelerPage() {
         title="Doğum Günü Yaklaşanlar"
         size="lg"
       >
-        {upcomingBirthdays.length === 0 ? (
+        {soonBirthdays.length === 0 ? (
           <p className="text-sm text-coffee/55 bg-cream-soft rounded-2xl px-4 py-4 text-center">
-            Doğum tarihi kayıtlı üye bulunmuyor.
+            Önümüzdeki 3 gün içinde doğum günü olan üye yok.
           </p>
         ) : (
           <ul className="flex flex-col gap-2">
-            {upcomingBirthdays.map(({ member, days }) => {
+            {soonBirthdays.map(({ member, days }) => {
               const imminent = days <= 1;
               const soon = days <= 30;
               return (
