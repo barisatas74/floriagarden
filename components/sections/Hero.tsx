@@ -222,8 +222,8 @@ export default function Hero() {
                 </span>
               </div>
 
-              {/* Görsel blok içi: imza koleksiyon etiketi (taşma riski yok) */}
-              <div className="absolute top-4 left-4 inline-flex items-center gap-2 rounded-full bg-white/90 backdrop-blur px-3 py-1.5 shadow-soft">
+              {/* Görsel blok içi: imza koleksiyon etiketi — mobilde gizli */}
+              <div className="absolute top-4 left-4 hidden md:inline-flex items-center gap-2 rounded-full bg-white/90 backdrop-blur px-3 py-1.5 shadow-soft">
                 <Sparkles size={13} strokeWidth={1.7} className="text-bordo" />
                 <span className="text-[0.65rem] uppercase tracking-wider2 text-coffee">
                   Kahve & Çiçek Setleri
