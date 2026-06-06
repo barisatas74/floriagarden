@@ -24,7 +24,9 @@ export function getPool(): mysql.Pool {
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
       waitForConnections: true,
-      connectionLimit: Number(process.env.DB_CONNECTION_LIMIT ?? 3),
+      // Admin verisi 9 sorguyu paralel çeker; havuzu büyütünce tek turda biter.
+      // Alastyr "too many connections" derse Vercel'de DB_CONNECTION_LIMIT düşür.
+      connectionLimit: Number(process.env.DB_CONNECTION_LIMIT ?? 8),
       charset: "utf8mb4",
       // DATE/DATETIME'ı string döndür (timezone kaymalarını önler)
       dateStrings: true,
