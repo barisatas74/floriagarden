@@ -92,7 +92,12 @@ export function AdminDataProvider({ children }: { children: ReactNode }) {
     }
   }, [toast]);
 
+  // Yalnızca ilk açılışta bir kez yükle (yeniden-yükleme döngüsünü önler;
+  // aksi halde optimistik eklemeler anında eziliyordu).
+  const loadedRef = useRef(false);
   useEffect(() => {
+    if (loadedRef.current) return;
+    loadedRef.current = true;
     void load();
   }, [load]);
 
