@@ -507,7 +507,7 @@ export default function SiparislerPage() {
                     <select
                       value={it.productId || ""}
                       onChange={(e) => setItemProduct(i, e.target.value)}
-                      className={`${adminInput} cursor-pointer flex-1`}
+                      className={`${adminInput} cursor-pointer flex-1 min-w-0`}
                       style={{ colorScheme: "light" }}
                     >
                       <option value="">Ürün seçin…</option>
