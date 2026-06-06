@@ -5,8 +5,8 @@ export const SITE = {
   city: "Gemlik",
   // TODO: Alastyr'da bu kutuyu aç (info@gemlikfloriagarden.com) ya da farklı bir adres ver
   email: "info@gemlikfloriagarden.com",
-  phoneDisplay: "+90 541 623 98 16",
-  phoneRaw: "905416239816",
+  phoneDisplay: "+90 538 667 07 16",
+  phoneRaw: "905386670716",
   address:
     "Demirsubaşı Mah. Şehit Gökhan Aydınlı Sk. No: 9 İç Kapı: A, Gemlik / Bursa",
   hours: "Pzt – Cmt: 08:30 – 23:00 · Pazar: 10:00 – 17:00",
