@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Breadcrumb from "@/components/ui/Breadcrumb";
 import FadeIn from "@/components/motion/FadeIn";
 import DeliverySections from "@/components/delivery/DeliverySections";
+import { getDelivery } from "@/lib/db/queries";
 
 export const metadata: Metadata = {
   title: "Teslimat Bilgileri",
@@ -9,7 +10,10 @@ export const metadata: Metadata = {
     "Floria Garden teslimat saatleri, bölgeler ve özenli teslimat süreci hakkında detaylı bilgi.",
 };
 
-export default function DeliveryPage() {
+export const dynamic = "force-dynamic";
+
+export default async function DeliveryPage() {
+  const { deliveryZones, deliveryProcess } = await getDelivery();
   return (
     <article className="pt-28 md:pt-32 pb-20 md:pb-28">
       <div className="container">
@@ -27,8 +31,11 @@ export default function DeliveryPage() {
           </FadeIn>
         </header>
 
-        {/* Bölgeler + Süreç (admin panelden yönetilir) */}
-        <DeliverySections />
+        {/* Bölgeler + Süreç (admin panelden yönetilir, DB'den okunur) */}
+        <DeliverySections
+          deliveryZones={deliveryZones}
+          deliveryProcess={deliveryProcess}
+        />
 
         {/* Önemli bilgiler */}
         <FadeIn>

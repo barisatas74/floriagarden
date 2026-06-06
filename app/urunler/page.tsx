@@ -2,8 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import Breadcrumb from "@/components/ui/Breadcrumb";
 import ProductGrid from "@/components/product/ProductGrid";
-import { PRODUCTS } from "@/lib/data/products";
-import { CATEGORIES } from "@/lib/data/categories";
+import { getPublicProducts, getPublicCategories } from "@/lib/db/queries";
 
 export const metadata: Metadata = {
   title: "Tüm Ürünler",
@@ -11,14 +10,19 @@ export const metadata: Metadata = {
     "Floria Garden'ın premium çiçek koleksiyonu — buketler, kutuda çiçekler, saksı çiçekleri, özel gün düzenlemeleri ve daha fazlası.",
 };
 
-export default function AllProductsPage() {
+// Veritabanından canlı okunur
+export const dynamic = "force-dynamic";
+
+export default async function AllProductsPage() {
+  const [products, categories] = await Promise.all([
+    getPublicProducts(),
+    getPublicCategories(),
+  ]);
+
   return (
     <article className="pt-28 md:pt-32 pb-20 md:pb-28">
       <div className="container">
-        <Breadcrumb
-          items={[{ label: "Tüm Ürünler" }]}
-          className="mb-8"
-        />
+        <Breadcrumb items={[{ label: "Tüm Ürünler" }]} className="mb-8" />
 
         <header className="flex flex-col items-start gap-4 mb-12 max-w-3xl">
           <span className="eyebrow">Koleksiyon</span>
@@ -32,12 +36,12 @@ export default function AllProductsPage() {
           </p>
         </header>
 
-        {/* Kategori chip filtreleri (statik linkler) */}
+        {/* Kategori chip filtreleri */}
         <div className="flex flex-wrap gap-2 mb-10">
           <span className="inline-flex items-center rounded-full bg-rose-gold-gradient text-coffee px-4 h-9 text-xs font-medium tracking-wide">
             Tümü
           </span>
-          {CATEGORIES.map((c) => (
+          {categories.map((c) => (
             <Link
               key={c.slug}
               href={`/koleksiyon/${c.slug}`}
@@ -48,7 +52,7 @@ export default function AllProductsPage() {
           ))}
         </div>
 
-        <ProductGrid products={PRODUCTS} />
+        <ProductGrid products={products} />
       </div>
     </article>
   );

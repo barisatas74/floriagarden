@@ -6,6 +6,8 @@ export type Category = {
   gradient: string;
   /** Decorative accent for the card */
   accent: "bordo" | "rose" | "sage" | "coffee";
+  /** Yüklenen gerçek görsel (WebP data URL veya URL) */
+  image?: string;
 };
 
 export const CATEGORIES: Category[] = [

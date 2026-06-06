@@ -1,13 +1,17 @@
-"use client";
-
 import { Clock, MapPin } from "lucide-react";
 import FadeIn from "@/components/motion/FadeIn";
 import { deliveryIcon } from "@/lib/admin/deliveryIcons";
-import { useDeliveryData } from "./useDeliveryData";
+import type { DeliveryZone, DeliveryStep } from "@/lib/admin/types";
 
-export default function DeliverySections() {
-  const { deliveryZones, deliveryProcess } = useDeliveryData();
+type Props = {
+  deliveryZones: DeliveryZone[];
+  deliveryProcess: DeliveryStep[];
+};
 
+export default function DeliverySections({
+  deliveryZones,
+  deliveryProcess,
+}: Props) {
   return (
     <>
       {/* Bölgeler */}

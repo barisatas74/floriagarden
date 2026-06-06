@@ -11,6 +11,8 @@ import type {
   Order,
   OrderItem,
 } from "@/lib/admin/types";
+import type { Product } from "@/lib/data/products";
+import type { Category } from "@/lib/data/categories";
 
 /* ════════════════════════════════════════════════
    Satır → uygulama tipi eşlemeleri
@@ -209,6 +211,93 @@ export async function getDelivery(): Promise<{
     deliveryZones: zones.map(toDeliveryZone),
     deliveryProcess: steps.map(toDeliveryStep),
   };
+}
+
+/* ── Public: tam Product / Category (sitenin gösterdiği) ── */
+
+function arr(v: unknown): string[] {
+  if (v == null) return [];
+  try {
+    const p = JSON.parse(String(v));
+    return Array.isArray(p) ? p.map(String) : [];
+  } catch {
+    return [];
+  }
+}
+
+function toFullProduct(r: Row): Product {
+  return {
+    id: s(r.id),
+    slug: s(r.slug),
+    name: s(r.name),
+    shortDescription: s(r.short_description),
+    longDescription: s(r.long_description),
+    contents: arr(r.contents),
+    careTips: arr(r.care_tips),
+    price: n(r.price),
+    category: s(r.category),
+    badge: opt(r.badge),
+    gradient: s(r.gradient),
+    image: opt(r.image),
+    galleryGradients: undefined,
+    pairings: arr(r.pairings),
+    dimensions: opt(r.dimensions),
+    stock: (s(r.stock) || "var") as Product["stock"],
+  };
+}
+
+function toFullCategory(r: Row): Category {
+  return {
+    slug: s(r.slug),
+    name: s(r.name),
+    description: s(r.description),
+    gradient: s(r.gradient),
+    accent: "bordo",
+    image: opt(r.image),
+  };
+}
+
+export async function getPublicCategories(): Promise<Category[]> {
+  const rows = await query<Row>(
+    "SELECT * FROM categories ORDER BY sort_order, name",
+  );
+  return rows.map(toFullCategory);
+}
+
+export async function getPublicProducts(): Promise<Product[]> {
+  const rows = await query<Row>(
+    "SELECT * FROM products ORDER BY sort_order, created_at DESC",
+  );
+  return rows.map(toFullProduct);
+}
+
+export async function getPublicProductsByCategory(
+  category: string,
+): Promise<Product[]> {
+  const rows = await query<Row>(
+    "SELECT * FROM products WHERE category = ? ORDER BY sort_order, created_at DESC",
+    [category],
+  );
+  return rows.map(toFullProduct);
+}
+
+export async function getPublicProductBySlug(
+  slug: string,
+): Promise<Product | null> {
+  const rows = await query<Row>("SELECT * FROM products WHERE slug = ? LIMIT 1", [
+    slug,
+  ]);
+  return rows[0] ? toFullProduct(rows[0]) : null;
+}
+
+export async function getPublicCategoryBySlug(
+  slug: string,
+): Promise<Category | null> {
+  const rows = await query<Row>(
+    "SELECT * FROM categories WHERE slug = ? LIMIT 1",
+    [slug],
+  );
+  return rows[0] ? toFullCategory(rows[0]) : null;
 }
 
 /* ════════════════════════════════════════════════

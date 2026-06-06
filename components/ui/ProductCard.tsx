@@ -69,7 +69,16 @@ export default function ProductCard({ product, index }: Props) {
             whileHover={{ scale: 1.04 }}
             transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
           >
-            <BotanicalArt seed={product.id} label={product.name} />
+            {product.image ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={product.image}
+                alt={product.name}
+                className="absolute inset-0 w-full h-full object-cover"
+              />
+            ) : (
+              <BotanicalArt seed={product.id} label={product.name} />
+            )}
           </motion.div>
           {/* Hover'da bordo yıkaması */}
           <div

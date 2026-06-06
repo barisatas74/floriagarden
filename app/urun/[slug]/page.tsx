@@ -7,17 +7,17 @@ import CustomerReviews from "@/components/product/CustomerReviews";
 import RecentlyViewed from "@/components/product/RecentlyViewed";
 import RecentlyViewedTracker from "@/components/product/RecentlyViewedTracker";
 import ProductJsonLd from "@/components/seo/ProductJsonLd";
-import { PRODUCTS, getProductBySlug } from "@/lib/data/products";
-import { CATEGORIES } from "@/lib/data/categories";
+import {
+  getPublicProductBySlug,
+  getPublicCategoryBySlug,
+} from "@/lib/db/queries";
 
 type Params = { params: { slug: string } };
 
-export function generateStaticParams() {
-  return PRODUCTS.map((p) => ({ slug: p.slug }));
-}
+export const dynamic = "force-dynamic";
 
-export function generateMetadata({ params }: Params): Metadata {
-  const product = getProductBySlug(params.slug);
+export async function generateMetadata({ params }: Params): Promise<Metadata> {
+  const product = await getPublicProductBySlug(params.slug);
   if (!product) return { title: "Ürün bulunamadı" };
   return {
     title: product.name,
@@ -30,11 +30,11 @@ export function generateMetadata({ params }: Params): Metadata {
   };
 }
 
-export default function ProductDetailPage({ params }: Params) {
-  const product = getProductBySlug(params.slug);
+export default async function ProductDetailPage({ params }: Params) {
+  const product = await getPublicProductBySlug(params.slug);
   if (!product) notFound();
 
-  const category = CATEGORIES.find((c) => c.slug === product.category);
+  const category = await getPublicCategoryBySlug(product.category);
 
   return (
     <article className="pt-28 md:pt-32 pb-20 md:pb-24">
@@ -67,5 +67,3 @@ export default function ProductDetailPage({ params }: Params) {
     </article>
   );
 }
-
-export const dynamic = "force-static";

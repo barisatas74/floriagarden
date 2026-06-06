@@ -2,9 +2,11 @@ import SectionHeading from "@/components/ui/SectionHeading";
 import CategoryCard from "@/components/ui/CategoryCard";
 import CategoryCtaCard from "@/components/ui/CategoryCtaCard";
 import FadeIn from "@/components/motion/FadeIn";
-import { CATEGORIES } from "@/lib/data/categories";
+import { getPublicCategories } from "@/lib/db/queries";
 
-export default function FeaturedCategories() {
+export default async function FeaturedCategories() {
+  const categories = await getPublicCategories();
+
   return (
     <section
       id="koleksiyon"
@@ -22,16 +24,16 @@ export default function FeaturedCategories() {
         />
 
         <div className="grid gap-5 md:gap-6 grid-cols-2 lg:grid-cols-4">
-          {CATEGORIES.map((category, i) => (
+          {categories.map((category, i) => (
             <FadeIn key={category.slug} delay={(i % 4) * 0.07} y={28} className="h-full">
               <CategoryCard category={category} />
             </FadeIn>
           ))}
 
-          {/* Son boş hücreyi dolduran özel tasarım CTA kartı */}
+          {/* Son hücreyi dolduran özel tasarım CTA kartı */}
           <FadeIn
             key="cta"
-            delay={(CATEGORIES.length % 4) * 0.07}
+            delay={(categories.length % 4) * 0.07}
             y={28}
             className="h-full"
           >

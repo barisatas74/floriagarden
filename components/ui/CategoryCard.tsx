@@ -30,7 +30,19 @@ export default function CategoryCard({ category }: Props) {
             whileHover={{ scale: 1.05 }}
             transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
           >
-            <FloralPlaceholder gradient={category.gradient} label={category.name} />
+            {category.image ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={category.image}
+                alt={category.name}
+                className="absolute inset-0 w-full h-full object-cover"
+              />
+            ) : (
+              <FloralPlaceholder
+                gradient={category.gradient}
+                label={category.name}
+              />
+            )}
           </motion.div>
 
           {/* Hover: bordo örtü — tüm kartlar üzerine gelince bordoya döner */}

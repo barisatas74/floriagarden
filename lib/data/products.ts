@@ -14,8 +14,10 @@ export type Product = {
   category: string;
   /** Hex etiket (badge) örn: "Yeni", "Çok Satan" */
   badge?: string;
-  /** Görsel yer tutucu için gradient (gerçek fotoğraf gelene kadar) */
+  /** Görsel yer tutucu için gradient (foto yoksa kullanılır) */
   gradient: string;
+  /** Yüklenen gerçek görsel (WebP data URL veya URL) */
+  image?: string;
   /** Galeride birden fazla "görsel" simülasyonu için ek gradientler */
   galleryGradients?: string[];
   /** Bu ürünle iyi giden ürün ID'leri */

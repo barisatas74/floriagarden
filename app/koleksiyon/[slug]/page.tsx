@@ -3,17 +3,18 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import Breadcrumb from "@/components/ui/Breadcrumb";
 import ProductGrid from "@/components/product/ProductGrid";
-import { CATEGORIES } from "@/lib/data/categories";
-import { getProductsByCategory } from "@/lib/data/products";
+import {
+  getPublicCategories,
+  getPublicCategoryBySlug,
+  getPublicProductsByCategory,
+} from "@/lib/db/queries";
 
 type Params = { params: { slug: string } };
 
-export function generateStaticParams() {
-  return CATEGORIES.map((c) => ({ slug: c.slug }));
-}
+export const dynamic = "force-dynamic";
 
-export function generateMetadata({ params }: Params): Metadata {
-  const category = CATEGORIES.find((c) => c.slug === params.slug);
+export async function generateMetadata({ params }: Params): Promise<Metadata> {
+  const category = await getPublicCategoryBySlug(params.slug);
   if (!category) return { title: "Kategori bulunamadı" };
   return {
     title: category.name,
@@ -21,11 +22,14 @@ export function generateMetadata({ params }: Params): Metadata {
   };
 }
 
-export default function CategoryPage({ params }: Params) {
-  const category = CATEGORIES.find((c) => c.slug === params.slug);
+export default async function CategoryPage({ params }: Params) {
+  const category = await getPublicCategoryBySlug(params.slug);
   if (!category) notFound();
 
-  const products = getProductsByCategory(category.slug);
+  const [products, categories] = await Promise.all([
+    getPublicProductsByCategory(category.slug),
+    getPublicCategories(),
+  ]);
 
   return (
     <article className="pt-28 md:pt-32 pb-20 md:pb-28">
@@ -61,7 +65,7 @@ export default function CategoryPage({ params }: Params) {
           >
             Tümü
           </Link>
-          {CATEGORIES.map((c) => (
+          {categories.map((c) => (
             <Link
               key={c.slug}
               href={`/koleksiyon/${c.slug}`}
