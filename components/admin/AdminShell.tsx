@@ -17,7 +17,6 @@ import {
   ExternalLink,
   Wrench,
 } from "lucide-react";
-import { ADMIN_SESSION_KEY } from "@/lib/admin/store";
 import { useMaintenance } from "@/components/maintenance/useMaintenance";
 import { cn } from "@/lib/utils/cn";
 
@@ -34,9 +33,9 @@ function isActive(pathname: string, href: string, exact?: boolean) {
   return exact ? pathname === href : pathname.startsWith(href);
 }
 
-function logout() {
+async function logout() {
   try {
-    window.sessionStorage.removeItem(ADMIN_SESSION_KEY);
+    await fetch("/api/admin/logout", { method: "POST" });
   } catch {
     /* ignore */
   }

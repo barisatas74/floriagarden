@@ -4,24 +4,32 @@ import { useState, type FormEvent } from "react";
 import { motion } from "framer-motion";
 import { Lock, Eye, EyeOff, ShieldCheck } from "lucide-react";
 import Button from "@/components/ui/Button";
-import { ADMIN_DEMO_PASSWORD, ADMIN_SESSION_KEY } from "@/lib/admin/store";
 
 export default function AdminLogin({ onSuccess }: { onSuccess: () => void }) {
   const [password, setPassword] = useState("");
   const [show, setShow] = useState(false);
   const [error, setError] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  const onSubmit = (e: FormEvent) => {
+  const onSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    if (password === ADMIN_DEMO_PASSWORD) {
-      try {
-        window.sessionStorage.setItem(ADMIN_SESSION_KEY, "1");
-      } catch {
-        /* ignore */
+    setLoading(true);
+    setError(false);
+    try {
+      const res = await fetch("/api/admin/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ password }),
+      });
+      if (res.ok) {
+        onSuccess();
+      } else {
+        setError(true);
       }
-      onSuccess();
-    } else {
+    } catch {
       setError(true);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -90,8 +98,14 @@ export default function AdminLogin({ onSuccess }: { onSuccess: () => void }) {
             )}
           </div>
 
-          <Button type="submit" variant="primary" size="md" className="w-full">
-            Giriş Yap
+          <Button
+            type="submit"
+            variant="primary"
+            size="md"
+            className="w-full"
+            disabled={loading}
+          >
+            {loading ? "Giriş yapılıyor…" : "Giriş Yap"}
           </Button>
         </form>
 

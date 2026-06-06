@@ -26,6 +26,8 @@ export function getPool(): mysql.Pool {
       waitForConnections: true,
       connectionLimit: Number(process.env.DB_CONNECTION_LIMIT ?? 3),
       charset: "utf8mb4",
+      // DATE/DATETIME'ı string döndür (timezone kaymalarını önler)
+      dateStrings: true,
       // Alastyr uzak bağlantısında gerekebilir; sorun olursa kaldırırız.
       enableKeepAlive: true,
     });

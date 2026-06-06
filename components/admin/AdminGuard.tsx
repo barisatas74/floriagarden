@@ -2,27 +2,23 @@
 
 import { useEffect, useState, type ReactNode } from "react";
 import AdminLogin from "./AdminLogin";
-import { ADMIN_SESSION_KEY } from "@/lib/admin/store";
 
 /**
- * Demo şifre kapısı. Oturum sessionStorage'da tutulur (sekme kapanınca düşer).
- * Gerçek güvenlik veritabanı/auth aşamasında httpOnly cookie + middleware
- * ile değiştirilecek.
+ * Sunucu tarafı oturum kapısı. Oturum httpOnly cookie ile sunucuda doğrulanır
+ * (gerçek güvenlik). Şifre ADMIN_PASSWORD ortam değişkeninde tutulur.
  */
 export default function AdminGuard({ children }: { children: ReactNode }) {
   const [authed, setAuthed] = useState(false);
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
-    try {
-      setAuthed(window.sessionStorage.getItem(ADMIN_SESSION_KEY) === "1");
-    } catch {
-      /* ignore */
-    }
-    setReady(true);
+    fetch("/api/admin/session", { cache: "no-store" })
+      .then((r) => r.json())
+      .then((j) => setAuthed(Boolean(j?.authed)))
+      .catch(() => setAuthed(false))
+      .finally(() => setReady(true));
   }, []);
 
-  // İlk render'da flaş önle
   if (!ready) {
     return <div className="min-h-screen bg-section-coffee" aria-hidden />;
   }

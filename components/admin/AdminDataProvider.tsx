@@ -2,6 +2,7 @@
 
 import {
   createContext,
+  useCallback,
   useContext,
   useEffect,
   useRef,
@@ -13,15 +14,12 @@ import type {
   AdminData,
   AdminCategory,
   AdminProduct,
-  Member,
   MemberCode,
   GeneralCode,
   DeliveryZone,
   DeliveryStep,
   Order,
 } from "@/lib/admin/types";
-import { buildSeed } from "@/lib/admin/seed";
-import { loadAdminData, saveAdminData, resetAdminData } from "@/lib/admin/store";
 
 type AdminContextValue = {
   data: AdminData;
@@ -52,84 +50,130 @@ type AdminContextValue = {
   addOrder: (order: Order) => void;
   updateOrder: (id: string, patch: Partial<Order>) => void;
   removeOrder: (id: string) => void;
-  // Demo sıfırla
+  // Sunucudan yeniden yükle
   reset: () => void;
+};
+
+const EMPTY: AdminData = {
+  categories: [],
+  products: [],
+  members: [],
+  generalCodes: [],
+  deliveryZones: [],
+  deliveryProcess: [],
+  orders: [],
 };
 
 const AdminContext = createContext<AdminContextValue | null>(null);
 
 export function AdminDataProvider({ children }: { children: ReactNode }) {
   const { toast } = useToast();
-  const [data, setData] = useState<AdminData>(() => buildSeed());
+  const [data, setData] = useState<AdminData>(EMPTY);
   const [hydrated, setHydrated] = useState(false);
-  const quotaWarned = useRef(false);
-
-  // İlk yüklemede localStorage'dan oku (yoksa seed'ler)
+  const dataRef = useRef(data);
   useEffect(() => {
-    setData(loadAdminData());
-    setHydrated(true);
-  }, []);
+    dataRef.current = data;
+  }, [data]);
 
-  // Her değişiklikte kalıcılaştır (hidrasyon sonrası).
-  // Kayıt başarısızsa (örn. çok sayıda fotoğraf → kota dolu) kullanıcıyı uyar.
-  useEffect(() => {
-    if (!hydrated) return;
-    const ok = saveAdminData(data);
-    if (!ok && !quotaWarned.current) {
-      quotaWarned.current = true;
+  const load = useCallback(async () => {
+    try {
+      const res = await fetch("/api/admin/data", { cache: "no-store" });
+      if (!res.ok) throw new Error(String(res.status));
+      const json = (await res.json()) as AdminData;
+      setData(json);
+    } catch {
       toast({
-        title: "Depolama sınırına ulaşıldı",
-        description:
-          "Tarayıcı belleği doldu. Daha az veya daha küçük fotoğraf kullanın; son değişiklik kaydedilemeyebilir.",
+        title: "Veriler yüklenemedi",
+        description: "Veritabanına ulaşılamadı. Sayfayı yenileyin.",
         tone: "warning",
       });
-    } else if (ok) {
-      quotaWarned.current = false;
+    } finally {
+      setHydrated(true);
     }
-  }, [data, hydrated, toast]);
+  }, [toast]);
+
+  useEffect(() => {
+    void load();
+  }, [load]);
+
+  const send = useCallback(
+    async (op: string, payload: unknown) => {
+      try {
+        const res = await fetch("/api/admin/mutate", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ op, data: payload }),
+        });
+        if (!res.ok) throw new Error(String(res.status));
+      } catch {
+        toast({
+          title: "Kaydedilemedi",
+          description: "Sunucuya ulaşılamadı; değişiklik kalıcı olmayabilir.",
+          tone: "warning",
+        });
+      }
+    },
+    [toast],
+  );
 
   const value: AdminContextValue = {
     data,
     hydrated,
 
-    addCategory: (c) =>
-      setData((d) => ({ ...d, categories: [...d.categories, c] })),
-    updateCategory: (slug, patch) =>
+    addCategory: (c) => {
+      setData((d) => ({ ...d, categories: [...d.categories, c] }));
+      void send("category.create", c);
+    },
+    updateCategory: (slug, patch) => {
+      const existing = dataRef.current.categories.find((c) => c.slug === slug);
+      const merged = existing ? { ...existing, ...patch } : undefined;
       setData((d) => ({
         ...d,
         categories: d.categories.map((c) =>
           c.slug === slug ? { ...c, ...patch } : c,
         ),
-      })),
-    removeCategory: (slug) =>
+      }));
+      if (merged) void send("category.update", merged);
+    },
+    removeCategory: (slug) => {
       setData((d) => ({
         ...d,
         categories: d.categories.filter((c) => c.slug !== slug),
-      })),
+      }));
+      void send("category.delete", slug);
+    },
 
-    addProduct: (p) =>
-      setData((d) => ({ ...d, products: [p, ...d.products] })),
-    updateProduct: (id, patch) =>
+    addProduct: (p) => {
+      setData((d) => ({ ...d, products: [p, ...d.products] }));
+      void send("product.create", p);
+    },
+    updateProduct: (id, patch) => {
+      const existing = dataRef.current.products.find((p) => p.id === id);
+      const merged = existing ? { ...existing, ...patch } : undefined;
       setData((d) => ({
         ...d,
-        products: d.products.map((p) =>
-          p.id === id ? { ...p, ...patch } : p,
-        ),
-      })),
-    removeProduct: (id) =>
+        products: d.products.map((p) => (p.id === id ? { ...p, ...patch } : p)),
+      }));
+      if (merged) void send("product.update", merged);
+    },
+    removeProduct: (id) => {
       setData((d) => ({
         ...d,
         products: d.products.filter((p) => p.id !== id),
-      })),
+      }));
+      void send("product.delete", id);
+    },
 
-    addMemberCode: (memberId, code) =>
+    addMemberCode: (memberId, code) => {
       setData((d) => ({
         ...d,
         members: d.members.map((m) =>
           m.id === memberId ? { ...m, codes: [code, ...m.codes] } : m,
         ),
-      })),
-    removeMemberCode: (memberId, code) =>
+      }));
+      void send("memberCode.add", { memberId, code });
+    },
+    removeMemberCode: (memberId, code) => {
       setData((d) => ({
         ...d,
         members: d.members.map((m) =>
@@ -137,60 +181,92 @@ export function AdminDataProvider({ children }: { children: ReactNode }) {
             ? { ...m, codes: m.codes.filter((c) => c.code !== code) }
             : m,
         ),
-      })),
+      }));
+      void send("memberCode.remove", code);
+    },
 
-    addGeneralCode: (code) =>
-      setData((d) => ({ ...d, generalCodes: [code, ...d.generalCodes] })),
-    removeGeneralCode: (code) =>
+    addGeneralCode: (code) => {
+      setData((d) => ({ ...d, generalCodes: [code, ...d.generalCodes] }));
+      void send("generalCode.add", code);
+    },
+    removeGeneralCode: (code) => {
       setData((d) => ({
         ...d,
         generalCodes: d.generalCodes.filter((c) => c.code !== code),
-      })),
+      }));
+      void send("generalCode.remove", code);
+    },
 
-    addDeliveryZone: (zone) =>
-      setData((d) => ({ ...d, deliveryZones: [...d.deliveryZones, zone] })),
-    updateDeliveryZone: (id, patch) =>
+    addDeliveryZone: (zone) => {
+      setData((d) => ({ ...d, deliveryZones: [...d.deliveryZones, zone] }));
+      void send("zone.create", zone);
+    },
+    updateDeliveryZone: (id, patch) => {
+      const existing = dataRef.current.deliveryZones.find((z) => z.id === id);
+      const merged = existing ? { ...existing, ...patch } : undefined;
       setData((d) => ({
         ...d,
         deliveryZones: d.deliveryZones.map((z) =>
           z.id === id ? { ...z, ...patch } : z,
         ),
-      })),
-    removeDeliveryZone: (id) =>
+      }));
+      if (merged) void send("zone.update", merged);
+    },
+    removeDeliveryZone: (id) => {
       setData((d) => ({
         ...d,
         deliveryZones: d.deliveryZones.filter((z) => z.id !== id),
-      })),
+      }));
+      void send("zone.delete", id);
+    },
 
-    addDeliveryStep: (step) =>
-      setData((d) => ({ ...d, deliveryProcess: [...d.deliveryProcess, step] })),
-    updateDeliveryStep: (id, patch) =>
+    addDeliveryStep: (step) => {
+      setData((d) => ({ ...d, deliveryProcess: [...d.deliveryProcess, step] }));
+      void send("step.create", step);
+    },
+    updateDeliveryStep: (id, patch) => {
+      const existing = dataRef.current.deliveryProcess.find((x) => x.id === id);
+      const merged = existing ? { ...existing, ...patch } : undefined;
       setData((d) => ({
         ...d,
-        deliveryProcess: d.deliveryProcess.map((s) =>
-          s.id === id ? { ...s, ...patch } : s,
+        deliveryProcess: d.deliveryProcess.map((x) =>
+          x.id === id ? { ...x, ...patch } : x,
         ),
-      })),
-    removeDeliveryStep: (id) =>
+      }));
+      if (merged) void send("step.update", merged);
+    },
+    removeDeliveryStep: (id) => {
       setData((d) => ({
         ...d,
-        deliveryProcess: d.deliveryProcess.filter((s) => s.id !== id),
-      })),
+        deliveryProcess: d.deliveryProcess.filter((x) => x.id !== id),
+      }));
+      void send("step.delete", id);
+    },
 
-    addOrder: (order) =>
-      setData((d) => ({ ...d, orders: [order, ...d.orders] })),
-    updateOrder: (id, patch) =>
+    addOrder: (order) => {
+      setData((d) => ({ ...d, orders: [order, ...d.orders] }));
+      void send("order.create", order);
+    },
+    updateOrder: (id, patch) => {
+      const existing = dataRef.current.orders.find((o) => o.id === id);
+      const merged = existing ? { ...existing, ...patch } : undefined;
       setData((d) => ({
         ...d,
         orders: d.orders.map((o) => (o.id === id ? { ...o, ...patch } : o)),
-      })),
-    removeOrder: (id) =>
+      }));
+      if (merged) void send("order.update", merged);
+    },
+    removeOrder: (id) => {
       setData((d) => ({
         ...d,
         orders: d.orders.filter((o) => o.id !== id),
-      })),
+      }));
+      void send("order.delete", id);
+    },
 
-    reset: () => setData(resetAdminData()),
+    reset: () => {
+      void load();
+    },
   };
 
   return (

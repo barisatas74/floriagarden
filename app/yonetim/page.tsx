@@ -79,7 +79,6 @@ export default function AdminDashboard() {
   const { toast } = useToast();
   const maintenance = useMaintenance();
 
-  const [confirmReset, setConfirmReset] = useState(false);
 
   const toggleMaintenance = () => {
     if (ENV_MAINTENANCE) return; // ortam değişkeni öncelikli
@@ -589,34 +588,24 @@ export default function AdminDashboard() {
           </span>
           <div className="flex flex-col gap-3">
             <div>
-              <h2 className="font-display text-xl text-coffee">Demo modu</h2>
+              <h2 className="font-display text-xl text-coffee">Veritabanı bağlı</h2>
               <p className="mt-1 text-sm text-coffee/65 leading-relaxed max-w-2xl">
-                Şu an veritabanı bağlı değil. Yaptığınız değişiklikler yalnızca
-                bu tarayıcıda saklanır ve canlı siteyi henüz etkilemez.
-                Veritabanına geçtiğimizde tüm demo veriler temizlenip gerçek
-                kayıtlara bağlanacak.
+                Veriler MySQL veritabanında saklanıyor — tüm cihazlardan
+                erişilebilir ve kalıcıdır. Yaptığınız değişiklikler anında
+                kaydedilir.
               </p>
             </div>
             <button
               type="button"
-              onClick={() => setConfirmReset(true)}
+              onClick={reset}
               className="inline-flex w-fit items-center gap-2 text-xs text-coffee/55 hover:text-bordo transition-colors"
             >
               <RotateCcw size={14} strokeWidth={1.7} />
-              Demo verilerini başlangıca sıfırla
+              Verileri yenile
             </button>
           </div>
         </div>
       </AdminCard>
-
-      <ConfirmDialog
-        open={confirmReset}
-        title="Demo verilerini sıfırla"
-        message="Tüm kategori, ürün, üye ve kod değişiklikleriniz silinip başlangıç demo verilerine dönülecek. Devam edilsin mi?"
-        confirmLabel="Sıfırla"
-        onConfirm={reset}
-        onClose={() => setConfirmReset(false)}
-      />
 
       <ConfirmDialog
         open={!!removeTarget}
