@@ -20,8 +20,9 @@ export default function DistanceSalesPage() {
           body: (
             <>
               <p>
-                <strong className="text-coffee">Satıcı:</strong> Floria Garden (
-                {SITE.address})
+                <strong className="text-coffee">Satıcı:</strong> {SITE.name} —{" "}
+                {SITE.legal.owner} ({SITE.address}). Vergi Dairesi:{" "}
+                {SITE.legal.taxOffice}, Vergi No: {SITE.legal.taxNo}.
               </p>
               <p>
                 <strong className="text-coffee">Alıcı:</strong> Sipariş veren
