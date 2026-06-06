@@ -20,7 +20,7 @@ export default function LocalBusinessJsonLd() {
       addressLocality: SITE.city,
       addressCountry: "TR",
     },
-    openingHours: "Mo-Su 09:00-22:00",
+    openingHours: ["Mo-Sa 08:30-23:00", "Su 10:00-17:00"],
     priceRange: "₺₺-₺₺₺",
     sameAs: [SITE.instagram.url],
   };

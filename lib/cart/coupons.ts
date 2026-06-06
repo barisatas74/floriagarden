@@ -16,35 +16,7 @@ export type Coupon = {
  * Statik kupon havuzu — gerçek kullanım hesabı için backend gerek
  * ama indirim doğrulaması ve UX akışı tamamen client-side çalışır.
  */
-export const COUPONS: Coupon[] = [
-  {
-    code: "FLORIA10",
-    type: "percent",
-    value: 10,
-    description: "İlk siparişe özel %10 indirim",
-  },
-  {
-    code: "HOSGELDIN",
-    type: "fixed",
-    value: 150,
-    minSubtotal: 800,
-    description: "Hoş geldin: ₺800 üzeri ₺150 indirim",
-  },
-  {
-    code: "ANNELERGUNU",
-    type: "percent",
-    value: 15,
-    minSubtotal: 1000,
-    description: "Anneler Günü: ₺1000 üzeri %15 indirim",
-    expiresAt: "2026-05-31T23:59:00+03:00",
-  },
-  {
-    code: "KAHVE",
-    type: "fixed",
-    value: 75,
-    description: "Kahve ve Çiçek setlerine özel ₺75",
-  },
-];
+export const COUPONS: Coupon[] = [];
 
 export type CouponValidation =
   | { ok: true; coupon: Coupon; discount: number }

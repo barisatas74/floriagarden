@@ -41,59 +41,9 @@ function seedProducts(): AdminProduct[] {
   }));
 }
 
-const seedMembers: Member[] = [
-  {
-    id: "uye-ayse-demir",
-    name: "Ayşe Demir",
-    phone: "+90 532 111 22 33",
-    email: "ayse.demir@example.com",
-    birthDate: "1992-04-18",
-    joinedAt: "2026-02-12T10:30:00+03:00",
-    codes: [
-      {
-        code: "FG-AD-7K2P",
-        discountType: "percent",
-        discountValue: 15,
-        createdAt: "2026-03-01T09:00:00+03:00",
-        note: "Sadık müşteri — yıldönümü jesti",
-      },
-    ],
-  },
-  {
-    id: "uye-mehmet-yilmaz",
-    name: "Mehmet Yılmaz",
-    phone: "+90 505 444 55 66",
-    email: "mehmet.yilmaz@example.com",
-    birthDate: "1987-11-03",
-    joinedAt: "2026-03-20T14:05:00+03:00",
-    codes: [],
-  },
-  {
-    id: "uye-zeynep-kaya",
-    name: "Zeynep Kaya",
-    phone: "+90 542 777 88 99",
-    email: "zeynep.kaya@example.com",
-    joinedAt: "2026-05-02T18:45:00+03:00",
-    codes: [
-      {
-        code: "FG-ZK-9M4X",
-        discountType: "fixed",
-        discountValue: 100,
-        createdAt: "2026-05-10T11:20:00+03:00",
-      },
-    ],
-  },
-];
+const seedMembers: Member[] = [];
 
-const seedGeneralCodes: GeneralCode[] = [
-  {
-    code: "BAHAR15",
-    discountType: "percent",
-    discountValue: 15,
-    createdAt: "2026-03-01T09:00:00+03:00",
-    note: "Bahar kampanyası — tüm üyeler",
-  },
-];
+const seedGeneralCodes: GeneralCode[] = [];
 
 const seedDeliveryZones: DeliveryZone[] = [
   { id: "zone-gemlik-merkez", name: "Gemlik Merkez", eta: "60 — 120 dk", fee: "Ücretsiz", note: "100 ₺ üzeri siparişlerde" },

@@ -9,8 +9,7 @@ export const SITE = {
   phoneRaw: "905416239816",
   address:
     "Demirsubaşı Mah. Şehit Gökhan Aydınlı Sk. No: 9 İç Kapı: A, Gemlik / Bursa",
-  // TODO: gerçek çalışma saatleri gelince güncellenecek
-  hours: "Her gün 09:00 — 22:00",
+  hours: "Pzt – Cmt: 08:30 – 23:00 · Pazar: 10:00 – 17:00",
   instagram: {
     handle: "@floriagarden_",
     url: "https://www.instagram.com/floriagarden_/",
