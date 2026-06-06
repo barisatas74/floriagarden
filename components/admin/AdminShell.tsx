@@ -18,6 +18,7 @@ import {
   Wrench,
 } from "lucide-react";
 import { useMaintenance } from "@/components/maintenance/useMaintenance";
+import { useAdminData } from "./AdminDataProvider";
 import { cn } from "@/lib/utils/cn";
 
 const NAV = [
@@ -87,6 +88,7 @@ function Brand() {
 export default function AdminShell({ children }: { children: ReactNode }) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const maintenance = useMaintenance();
+  const { hydrated } = useAdminData();
 
   return (
     <div className="min-h-screen bg-section-coffee">
@@ -193,7 +195,14 @@ export default function AdminShell({ children }: { children: ReactNode }) {
           </div>
         )}
         <div className="px-5 sm:px-8 py-8 md:py-12 max-w-5xl mx-auto">
-          {children}
+          {hydrated ? (
+            children
+          ) : (
+            <div className="flex flex-col items-center justify-center gap-3 py-32 text-coffee/50">
+              <span className="h-9 w-9 rounded-full border-2 border-rose-gold/30 border-t-bordo animate-spin" />
+              <span className="text-sm">Veriler yükleniyor…</span>
+            </div>
+          )}
         </div>
       </main>
     </div>
