@@ -1,14 +1,16 @@
 import SectionHeading from "@/components/ui/SectionHeading";
 import ProductCard from "@/components/ui/ProductCard";
 import FadeIn from "@/components/motion/FadeIn";
-import { getRelatedProducts } from "@/lib/data/products";
+import { getPublicProductsByCategory } from "@/lib/db/queries";
+import type { Product } from "@/lib/data/products";
 
 type Props = {
-  productId: string;
+  product: Product;
 };
 
-export default function RelatedProducts({ productId }: Props) {
-  const products = getRelatedProducts(productId, 4);
+export default async function RelatedProducts({ product }: Props) {
+  const sameCategory = await getPublicProductsByCategory(product.category);
+  const products = sameCategory.filter((p) => p.id !== product.id).slice(0, 4);
   if (products.length === 0) return null;
 
   return (

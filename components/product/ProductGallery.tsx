@@ -9,15 +9,36 @@ type Props = {
   name: string;
   primaryGradient: string;
   galleryGradients?: string[];
+  /** Yüklenen gerçek görsel (varsa gradient yerine gösterilir) */
+  image?: string;
 };
 
 export default function ProductGallery({
   name,
   primaryGradient,
   galleryGradients = [],
+  image,
 }: Props) {
   const all = [primaryGradient, ...galleryGradients];
   const [active, setActive] = useState(0);
+
+  // Yüklenen foto varsa onu tek ana görsel olarak göster
+  if (image) {
+    return (
+      <div className="relative aspect-[4/5] overflow-hidden rounded-3xl border border-rose-gold/15 shadow-card">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={image}
+          alt={name}
+          className="absolute inset-0 w-full h-full object-cover"
+        />
+        <div aria-hidden className="absolute top-5 left-5 h-px w-12 bg-rose-gold/70" />
+        <div aria-hidden className="absolute top-5 left-5 w-px h-12 bg-rose-gold/70" />
+        <div aria-hidden className="absolute bottom-5 right-5 h-px w-12 bg-rose-gold/70" />
+        <div aria-hidden className="absolute bottom-5 right-5 w-px h-12 bg-rose-gold/70" />
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col gap-4">

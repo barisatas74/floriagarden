@@ -3,7 +3,7 @@
 import { useRecentlyViewed } from "@/lib/hooks/useRecentlyViewed";
 import ProductCard from "@/components/ui/ProductCard";
 import FadeIn from "@/components/motion/FadeIn";
-import { PRODUCTS } from "@/lib/data/products";
+import { useCatalog } from "@/lib/catalog-client";
 
 type Props = {
   /** Bu ID hariç tutulur — ürün detay sayfasında "mevcut" ürünü göstermemek için */
@@ -18,11 +18,12 @@ export default function RecentlyViewed({
   limit = 4,
 }: Props) {
   const { ids } = useRecentlyViewed();
+  const { products: all } = useCatalog();
 
   const products = ids
     .filter((id) => id !== excludeId)
-    .map((id) => PRODUCTS.find((p) => p.id === id))
-    .filter((p): p is (typeof PRODUCTS)[number] => Boolean(p))
+    .map((id) => all.find((p) => p.id === id))
+    .filter((p): p is (typeof all)[number] => Boolean(p))
     .slice(0, limit);
 
   if (products.length === 0) return null;

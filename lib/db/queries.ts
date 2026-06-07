@@ -41,6 +41,8 @@ function toProduct(r: Row): AdminProduct {
     slug: s(r.slug),
     name: s(r.name),
     shortDescription: s(r.short_description),
+    longDescription: s(r.long_description),
+    contents: arr(r.contents),
     price: n(r.price),
     category: s(r.category),
     stock: (s(r.stock) || "var") as AdminProduct["stock"],
@@ -347,12 +349,14 @@ export async function deleteCategory(slug: string) {
 
 export async function createProduct(p: AdminProduct) {
   await execute(
-    "INSERT INTO products (id,slug,name,short_description,price,category,badge,gradient,image,stock) VALUES (?,?,?,?,?,?,?,?,?,?)",
+    "INSERT INTO products (id,slug,name,short_description,long_description,contents,price,category,badge,gradient,image,stock) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)",
     [
       p.id,
       p.slug,
       p.name,
       p.shortDescription,
+      p.longDescription ?? "",
+      JSON.stringify(p.contents ?? []),
       p.price,
       p.category,
       p.badge ?? null,
@@ -365,11 +369,13 @@ export async function createProduct(p: AdminProduct) {
 
 export async function updateProduct(id: string, p: AdminProduct) {
   await execute(
-    "UPDATE products SET slug=?, name=?, short_description=?, price=?, category=?, badge=?, gradient=?, image=?, stock=? WHERE id=?",
+    "UPDATE products SET slug=?, name=?, short_description=?, long_description=?, contents=?, price=?, category=?, badge=?, gradient=?, image=?, stock=? WHERE id=?",
     [
       p.slug,
       p.name,
       p.shortDescription,
+      p.longDescription ?? "",
+      JSON.stringify(p.contents ?? []),
       p.price,
       p.category,
       p.badge ?? null,

@@ -97,6 +97,7 @@ export default function ProductDetailClient({ product }: Props) {
           name={product.name}
           primaryGradient={product.gradient}
           galleryGradients={product.galleryGradients}
+          image={product.image}
         />
       </div>
 

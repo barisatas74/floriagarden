@@ -1,28 +1,38 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import {
-  ENV_MAINTENANCE,
-  MAINTENANCE_EVENT,
-  getStoredMaintenance,
-} from "@/lib/maintenance";
+
+// Ortam değişkeni ile global zorlama (derleme anında gömülür).
+const ENV_MAINTENANCE = process.env.NEXT_PUBLIC_MAINTENANCE === "1";
+
+// Modül düzeyinde önbellek — aynı sayfadaki birden çok bileşen tek istek paylaşır.
+let cache: Promise<boolean> | null = null;
+
+function fetchMaintenance(): Promise<boolean> {
+  if (ENV_MAINTENANCE) return Promise.resolve(true);
+  if (!cache) {
+    cache = fetch("/api/maintenance", { cache: "no-store" })
+      .then((r) => (r.ok ? r.json() : { maintenance: false }))
+      .then((j) => Boolean(j?.maintenance))
+      .catch(() => false);
+  }
+  return cache;
+}
 
 /**
- * Bakım modu açık mı? Ortam değişkeni veya localStorage anahtarı.
- * Toggle değişince (aynı/diğer sekme) otomatik güncellenir.
+ * Bakım modu açık mı? Veritabanından (settings) okunur; NEXT_PUBLIC_MAINTENANCE
+ * ile global zorlanabilir.
  */
 export function useMaintenance(): boolean {
-  // İlk değer ENV (sunucu + istemci aynı) → hidrasyon uyumlu.
   const [on, setOn] = useState<boolean>(ENV_MAINTENANCE);
 
   useEffect(() => {
-    const update = () => setOn(ENV_MAINTENANCE || getStoredMaintenance());
-    update();
-    window.addEventListener("storage", update);
-    window.addEventListener(MAINTENANCE_EVENT, update);
+    let active = true;
+    fetchMaintenance().then((v) => {
+      if (active) setOn(v);
+    });
     return () => {
-      window.removeEventListener("storage", update);
-      window.removeEventListener(MAINTENANCE_EVENT, update);
+      active = false;
     };
   }, []);
 

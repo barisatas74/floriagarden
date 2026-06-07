@@ -6,11 +6,12 @@ import ProductCard from "@/components/ui/ProductCard";
 import EmptyState from "@/components/ui/EmptyState";
 import FadeIn from "@/components/motion/FadeIn";
 import { useWishlist } from "@/components/wishlist/WishlistProvider";
-import { PRODUCTS } from "@/lib/data/products";
+import { useCatalog } from "@/lib/catalog-client";
 
 export default function FavoritesPage() {
   const { ids } = useWishlist();
-  const products = PRODUCTS.filter((p) => ids.includes(p.id));
+  const { products: all } = useCatalog();
+  const products = all.filter((p) => ids.includes(p.id));
 
   return (
     <article className="pt-24 md:pt-28 pb-20 md:pb-28">

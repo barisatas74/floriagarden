@@ -107,6 +107,11 @@ export async function POST(req: Request) {
         await db.deleteOrder(String(data));
         break;
 
+      // Bakım modu
+      case "maintenance":
+        await db.setSetting("maintenance", data ? "1" : "0");
+        break;
+
       default:
         return NextResponse.json({ error: "unknown_op" }, { status: 400 });
     }

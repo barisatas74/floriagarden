@@ -46,6 +46,8 @@ export default function UrunlerPage() {
   const [stock, setStock] = useState<StockState>("var");
   const [badge, setBadge] = useState("");
   const [shortDescription, setShortDescription] = useState("");
+  const [longDescription, setLongDescription] = useState("");
+  const [contents, setContents] = useState(""); // satır satır → dizi
   const [gradient, setGradient] = useState(DEFAULT_GRADIENT);
   const [image, setImage] = useState<string | undefined>(undefined);
 
@@ -60,6 +62,8 @@ export default function UrunlerPage() {
     setStock("var");
     setBadge("");
     setShortDescription("");
+    setLongDescription("");
+    setContents("");
     setGradient(DEFAULT_GRADIENT);
     setImage(undefined);
     setFormOpen(true);
@@ -73,6 +77,8 @@ export default function UrunlerPage() {
     setStock(p.stock);
     setBadge(p.badge ?? "");
     setShortDescription(p.shortDescription);
+    setLongDescription(p.longDescription ?? "");
+    setContents((p.contents ?? []).join("\n"));
     setGradient(p.gradient);
     setImage(p.image);
     setFormOpen(true);
@@ -90,6 +96,11 @@ export default function UrunlerPage() {
       stock,
       badge: badge.trim() || undefined,
       shortDescription: shortDescription.trim(),
+      longDescription: longDescription.trim(),
+      contents: contents
+        .split("\n")
+        .map((l) => l.trim())
+        .filter(Boolean),
       gradient,
       image,
     };
@@ -308,6 +319,34 @@ export default function UrunlerPage() {
               onChange={(e) => setShortDescription(e.target.value)}
               placeholder="Ürünü bir cümleyle tanımlayın"
               rows={2}
+              className={`${adminInput} h-auto py-3 resize-none`}
+            />
+          </div>
+
+          <div>
+            <label htmlFor="p-long" className={adminLabel}>
+              Uzun açıklama (detay sayfası)
+            </label>
+            <textarea
+              id="p-long"
+              value={longDescription}
+              onChange={(e) => setLongDescription(e.target.value)}
+              placeholder="Ürünün detaylı tanıtımı (opsiyonel)"
+              rows={4}
+              className={`${adminInput} h-auto py-3 resize-none`}
+            />
+          </div>
+
+          <div>
+            <label htmlFor="p-contents" className={adminLabel}>
+              İçindekiler (her satıra bir madde)
+            </label>
+            <textarea
+              id="p-contents"
+              value={contents}
+              onChange={(e) => setContents(e.target.value)}
+              placeholder={"21 adet bordo gül\nKadife ambalaj\nEl yazısı kart"}
+              rows={3}
               className={`${adminInput} h-auto py-3 resize-none`}
             />
           </div>

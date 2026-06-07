@@ -4,8 +4,9 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import { Search, X, ArrowRight, Flower2, LayoutGrid, Sparkles } from "lucide-react";
-import { PRODUCTS } from "@/lib/data/products";
-import { CATEGORIES } from "@/lib/data/categories";
+import type { Product } from "@/lib/data/products";
+import type { Category } from "@/lib/data/categories";
+import { useCatalog } from "@/lib/catalog-client";
 import { formatPrice } from "@/lib/utils/format";
 import { cn } from "@/lib/utils/cn";
 
@@ -37,13 +38,17 @@ const normalize = (s: string) =>
     .normalize("NFD")
     .replace(/[̀-ͯ]/g, "");
 
-function searchAll(query: string): Result[] {
+function searchAll(
+  query: string,
+  products: Product[],
+  categories: Category[],
+): Result[] {
   const q = normalize(query.trim());
   if (!q) return [];
 
   const out: Result[] = [];
 
-  PRODUCTS.forEach((p) => {
+  products.forEach((p) => {
     const haystack = normalize(`${p.name} ${p.shortDescription} ${p.category}`);
     if (haystack.includes(q)) {
       out.push({
@@ -57,7 +62,7 @@ function searchAll(query: string): Result[] {
     }
   });
 
-  CATEGORIES.forEach((c) => {
+  categories.forEach((c) => {
     const haystack = normalize(`${c.name} ${c.description}`);
     if (haystack.includes(q)) {
       out.push({
@@ -112,8 +117,12 @@ export default function SearchPalette({ open, onClose }: Props) {
   const [activeIdx, setActiveIdx] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
+  const { products, categories } = useCatalog();
 
-  const results = useMemo(() => searchAll(query), [query]);
+  const results = useMemo(
+    () => searchAll(query, products, categories),
+    [query, products, categories],
+  );
 
   // Açıldığında inputa odaklan + query sıfırla
   useEffect(() => {

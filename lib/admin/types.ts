@@ -23,6 +23,10 @@ export type AdminProduct = {
   slug: string;
   name: string;
   shortDescription: string;
+  /** Detay sayfası uzun açıklaması */
+  longDescription?: string;
+  /** İçindekiler / bileşenler listesi */
+  contents?: string[];
   price: number;
   /** Kategori slug'ı */
   category: string;

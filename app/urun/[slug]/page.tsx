@@ -56,7 +56,7 @@ export default async function ProductDetailPage({ params }: Params) {
       <RecentlyViewedTracker productId={product.id} />
 
       <CustomerReviews productId={product.id} />
-      <RelatedProducts productId={product.id} />
+      <RelatedProducts product={product} />
 
       <div className="container">
         <RecentlyViewed excludeId={product.id} />

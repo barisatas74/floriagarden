@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState, type FormEvent } from "react";
+import { useEffect, useMemo, useState, type FormEvent } from "react";
 import {
   Tags,
   Flower2,
@@ -24,11 +24,8 @@ import {
 } from "lucide-react";
 import { useAdminData } from "@/components/admin/AdminDataProvider";
 import { orderTotal } from "@/lib/admin/orders";
-import { useMaintenance } from "@/components/maintenance/useMaintenance";
-import {
-  setStoredMaintenance,
-  ENV_MAINTENANCE,
-} from "@/lib/maintenance";
+
+const ENV_MAINTENANCE = process.env.NEXT_PUBLIC_MAINTENANCE === "1";
 import {
   AdminCard,
   ConfirmDialog,
@@ -77,13 +74,21 @@ function discountLabel(c: GeneralCode) {
 export default function AdminDashboard() {
   const { data, reset, addGeneralCode, removeGeneralCode } = useAdminData();
   const { toast } = useToast();
-  const maintenance = useMaintenance();
 
+  // Bakım modu — veritabanından okunur/yazılır
+  const [maintenance, setMaintenance] = useState(ENV_MAINTENANCE);
+  useEffect(() => {
+    if (ENV_MAINTENANCE) return;
+    fetch("/api/maintenance", { cache: "no-store" })
+      .then((r) => r.json())
+      .then((j) => setMaintenance(Boolean(j?.maintenance)))
+      .catch(() => {});
+  }, []);
 
-  const toggleMaintenance = () => {
+  const toggleMaintenance = async () => {
     if (ENV_MAINTENANCE) return; // ortam değişkeni öncelikli
     const next = !maintenance;
-    setStoredMaintenance(next);
+    setMaintenance(next);
     toast({
       title: next ? "Bakım modu açıldı" : "Bakım modu kapatıldı",
       description: next
@@ -91,6 +96,15 @@ export default function AdminDashboard() {
         : "Site yeniden normal yayında.",
       tone: next ? "warning" : "success",
     });
+    try {
+      await fetch("/api/admin/mutate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ op: "maintenance", data: next }),
+      });
+    } catch {
+      toast({ title: "Kaydedilemedi", tone: "warning" });
+    }
   };
 
   // Genel kod formu
