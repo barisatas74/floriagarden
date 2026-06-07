@@ -3,8 +3,7 @@ export const SITE = {
   tagline: "Flowers and Coffee",
   shortDescription: "Gemlik'in yeni nesil butik çiçekçisi",
   city: "Gemlik",
-  // TODO: Alastyr'da bu kutuyu aç (info@gemlikfloriagarden.com) ya da farklı bir adres ver
-  email: "info@gemlikfloriagarden.com",
+  email: "merhaba@gemlikfloriagarden.com",
   phoneDisplay: "+90 538 667 07 16",
   phoneRaw: "905386670716",
   address:
