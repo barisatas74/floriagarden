@@ -15,8 +15,8 @@ export default function CategoryCard({ category }: Props) {
   return (
     <motion.div
       whileHover={{ y: -6 }}
-      transition={{ duration: 0.15, ease: "easeOut" }}
-      className="group relative h-full flex flex-col overflow-hidden rounded-3xl bg-white hover:bg-bordo border border-rose-gold/20 hover:border-bordo shadow-soft hover:shadow-card transition-all duration-200"
+      transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+      className="group relative h-full flex flex-col overflow-hidden rounded-3xl bg-white hover:bg-bordo border border-rose-gold/20 hover:border-bordo shadow-soft hover:shadow-card transition-all duration-300"
     >
       <Link
         href={`/koleksiyon/${category.slug}`}
