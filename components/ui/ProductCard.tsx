@@ -54,8 +54,8 @@ export default function ProductCard({ product, index }: Props) {
   return (
     <motion.article
       whileHover={{ y: -6 }}
-      transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
-      className="group relative h-full flex flex-col overflow-hidden rounded-2xl bg-white group-hover:bg-bordo hover:bg-bordo border border-rose-gold/20 hover:border-bordo shadow-soft hover:shadow-card transition-[background-color,border-color,box-shadow] duration-500"
+      transition={{ duration: 0.15, ease: "easeOut" }}
+      className="group relative h-full flex flex-col overflow-hidden rounded-2xl bg-white group-hover:bg-bordo hover:bg-bordo border border-rose-gold/20 hover:border-bordo shadow-soft hover:shadow-card transition-[background-color,border-color,box-shadow] duration-200"
     >
       {/* Görsel — botanik lookbook */}
       <div className="relative aspect-[4/5] overflow-hidden">
