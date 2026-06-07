@@ -395,6 +395,28 @@ export async function deleteProduct(id: string) {
    YAZMA — üye kodları
    ════════════════════════════════════════════════ */
 
+export async function createMember(m: {
+  id: string;
+  name: string;
+  phone: string;
+  email: string;
+  birthDate?: string;
+}) {
+  await execute(
+    "INSERT INTO members (id,name,phone,email,birth_date) VALUES (?,?,?,?,?)",
+    [m.id, m.name, m.phone, m.email, m.birthDate || null],
+  );
+}
+
+export async function memberExistsByEmail(email: string): Promise<boolean> {
+  if (!email) return false;
+  const rows = await query<Row>(
+    "SELECT id FROM members WHERE email = ? LIMIT 1",
+    [email],
+  );
+  return rows.length > 0;
+}
+
 export async function addMemberCode(memberId: string, c: MemberCode) {
   await execute(
     "INSERT INTO member_codes (code,member_id,discount_type,discount_value,note) VALUES (?,?,?,?,?)",

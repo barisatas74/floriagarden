@@ -20,17 +20,69 @@ export default function AuthForm({ mode }: { mode: Mode }) {
   const [showPass, setShowPass] = useState(false);
   const [done, setDone] = useState(false);
 
-  const onSubmit = (e: FormEvent) => {
+  const [loading, setLoading] = useState(false);
+
+  const onSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    // Backend (Auth) bağlanınca gerçek giriş/kayıt burada yapılacak.
-    setDone(true);
-    toast({
-      title: isLogin ? "Giriş yakında" : "Kayıt yakında",
-      description:
-        "Üyelik sistemi hazırlanıyor. Şimdilik siparişlerinizi WhatsApp'tan verebilirsiniz.",
-      tone: "info",
-    });
-    setTimeout(() => setDone(false), 2500);
+
+    if (isLogin) {
+      // Üye giriş alanı (hesap paneli) henüz yok — bilgilendir.
+      toast({
+        title: "Üye girişi yakında",
+        description:
+          "Şimdilik üye olabilir, siparişlerinizi WhatsApp'tan verebilirsiniz.",
+        tone: "info",
+      });
+      return;
+    }
+
+    // Kayıt → veritabanına
+    if (!name.trim() || !phone.trim()) {
+      toast({ title: "Ad ve telefon gerekli", tone: "warning" });
+      return;
+    }
+    setLoading(true);
+    try {
+      const res = await fetch("/api/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, phone, email, birthDate }),
+      });
+      const j = await res.json().catch(() => ({}));
+      if (res.ok && j?.ok) {
+        setDone(true);
+        try {
+          localStorage.setItem("floria-member", "1");
+        } catch {
+          /* yok say */
+        }
+        toast({
+          title: "Kaydınız alındı 🌸",
+          description: "Hoş geldiniz! Kampanya ve özel kodlar için sizi ekledik.",
+          tone: "success",
+        });
+        setName("");
+        setPhone("");
+        setEmail("");
+        setBirthDate("");
+        setPassword("");
+        setTimeout(() => setDone(false), 2500);
+      } else {
+        toast({
+          title: "Kayıt yapılamadı",
+          description: j?.error ?? "Lütfen tekrar deneyin.",
+          tone: "warning",
+        });
+      }
+    } catch {
+      toast({
+        title: "Bağlantı hatası",
+        description: "Lütfen tekrar deneyin.",
+        tone: "warning",
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   const inputBase =
@@ -147,14 +199,26 @@ export default function AuthForm({ mode }: { mode: Mode }) {
             </div>
           )}
 
-          <Button variant="gold" size="lg" type="submit" className="w-full mt-1">
+          <Button
+            variant="gold"
+            size="lg"
+            type="submit"
+            className="w-full mt-1"
+            disabled={loading}
+          >
             {done ? (
               <>
                 <Check size={18} strokeWidth={2} />
                 <span>Alındı</span>
               </>
             ) : (
-              <span>{isLogin ? "Giriş Yap" : "Kayıt Ol"}</span>
+              <span>
+                {loading
+                  ? "Kaydediliyor…"
+                  : isLogin
+                    ? "Giriş Yap"
+                    : "Kayıt Ol"}
+              </span>
             )}
           </Button>
         </form>
