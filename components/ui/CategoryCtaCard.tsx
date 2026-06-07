@@ -18,9 +18,10 @@ export default function CategoryCtaCard() {
       target="_blank"
       rel="noopener noreferrer"
       aria-label="Size özel tasarım için WhatsApp'tan yazın"
-      whileHover={{ y: -6 }}
+      whileHover={{ scale: 1.02 }}
       transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-      className="group relative h-full flex flex-col overflow-hidden rounded-3xl bg-white hover:bg-bordo border border-rose-gold/20 hover:border-bordo shadow-soft hover:shadow-card transition-all duration-300"
+      style={{ willChange: "transform" }}
+      className="group relative h-full flex flex-col overflow-hidden rounded-3xl bg-white hover:bg-bordo border border-rose-gold/20 hover:border-bordo shadow-soft hover:shadow-card transition-colors duration-300"
     >
       {/* Görsel alanı */}
       <div className="relative aspect-[5/4] overflow-hidden">
