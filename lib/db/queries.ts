@@ -1,4 +1,7 @@
 import { query, execute } from "./mysql";
+import { seedDelivery } from "@/lib/admin/seed";
+import { CATEGORIES } from "@/lib/data/categories";
+import { PRODUCTS } from "@/lib/data/products";
 import type {
   AdminData,
   AdminCategory,
@@ -206,14 +209,18 @@ export async function getDelivery(): Promise<{
   deliveryZones: DeliveryZone[];
   deliveryProcess: DeliveryStep[];
 }> {
-  const [zones, steps] = await Promise.all([
-    query<Row>("SELECT * FROM delivery_zones ORDER BY sort_order, name"),
-    query<Row>("SELECT * FROM delivery_steps ORDER BY sort_order"),
-  ]);
-  return {
-    deliveryZones: zones.map(toDeliveryZone),
-    deliveryProcess: steps.map(toDeliveryStep),
-  };
+  try {
+    const [zones, steps] = await Promise.all([
+      query<Row>("SELECT * FROM delivery_zones ORDER BY sort_order, name"),
+      query<Row>("SELECT * FROM delivery_steps ORDER BY sort_order"),
+    ]);
+    return {
+      deliveryZones: zones.map(toDeliveryZone),
+      deliveryProcess: steps.map(toDeliveryStep),
+    };
+  } catch {
+    return seedDelivery();
+  }
 }
 
 /* ── Public: tam Product / Category (sitenin gösterdiği) ── */
@@ -261,46 +268,67 @@ function toFullCategory(r: Row): Category {
 }
 
 export async function getPublicCategories(): Promise<Category[]> {
-  const rows = await query<Row>(
-    "SELECT * FROM categories ORDER BY sort_order, name",
-  );
-  return rows.map(toFullCategory);
+  try {
+    const rows = await query<Row>(
+      "SELECT * FROM categories ORDER BY sort_order, name",
+    );
+    return rows.map(toFullCategory);
+  } catch {
+    return CATEGORIES;
+  }
 }
 
 export async function getPublicProducts(): Promise<Product[]> {
-  const rows = await query<Row>(
-    "SELECT * FROM products ORDER BY sort_order, created_at DESC",
-  );
-  return rows.map(toFullProduct);
+  try {
+    const rows = await query<Row>(
+      "SELECT * FROM products ORDER BY sort_order, created_at DESC",
+    );
+    return rows.map(toFullProduct);
+  } catch {
+    return PRODUCTS;
+  }
 }
 
 export async function getPublicProductsByCategory(
   category: string,
 ): Promise<Product[]> {
-  const rows = await query<Row>(
-    "SELECT * FROM products WHERE category = ? ORDER BY sort_order, created_at DESC",
-    [category],
-  );
-  return rows.map(toFullProduct);
+  try {
+    const rows = await query<Row>(
+      "SELECT * FROM products WHERE category = ? ORDER BY sort_order, created_at DESC",
+      [category],
+    );
+    return rows.map(toFullProduct);
+  } catch {
+    return PRODUCTS.filter((product) => product.category === category);
+  }
 }
 
 export async function getPublicProductBySlug(
   slug: string,
 ): Promise<Product | null> {
-  const rows = await query<Row>("SELECT * FROM products WHERE slug = ? LIMIT 1", [
-    slug,
-  ]);
-  return rows[0] ? toFullProduct(rows[0]) : null;
+  try {
+    const rows = await query<Row>(
+      "SELECT * FROM products WHERE slug = ? LIMIT 1",
+      [slug],
+    );
+    return rows[0] ? toFullProduct(rows[0]) : null;
+  } catch {
+    return PRODUCTS.find((product) => product.slug === slug) ?? null;
+  }
 }
 
 export async function getPublicCategoryBySlug(
   slug: string,
 ): Promise<Category | null> {
-  const rows = await query<Row>(
-    "SELECT * FROM categories WHERE slug = ? LIMIT 1",
-    [slug],
-  );
-  return rows[0] ? toFullCategory(rows[0]) : null;
+  try {
+    const rows = await query<Row>(
+      "SELECT * FROM categories WHERE slug = ? LIMIT 1",
+      [slug],
+    );
+    return rows[0] ? toFullCategory(rows[0]) : null;
+  } catch {
+    return CATEGORIES.find((category) => category.slug === slug) ?? null;
+  }
 }
 
 /* ════════════════════════════════════════════════
@@ -468,6 +496,10 @@ export async function addMemberCode(memberId: string, c: MemberCode) {
 
 export async function removeMemberCode(code: string) {
   await execute("DELETE FROM member_codes WHERE code=?", [code]);
+}
+
+export async function deleteMember(id: string) {
+  await execute("DELETE FROM members WHERE id=?", [id]);
 }
 
 /* ════════════════════════════════════════════════

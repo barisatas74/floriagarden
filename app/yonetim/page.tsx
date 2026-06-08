@@ -37,7 +37,7 @@ import { useToast } from "@/components/toast/ToastProvider";
 import { generateGeneralCode } from "@/lib/admin/store";
 import { daysUntilBirthday, formatDayMonth } from "@/lib/admin/birthday";
 import { formatPrice } from "@/lib/utils/format";
-import type { GeneralCode, StockState } from "@/lib/admin/types";
+import type { GeneralCode, Member, StockState } from "@/lib/admin/types";
 
 const STOCK_INFO: Record<
   Exclude<StockState, "var">,
@@ -126,9 +126,7 @@ export default function AdminDashboard() {
         member: m,
         days: daysUntilBirthday(m.birthDate as string, today),
       }))
-      .filter((x): x is { member: (typeof data.members)[number]; days: number } =>
-        x.days !== null,
-      )
+      .filter((x): x is { member: Member; days: number } => x.days !== null)
       .sort((a, b) => a.days - b.days)
       .slice(0, 5);
   }, [data.members]);
@@ -590,11 +588,11 @@ export default function AdminDashboard() {
         <p className="mt-4 text-xs text-coffee/45 leading-relaxed max-w-2xl">
           {ENV_MAINTENANCE
             ? "Şu an ortam değişkeni (NEXT_PUBLIC_MAINTENANCE) ile global olarak açık. Kapatmak için Vercel ayarlarından değişkeni kaldırın."
-            : "Demo: bu anahtar şimdilik yalnızca bu tarayıcıda etkilidir (önizleme/test). Tüm ziyaretçilere global açmak için Vercel'de NEXT_PUBLIC_MAINTENANCE=1 yapın; veritabanına geçince bu toggle global çalışacak."}
+            : "Bu anahtar veritabanındaki bakım ayarını değiştirir ve tüm ziyaretçiler için geçerlidir. Ortam değişkeni yalnızca acil kilitleme gerektiğinde kullanılmalı."}
         </p>
       </AdminCard>
 
-      {/* Demo bilgi notu */}
+      {/* Bilgi notu */}
       <AdminCard className="p-6 bg-cream-soft/60">
         <div className="flex items-start gap-3">
           <span className="inline-flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full bg-bordo/10 text-bordo">

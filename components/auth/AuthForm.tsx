@@ -38,11 +38,6 @@ export default function AuthForm({ mode }: { mode: Mode }) {
         });
         const j = await res.json().catch(() => ({}));
         if (res.ok && j?.ok) {
-          try {
-            localStorage.setItem("floria-member", "1");
-          } catch {
-            /* yok say */
-          }
           window.location.href = "/hesabim";
         } else {
           toast({
@@ -81,11 +76,6 @@ export default function AuthForm({ mode }: { mode: Mode }) {
       });
       const j = await res.json().catch(() => ({}));
       if (res.ok && j?.ok) {
-        try {
-          localStorage.setItem("floria-member", "1");
-        } catch {
-          /* yok say */
-        }
         window.location.href = "/hesabim";
       } else {
         toast({
@@ -258,8 +248,8 @@ export default function AuthForm({ mode }: { mode: Mode }) {
       </motion.div>
 
       <p className="mt-4 text-center text-[0.7rem] text-coffee/45 leading-relaxed">
-        Üyelik sistemi yakında aktifleşecek. Şimdilik siparişlerinizi WhatsApp
-        üzerinden verebilirsiniz.
+        Kayıt sonrası hesabınızdan size özel kodları ve üyelik bilgilerinizi
+        görüntüleyebilirsiniz.
       </p>
     </div>
   );

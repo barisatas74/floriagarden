@@ -11,11 +11,10 @@ import type {
 } from "./types";
 
 /**
- * Demo başlangıç verisi.
+ * Başlangıç verisi.
  *
- * Public sitedeki statik kategori ve ürünleri admin tiplerine eşler, üstüne
- * birkaç demo üye ekler. Veritabanına geçince bu dosya tamamen silinecek;
- * yerine gerçek kayıtlar gelecek.
+ * Public sitedeki statik kategori ve ürünleri admin tiplerine eşler.
+ * Kurulum sırasında veritabanı boşsa güvenli varsayılanlar sağlar.
  */
 
 function seedCategories(): AdminCategory[] {

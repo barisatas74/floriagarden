@@ -10,7 +10,11 @@ export const MEMBER_COOKIE = "floria_member";
 const TTL_SECONDS = 30 * 24 * 60 * 60;
 
 function secret(): string {
-  return process.env.ADMIN_SECRET ?? "degistir-bu-gizli-anahtari";
+  return (
+    process.env.MEMBER_SECRET ??
+    process.env.ADMIN_SECRET ??
+    "degistir-bu-gizli-anahtari"
+  );
 }
 
 export function hashPassword(password: string): string {

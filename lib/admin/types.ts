@@ -1,9 +1,5 @@
 /**
- * Admin panel veri tipleri.
- *
- * Bu tipler hem demo (localStorage) hem de ileride gerçek veritabanı
- * için ortak sözleşmedir. Veritabanına geçerken yalnızca lib/admin/store.ts
- * içindeki okuma/yazma fonksiyonları değişir — bu tipler ve sayfalar aynı kalır.
+ * Admin paneli ile veritabanı/API katmanının ortak veri tipleri.
  */
 
 export type AdminCategory = {
@@ -148,7 +144,7 @@ export type Order = {
   adminNote: string;
 };
 
-/** localStorage'da tutulan tüm admin verisi */
+/** Yönetim panelinde tek ekrana taşınan tüm veriler */
 export type AdminData = {
   categories: AdminCategory[];
   products: AdminProduct[];

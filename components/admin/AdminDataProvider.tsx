@@ -35,6 +35,7 @@ type AdminContextValue = {
   // Üyeler
   addMemberCode: (memberId: string, code: MemberCode) => void;
   removeMemberCode: (memberId: string, code: string) => void;
+  removeMember: (memberId: string) => void;
   // Genel kodlar
   addGeneralCode: (code: GeneralCode) => void;
   removeGeneralCode: (code: string) => void;
@@ -188,6 +189,13 @@ export function AdminDataProvider({ children }: { children: ReactNode }) {
         ),
       }));
       void send("memberCode.remove", code);
+    },
+    removeMember: (memberId) => {
+      setData((d) => ({
+        ...d,
+        members: d.members.filter((m) => m.id !== memberId),
+      }));
+      void send("member.delete", memberId);
     },
 
     addGeneralCode: (code) => {

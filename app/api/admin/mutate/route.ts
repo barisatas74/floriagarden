@@ -16,8 +16,6 @@ import type {
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 export async function POST(req: Request) {
   if (!isAuthed()) {
     return NextResponse.json({ error: "unauthorized" }, { status: 401 });
@@ -66,6 +64,9 @@ export async function POST(req: Request) {
         break;
       case "memberCode.remove":
         await db.removeMemberCode(String(data));
+        break;
+      case "member.delete":
+        await db.deleteMember(String(data));
         break;
 
       // Genel kodlar

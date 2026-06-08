@@ -30,7 +30,7 @@ export async function POST(req: Request) {
 
     cookies().set(MEMBER_COOKIE, createMemberSession(m.id), {
       httpOnly: true,
-      secure: true,
+      secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
       path: "/",
       maxAge: MEMBER_TTL,

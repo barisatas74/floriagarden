@@ -2,11 +2,27 @@ import type { MetadataRoute } from "next";
 import { PRODUCTS } from "@/lib/data/products";
 import { CATEGORIES } from "@/lib/data/categories";
 import { SITE_URL } from "@/lib/constants";
+import { getPublicCategories, getPublicProducts } from "@/lib/db/queries";
 
 const BASE_URL = SITE_URL;
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export const dynamic = "force-dynamic";
+
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const now = new Date();
+  let products = PRODUCTS;
+  let categories = CATEGORIES;
+
+  try {
+    const [dbProducts, dbCategories] = await Promise.all([
+      getPublicProducts(),
+      getPublicCategories(),
+    ]);
+    products = dbProducts;
+    categories = dbCategories;
+  } catch {
+    // Build ve DB kesintilerinde sitemap üretimi bozulmasın.
+  }
 
   const staticPages = [
     "",
@@ -30,13 +46,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "monthly" as const,
       priority: path === "" ? 1 : 0.7,
     })),
-    ...CATEGORIES.map((c) => ({
+    ...categories.map((c) => ({
       url: `${BASE_URL}/koleksiyon/${c.slug}`,
       lastModified: now,
       changeFrequency: "weekly" as const,
       priority: 0.8,
     })),
-    ...PRODUCTS.map((p) => ({
+    ...products.map((p) => ({
       url: `${BASE_URL}/urun/${p.slug}`,
       lastModified: now,
       changeFrequency: "weekly" as const,

@@ -3,20 +3,26 @@
 import { useEffect, useState } from "react";
 
 /**
- * Üyelik durumu (placeholder).
- * Şu an localStorage'daki "floria-member" anahtarını okur (varsayılan: üye değil).
- * Gerçek auth (Clerk / NextAuth / Supabase) bağlanınca burası onların
- * oturum durumuyla değiştirilecek — çağıran bileşenler aynı kalır.
+ * Üyelik durumu.
+ * httpOnly cookie tarayıcıdan okunamadığı için sunucu oturumunu API üzerinden
+ * kontrol eder. Çağıran bileşenler yalnızca boolean sonucu kullanır.
  */
 export function useMember(): boolean {
   const [isMember, setIsMember] = useState(false);
 
   useEffect(() => {
-    try {
-      setIsMember(window.localStorage.getItem("floria-member") === "1");
-    } catch {
-      /* ignore */
-    }
+    let active = true;
+    fetch("/api/member/me", { cache: "no-store" })
+      .then((r) => (r.ok ? r.json() : { authed: false }))
+      .then((j) => {
+        if (active) setIsMember(Boolean(j?.authed));
+      })
+      .catch(() => {
+        if (active) setIsMember(false);
+      });
+    return () => {
+      active = false;
+    };
   }, []);
 
   return isMember;

@@ -60,7 +60,7 @@ export async function POST(req: Request) {
     // Kayıt sonrası otomatik giriş
     cookies().set(MEMBER_COOKIE, createMemberSession(id), {
       httpOnly: true,
-      secure: true,
+      secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
       path: "/",
       maxAge: MEMBER_TTL,

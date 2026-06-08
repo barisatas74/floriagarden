@@ -34,7 +34,7 @@ import Button from "@/components/ui/Button";
 import { useToast } from "@/components/toast/ToastProvider";
 import { generateMemberCode } from "@/lib/admin/store";
 import { formatPrice } from "@/lib/utils/format";
-import type { MemberCode } from "@/lib/admin/types";
+import type { Member, MemberCode } from "@/lib/admin/types";
 
 function formatDate(iso?: string) {
   if (!iso) return "—";
@@ -56,12 +56,16 @@ function discountLabel(c: MemberCode) {
 }
 
 export default function UyelerPage() {
-  const { data, addMemberCode, removeMemberCode } = useAdminData();
+  const { data, addMemberCode, removeMemberCode, removeMember } =
+    useAdminData();
   const { toast } = useToast();
 
   const [detailId, setDetailId] = useState<string | null>(null);
   const [copied, setCopied] = useState<string | null>(null);
   const [removeCode, setRemoveCode] = useState<MemberCode | null>(null);
+  const [removeMemberTarget, setRemoveMemberTarget] = useState<Member | null>(
+    null,
+  );
   const [birthdayOpen, setBirthdayOpen] = useState(false);
 
   // Doğum günü yaklaşan üyeler (en yakına göre sıralı)
@@ -70,9 +74,7 @@ export default function UyelerPage() {
     return data.members
       .filter((m) => m.birthDate)
       .map((m) => ({ member: m, days: daysUntilBirthday(m.birthDate as string, today) }))
-      .filter((x): x is { member: (typeof data.members)[number]; days: number } =>
-        x.days !== null,
-      )
+      .filter((x): x is { member: Member; days: number } => x.days !== null)
       .sort((a, b) => a.days - b.days);
   }, [data.members]);
 
@@ -361,6 +363,25 @@ export default function UyelerPage() {
                 Kod üret
               </Button>
             </form>
+
+            <div className="rounded-2xl border border-bordo/20 bg-bordo/5 p-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+              <div>
+                <h3 className="text-sm font-medium text-coffee">Üyeyi sil</h3>
+                <p className="mt-1 text-xs leading-relaxed text-coffee/55">
+                  Üye kaydı ve kişiye özel kodları kalıcı olarak silinir.
+                </p>
+              </div>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => setRemoveMemberTarget(member)}
+                className="self-start sm:self-center border-bordo/40 text-bordo hover:bg-bordo hover:text-cream"
+              >
+                <Trash2 size={15} strokeWidth={1.8} />
+                Üyeyi sil
+              </Button>
+            </div>
           </div>
         )}
       </Modal>
@@ -434,6 +455,20 @@ export default function UyelerPage() {
           toast({ title: "Kod silindi", tone: "info" });
         }}
         onClose={() => setRemoveCode(null)}
+      />
+
+      <ConfirmDialog
+        open={!!removeMemberTarget}
+        title="Üyeyi sil"
+        message={`"${removeMemberTarget?.name}" adlı üye ve bu üyeye ait özel kodlar kalıcı olarak silinecek. Devam edilsin mi?`}
+        confirmLabel="Üyeyi sil"
+        onConfirm={() => {
+          if (!removeMemberTarget) return;
+          removeMember(removeMemberTarget.id);
+          if (detailId === removeMemberTarget.id) setDetailId(null);
+          toast({ title: "Üye silindi", tone: "info" });
+        }}
+        onClose={() => setRemoveMemberTarget(null)}
       />
     </div>
   );

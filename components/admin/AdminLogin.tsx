@@ -110,8 +110,7 @@ export default function AdminLogin({ onSuccess }: { onSuccess: () => void }) {
         </form>
 
         <p className="mt-6 text-center text-[0.7rem] text-coffee/40 leading-relaxed">
-          Bu alan yalnızca yöneticiye özeldir. Demo aşamasında giriş tarayıcıda
-          tutulur.
+          Bu alan yalnızca yöneticiye özeldir. Giriş sunucu oturumuyla korunur.
         </p>
       </motion.div>
     </div>

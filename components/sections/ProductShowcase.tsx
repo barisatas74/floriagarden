@@ -3,9 +3,20 @@ import { ArrowRight } from "lucide-react";
 import SectionHeading from "@/components/ui/SectionHeading";
 import ProductCard from "@/components/ui/ProductCard";
 import FadeIn from "@/components/motion/FadeIn";
-import { PRODUCTS } from "@/lib/data/products";
+import { getPublicProducts } from "@/lib/db/queries";
+import type { Product } from "@/lib/data/products";
 
-export default function ProductShowcase() {
+export default async function ProductShowcase() {
+  let products: Product[] = [];
+
+  try {
+    products = (await getPublicProducts())
+      .filter((product) => product.stock !== "tukendi")
+      .slice(0, 4);
+  } catch {
+    products = [];
+  }
+
   return (
     <section
       id="urunler"
@@ -38,13 +49,34 @@ export default function ProductShowcase() {
           </FadeIn>
         </div>
 
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {PRODUCTS.map((product, i) => (
-            <FadeIn key={product.id} delay={(i % 4) * 0.06} y={28}>
-              <ProductCard product={product} />
-            </FadeIn>
-          ))}
-        </div>
+        {products.length > 0 ? (
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            {products.map((product, i) => (
+              <FadeIn key={product.id} delay={(i % 4) * 0.06} y={28}>
+                <ProductCard product={product} />
+              </FadeIn>
+            ))}
+          </div>
+        ) : (
+          <FadeIn y={24}>
+            <div className="rounded-3xl border border-rose-gold/20 bg-white/95 p-8 md:p-10 text-coffee shadow-card">
+              <h3 className="font-display text-2xl md:text-3xl">
+                Ürün vitrini hazırlanıyor
+              </h3>
+              <p className="mt-2 max-w-2xl text-sm md:text-base leading-relaxed text-coffee/65">
+                Yeni koleksiyon çok yakında yayında olacak. Acil sipariş ve
+                özel tasarım talepleriniz için bizimle iletişime geçebilirsiniz.
+              </p>
+              <Link
+                href="/iletisim"
+                className="mt-5 inline-flex items-center gap-2 text-sm font-medium text-bordo hover:text-rose-goldDark transition-colors"
+              >
+                <span>İletişime geç</span>
+                <ArrowRight size={14} strokeWidth={1.7} />
+              </Link>
+            </div>
+          </FadeIn>
+        )}
       </div>
     </section>
   );
