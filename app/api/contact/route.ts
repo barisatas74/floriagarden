@@ -19,6 +19,16 @@ function isValidEmail(email: string): boolean {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
 
+function contactRecipients(): string[] {
+  return Array.from(
+    new Set(
+      [notifyEmail(), SITE.email, process.env.SMTP_USER]
+        .map((item) => String(item ?? "").trim())
+        .filter(Boolean),
+    ),
+  );
+}
+
 function contactHtml(input: {
   name: string;
   email: string;
@@ -69,7 +79,7 @@ export async function POST(req: Request) {
       );
     }
 
-    const to = notifyEmail();
+    const to = contactRecipients();
     const sent = await sendMail({
       to,
       subject: `İletişim formu: ${topic || "Genel bilgi"} — ${name}`,

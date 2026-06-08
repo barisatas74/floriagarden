@@ -28,13 +28,19 @@ function getTransporter(): Transporter | null {
 }
 
 export async function sendMail(opts: {
-  to: string;
+  to: string | string[];
   subject: string;
   html: string;
   replyTo?: string;
 }): Promise<boolean> {
   const t = getTransporter();
-  if (!t || !opts.to) return false;
+  if (!t || !opts.to) {
+    console.error("[mail] SMTP transporter veya alıcı yok", {
+      hasTransporter: Boolean(t),
+      to: opts.to,
+    });
+    return false;
+  }
   try {
     await t.sendMail({
       from: `"Floria Garden" <${process.env.SMTP_USER}>`,
@@ -44,7 +50,12 @@ export async function sendMail(opts: {
       replyTo: opts.replyTo,
     });
     return true;
-  } catch {
+  } catch (error) {
+    console.error("[mail] E-posta gönderilemedi", {
+      to: opts.to,
+      subject: opts.subject,
+      error: error instanceof Error ? error.message : String(error),
+    });
     return false;
   }
 }
