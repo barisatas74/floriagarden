@@ -149,6 +149,7 @@ export async function getAdminData(): Promise<AdminData> {
     createdAt: s(r.created_at),
     customerName: s(r.customer_name),
     customerPhone: s(r.customer_phone),
+    customerEmail: opt(r.customer_email),
     recipientName: s(r.recipient_name),
     recipientPhone: s(r.recipient_phone),
     address: s(r.address),
@@ -492,13 +493,14 @@ export async function deleteDeliveryStep(id: string) {
 export async function createOrder(o: Order) {
   await execute(
     `INSERT INTO orders
-     (id,order_no,customer_name,customer_phone,recipient_name,recipient_phone,address,surprise,delivery_zone,delivery_date,delivery_slot,payment,status,card_note,admin_note)
-     VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`,
+     (id,order_no,customer_name,customer_phone,customer_email,recipient_name,recipient_phone,address,surprise,delivery_zone,delivery_date,delivery_slot,payment,status,card_note,admin_note)
+     VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`,
     [
       o.id,
       o.orderNo,
       o.customerName,
       o.customerPhone,
+      o.customerEmail ?? null,
       o.recipientName,
       o.recipientPhone,
       o.address,
@@ -523,7 +525,7 @@ export async function createOrder(o: Order) {
 export async function updateOrder(id: string, o: Order) {
   await execute(
     `UPDATE orders SET
-      order_no=?, customer_name=?, customer_phone=?, recipient_name=?, recipient_phone=?,
+      order_no=?, customer_name=?, customer_phone=?, customer_email=?, recipient_name=?, recipient_phone=?,
       address=?, surprise=?, delivery_zone=?, delivery_date=?, delivery_slot=?,
       payment=?, status=?, card_note=?, admin_note=?
      WHERE id=?`,
@@ -531,6 +533,7 @@ export async function updateOrder(id: string, o: Order) {
       o.orderNo,
       o.customerName,
       o.customerPhone,
+      o.customerEmail ?? null,
       o.recipientName,
       o.recipientPhone,
       o.address,

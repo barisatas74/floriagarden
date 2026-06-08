@@ -99,6 +99,7 @@ CREATE TABLE IF NOT EXISTS orders (
   created_at      DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   customer_name   VARCHAR(200) NOT NULL,
   customer_phone  VARCHAR(40),
+  customer_email  VARCHAR(200),
   recipient_name  VARCHAR(200),
   recipient_phone VARCHAR(40),
   address         TEXT,

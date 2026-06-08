@@ -16,7 +16,7 @@ type FormState = {
 const initialState: FormState = {
   name: "",
   email: "",
-  phone: "",
+  phone: "+90 ",
   topic: "Genel bilgi",
   message: "",
 };

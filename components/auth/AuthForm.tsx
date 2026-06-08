@@ -13,7 +13,7 @@ export default function AuthForm({ mode }: { mode: Mode }) {
   const isLogin = mode === "login";
   const { toast } = useToast();
   const [name, setName] = useState("");
-  const [phone, setPhone] = useState("");
+  const [phone, setPhone] = useState("+90 ");
   const [birthDate, setBirthDate] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -62,7 +62,7 @@ export default function AuthForm({ mode }: { mode: Mode }) {
           tone: "success",
         });
         setName("");
-        setPhone("");
+        setPhone("+90 ");
         setEmail("");
         setBirthDate("");
         setPassword("");

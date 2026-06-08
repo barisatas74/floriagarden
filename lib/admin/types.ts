@@ -126,6 +126,7 @@ export type Order = {
   // Müşteri (gönderen)
   customerName: string;
   customerPhone: string;
+  customerEmail?: string;
   // Alıcı
   recipientName: string;
   recipientPhone: string;

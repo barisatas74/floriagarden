@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { isAuthed } from "@/lib/admin/auth-server";
 import * as db from "@/lib/db/queries";
+import { sendMail, notifyEmail } from "@/lib/mail";
+import { buildBusinessEmail, buildCustomerEmail } from "@/lib/order-mail";
 import type {
   AdminCategory,
   AdminProduct,
@@ -97,9 +99,33 @@ export async function POST(req: Request) {
         break;
 
       // Siparişler
-      case "order.create":
-        await db.createOrder(data as Order);
+      case "order.create": {
+        const order = data as Order;
+        await db.createOrder(order);
+        // Bildirim e-postaları (SMTP ayarlıysa) — siparişi bloklamadan dener
+        try {
+          const biz = buildBusinessEmail(order);
+          const notify = notifyEmail();
+          if (notify)
+            await sendMail({
+              to: notify,
+              subject: biz.subject,
+              html: biz.html,
+              replyTo: order.customerEmail || undefined,
+            });
+          if (order.customerEmail) {
+            const cust = buildCustomerEmail(order);
+            await sendMail({
+              to: order.customerEmail,
+              subject: cust.subject,
+              html: cust.html,
+            });
+          }
+        } catch {
+          /* mail hatası siparişi etkilemez */
+        }
         break;
+      }
       case "order.update":
         await db.updateOrder((data as Order).id, data as Order);
         break;

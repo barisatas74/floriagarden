@@ -73,6 +73,7 @@ export default function SiparislerPage() {
   const [editTarget, setEditTarget] = useState<Order | null>(null);
   const [customerName, setCustomerName] = useState("");
   const [customerPhone, setCustomerPhone] = useState("");
+  const [customerEmail, setCustomerEmail] = useState("");
   const [recipientName, setRecipientName] = useState("");
   const [recipientPhone, setRecipientPhone] = useState("");
   const [address, setAddress] = useState("");
@@ -135,9 +136,10 @@ export default function SiparislerPage() {
   /* ── Form yardımcıları ── */
   const resetForm = () => {
     setCustomerName("");
-    setCustomerPhone("");
+    setCustomerPhone("+90 ");
+    setCustomerEmail("");
     setRecipientName("");
-    setRecipientPhone("");
+    setRecipientPhone("+90 ");
     setAddress("");
     setSurprise(false);
     setItems([emptyItem()]);
@@ -160,6 +162,7 @@ export default function SiparislerPage() {
     setEditTarget(o);
     setCustomerName(o.customerName);
     setCustomerPhone(o.customerPhone);
+    setCustomerEmail(o.customerEmail ?? "");
     setRecipientName(o.recipientName);
     setRecipientPhone(o.recipientPhone);
     setAddress(o.address);
@@ -216,6 +219,7 @@ export default function SiparislerPage() {
     const base = {
       customerName: customerName.trim(),
       customerPhone: customerPhone.trim(),
+      customerEmail: customerEmail.trim() || undefined,
       recipientName: recipientName.trim(),
       recipientPhone: recipientPhone.trim(),
       address: address.trim(),
@@ -493,6 +497,13 @@ export default function SiparislerPage() {
                 className={adminInput}
               />
             </div>
+            <input
+              type="email"
+              value={customerEmail}
+              onChange={(e) => setCustomerEmail(e.target.value)}
+              placeholder="E-posta (girilirse müşteriye onay maili gider)"
+              className={`${adminInput} mt-3`}
+            />
           </div>
 
           {/* Alıcı */}
