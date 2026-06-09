@@ -2,7 +2,6 @@
 
 import { useEffect, useMemo, useState, type FormEvent } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import {
   BookOpen,
   Check,
@@ -26,7 +25,10 @@ import Button from "@/components/ui/Button";
 import { useToast } from "@/components/toast/ToastProvider";
 import { useWishlist } from "@/components/wishlist/WishlistProvider";
 import { useCatalog } from "@/lib/catalog-client";
-import { notifyMemberAuthChanged } from "@/lib/auth/member-session-client";
+import {
+  notifyMemberAuthChanged,
+  setCachedMemberAuthed,
+} from "@/lib/auth/member-session-client";
 import { orderTotal, STATUS_LABEL, STATUS_STYLE } from "@/lib/admin/orders";
 import { formatPrice } from "@/lib/utils/format";
 import { cn } from "@/lib/utils/cn";
@@ -106,7 +108,6 @@ function formatDate(value?: string) {
 }
 
 export default function AccountPage() {
-  const router = useRouter();
   const { toast } = useToast();
   const { ids: favoriteIds } = useWishlist();
   const { products } = useCatalog();
@@ -184,9 +185,8 @@ export default function AccountPage() {
     } catch {
       /* yok say */
     }
-    notifyMemberAuthChanged(false);
-    router.push("/");
-    router.refresh();
+    setCachedMemberAuthed(false);
+    window.location.assign("/");
   };
 
   const saveProfile = async (event: FormEvent) => {
