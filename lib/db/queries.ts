@@ -580,6 +580,23 @@ export async function getMemberWithCodes(id: string): Promise<Member | null> {
   };
 }
 
+export async function getMemberById(id: string): Promise<Member | null> {
+  const rows = await query<Row>("SELECT * FROM members WHERE id = ? LIMIT 1", [
+    id,
+  ]);
+  const r = rows[0];
+  if (!r) return null;
+  return {
+    id: s(r.id),
+    name: s(r.name),
+    phone: s(r.phone),
+    email: s(r.email),
+    birthDate: opt(r.birth_date),
+    joinedAt: s(r.joined_at),
+    codes: [],
+  };
+}
+
 export async function memberEmailUsedByOther(
   email: string,
   memberId: string,

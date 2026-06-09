@@ -116,6 +116,9 @@ export default function AccountPage() {
   const [accountError, setAccountError] = useState<string | null>(null);
   const [favoriteProducts, setFavoriteProducts] = useState<Product[]>([]);
   const [favoritesLoading, setFavoritesLoading] = useState(false);
+  const [ordersLoading, setOrdersLoading] = useState(false);
+  const [ordersLoaded, setOrdersLoaded] = useState(false);
+  const [ordersError, setOrdersError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<TabId>("orders");
   const [profileForm, setProfileForm] = useState<ProfileForm>({
     name: "",
@@ -155,6 +158,8 @@ export default function AccountPage() {
         orders: (json.orders ?? []) as Order[],
       };
       setData(next);
+      setOrdersLoaded(false);
+      setOrdersError(null);
       notifyMemberAuthChanged(true);
       setProfileForm({
         name: next.member.name,
@@ -174,6 +179,44 @@ export default function AccountPage() {
     void loadAccount();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    if (!data || activeTab !== "orders" || ordersLoaded) return;
+
+    let active = true;
+    setOrdersLoading(true);
+    setOrdersError(null);
+    fetch("/api/member/orders", { cache: "no-store" })
+      .then(async (res) => {
+        const json = await res.json().catch(() => ({}));
+        if (!active) return;
+        if (!res.ok || !json?.authed) {
+          setOrdersError(
+            json?.error ?? "Sipariş bilgileri şu anda yüklenemedi.",
+          );
+          setOrdersLoaded(true);
+          return;
+        }
+        setData((current) =>
+          current
+            ? { ...current, orders: (json.orders ?? []) as Order[] }
+            : current,
+        );
+        setOrdersLoaded(true);
+      })
+      .catch(() => {
+        if (!active) return;
+        setOrdersError("Sipariş bilgileri şu anda yüklenemedi.");
+        setOrdersLoaded(true);
+      })
+      .finally(() => {
+        if (active) setOrdersLoading(false);
+      });
+
+    return () => {
+      active = false;
+    };
+  }, [activeTab, data, ordersLoaded]);
 
   useEffect(() => {
     if (activeTab !== "favorites" || favoriteIds.length === 0) {
@@ -447,7 +490,11 @@ export default function AccountPage() {
         </header>
 
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-8">
-          <SummaryCard icon={PackageCheck} label="Sipariş" value={orders.length} />
+          <SummaryCard
+            icon={PackageCheck}
+            label="Sipariş"
+            value={ordersLoading ? "…" : orders.length}
+          />
           <SummaryCard icon={MapPin} label="Adres" value={addresses.length} />
           <SummaryCard icon={Heart} label="Favori" value={favoriteIds.length} />
           <SummaryCard icon={Ticket} label="Kupon" value={member.codes.length} />
@@ -480,7 +527,17 @@ export default function AccountPage() {
                 title="Siparişlerim"
                 description="E-posta veya telefonunuzla eşleşen siparişler burada görünür."
               >
-                {orders.length === 0 ? (
+                {ordersLoading ? (
+                  <div className="min-h-40 flex items-center justify-center">
+                    <span className="h-8 w-8 rounded-full border-2 border-rose-gold/30 border-t-bordo animate-spin" />
+                  </div>
+                ) : ordersError ? (
+                  <EmptyPanel
+                    icon={BookOpen}
+                    title="Siparişler yüklenemedi"
+                    description={ordersError}
+                  />
+                ) : orders.length === 0 ? (
                   <EmptyPanel
                     icon={BookOpen}
                     title="Henüz sipariş görünmüyor"
@@ -937,7 +994,7 @@ function SummaryCard({
 }: {
   icon: typeof PackageCheck;
   label: string;
-  value: number;
+  value: React.ReactNode;
 }) {
   return (
     <div className="rounded-2xl bg-white border border-rose-gold/20 shadow-soft p-4">
