@@ -554,10 +554,15 @@ export async function getMemberWithCodes(id: string): Promise<Member | null> {
   ]);
   const r = rows[0];
   if (!r) return null;
-  const codeRows = await query<Row>(
-    "SELECT * FROM member_codes WHERE member_id = ? ORDER BY created_at DESC",
-    [id],
-  );
+  let codeRows: Row[] = [];
+  try {
+    codeRows = await query<Row>(
+      "SELECT * FROM member_codes WHERE member_id = ? ORDER BY created_at DESC",
+      [id],
+    );
+  } catch {
+    codeRows = [];
+  }
   return {
     id: s(r.id),
     name: s(r.name),

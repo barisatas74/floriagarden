@@ -38,9 +38,29 @@ function sign(payload: string): string {
   return crypto.createHmac("sha256", secret()).update(payload).digest("hex");
 }
 
+function encodePayload(memberId: string, exp: number): string {
+  return Buffer.from(JSON.stringify({ memberId, exp }), "utf8").toString(
+    "base64url",
+  );
+}
+
+function parsePayload(payload: string): { memberId: string; exp: number } | null {
+  try {
+    const parsed = JSON.parse(
+      Buffer.from(payload, "base64url").toString("utf8"),
+    ) as { memberId?: unknown; exp?: unknown };
+    if (typeof parsed.memberId !== "string") return null;
+    const exp = Number(parsed.exp);
+    if (!Number.isFinite(exp)) return null;
+    return { memberId: parsed.memberId, exp };
+  } catch {
+    return null;
+  }
+}
+
 export function createMemberSession(memberId: string): string {
   const exp = Date.now() + TTL_SECONDS * 1000;
-  const payload = `${memberId}.${exp}`;
+  const payload = encodePayload(memberId, exp);
   return `${payload}.${sign(payload)}`;
 }
 
@@ -49,11 +69,20 @@ export function getMemberId(): string | null {
   const token = cookies().get(MEMBER_COOKIE)?.value;
   if (!token) return null;
   const parts = token.split(".");
-  if (parts.length !== 3) return null;
-  const [id, exp, sig] = parts;
-  if (sign(`${id}.${exp}`) !== sig) return null;
-  if (Number(exp) < Date.now()) return null;
-  return id;
+  if (parts.length === 2) {
+    const [payload, sig] = parts;
+    if (sign(payload) !== sig) return null;
+    const parsed = parsePayload(payload);
+    if (!parsed || parsed.exp < Date.now()) return null;
+    return parsed.memberId;
+  }
+  if (parts.length === 3) {
+    const [id, exp, sig] = parts;
+    if (sign(`${id}.${exp}`) !== sig) return null;
+    if (Number(exp) < Date.now()) return null;
+    return id;
+  }
+  return null;
 }
 
 export const MEMBER_TTL = TTL_SECONDS;

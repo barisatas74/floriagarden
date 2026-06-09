@@ -113,6 +113,7 @@ export default function AccountPage() {
 
   const [data, setData] = useState<AccountData | null>(null);
   const [loading, setLoading] = useState(true);
+  const [accountError, setAccountError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<TabId>("orders");
   const [profileForm, setProfileForm] = useState<ProfileForm>({
     name: "",
@@ -135,11 +136,20 @@ export default function AccountPage() {
 
   const loadAccount = async () => {
     setLoading(true);
+    setAccountError(null);
     try {
       const res = await fetch("/api/member/account", { cache: "no-store" });
       const json = await res.json().catch(() => ({}));
-      if (!res.ok || !json?.authed) {
+      if (!json?.authed) {
         setData(null);
+        notifyMemberAuthChanged(false);
+        return;
+      }
+      if (!res.ok || !json?.member) {
+        setData(null);
+        setAccountError(
+          json?.error ?? "Hesap bilgileri şu anda yüklenemedi.",
+        );
         return;
       }
       const next = {
@@ -148,6 +158,7 @@ export default function AccountPage() {
         orders: (json.orders ?? []) as Order[],
       };
       setData(next);
+      notifyMemberAuthChanged(true);
       setProfileForm({
         name: next.member.name,
         phone: next.member.phone,
@@ -331,6 +342,25 @@ export default function AccountPage() {
       <div className="min-h-[60vh] flex items-center justify-center">
         <span className="h-9 w-9 rounded-full border-2 border-rose-gold/30 border-t-bordo animate-spin" />
       </div>
+    );
+  }
+
+  if (!data && accountError) {
+    return (
+      <article className="pt-28 md:pt-32 pb-24">
+        <div className="container max-w-md text-center flex flex-col items-center gap-5">
+          <span className="inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-rose-gold-gradient text-coffee">
+            <ShieldCheck size={26} strokeWidth={1.5} />
+          </span>
+          <h1 className="font-display text-3xl text-coffee">
+            Hesap bilgileri alınamadı
+          </h1>
+          <p className="text-coffee/65">{accountError}</p>
+          <Button variant="gold" size="md" onClick={() => void loadAccount()}>
+            Tekrar Dene
+          </Button>
+        </div>
+      </article>
     );
   }
 

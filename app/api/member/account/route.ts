@@ -19,20 +19,30 @@ export async function GET() {
     const member = await getMemberWithCodes(memberId);
     if (!member) return NextResponse.json({ authed: false }, { status: 401 });
 
-    const [addresses, orders] = await Promise.all([
+    const [addressesResult, ordersResult] = await Promise.allSettled([
       getMemberAddresses(memberId),
       getMemberOrders(member),
     ]);
+    const warnings: string[] = [];
+
+    if (addressesResult.status === "rejected") {
+      warnings.push("Adres bilgileri şu anda alınamadı.");
+    }
+    if (ordersResult.status === "rejected") {
+      warnings.push("Sipariş bilgileri şu anda alınamadı.");
+    }
 
     return NextResponse.json({
       authed: true,
       member,
-      addresses,
-      orders,
+      addresses:
+        addressesResult.status === "fulfilled" ? addressesResult.value : [],
+      orders: ordersResult.status === "fulfilled" ? ordersResult.value : [],
+      warnings,
     });
   } catch {
     return NextResponse.json(
-      { authed: false, error: "Hesap bilgileri alınamadı." },
+      { authed: true, error: "Hesap bilgileri alınamadı." },
       { status: 500 },
     );
   }
