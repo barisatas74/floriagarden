@@ -19,6 +19,11 @@ import WishlistIconLink from "@/components/wishlist/WishlistIconLink";
 import SearchButton from "@/components/search/SearchButton";
 import { whatsappLink } from "@/lib/constants";
 import { cn } from "@/lib/utils/cn";
+import {
+  getCachedMemberAuthed,
+  listenMemberAuthChanged,
+  setCachedMemberAuthed,
+} from "@/lib/auth/member-session-client";
 
 /**
  * "Anasayfa" linki için yumuşak kaydırma:
@@ -47,7 +52,9 @@ const NAV_LINKS = [
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
-  const [memberAuthed, setMemberAuthed] = useState<boolean | null>(null);
+  const [memberAuthed, setMemberAuthed] = useState<boolean | null>(() =>
+    getCachedMemberAuthed(),
+  );
   const pathname = usePathname();
 
   useEffect(() => {
@@ -68,15 +75,22 @@ export default function Navbar() {
     };
   }, [open]);
 
+  useEffect(
+    () => listenMemberAuthChanged((authed) => setMemberAuthed(authed)),
+    [],
+  );
+
   useEffect(() => {
     let active = true;
-    setMemberAuthed(null);
     fetch("/api/member/me", { cache: "no-store" })
       .then((r) => (r.ok ? r.json() : { authed: false }))
       .then((j) => {
-        if (active) setMemberAuthed(Boolean(j?.authed));
+        const authed = Boolean(j?.authed);
+        setCachedMemberAuthed(authed);
+        if (active) setMemberAuthed(authed);
       })
       .catch(() => {
+        setCachedMemberAuthed(false);
         if (active) setMemberAuthed(false);
       });
     return () => {

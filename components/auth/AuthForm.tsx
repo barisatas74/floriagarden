@@ -6,6 +6,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { Mail, Lock, User, Eye, EyeOff, Phone, Calendar, X } from "lucide-react";
 import Button from "@/components/ui/Button";
 import { useToast } from "@/components/toast/ToastProvider";
+import { notifyMemberAuthChanged } from "@/lib/auth/member-session-client";
 
 type Mode = "login" | "register";
 
@@ -43,6 +44,7 @@ export default function AuthForm({ mode }: { mode: Mode }) {
         });
         const j = await res.json().catch(() => ({}));
         if (res.ok && j?.ok) {
+          notifyMemberAuthChanged(true);
           window.location.href = "/hesabim";
         } else {
           toast({
@@ -87,6 +89,7 @@ export default function AuthForm({ mode }: { mode: Mode }) {
       });
       const j = await res.json().catch(() => ({}));
       if (res.ok && j?.ok) {
+        notifyMemberAuthChanged(true);
         window.location.href = "/hesabim";
       } else {
         toast({

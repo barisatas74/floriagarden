@@ -7,6 +7,7 @@ import { User, Ticket, LogOut, Phone, Mail, Cake } from "lucide-react";
 import Breadcrumb from "@/components/ui/Breadcrumb";
 import Button from "@/components/ui/Button";
 import { formatPrice } from "@/lib/utils/format";
+import { notifyMemberAuthChanged } from "@/lib/auth/member-session-client";
 import type { Member } from "@/lib/admin/types";
 
 export default function AccountPage() {
@@ -30,6 +31,7 @@ export default function AccountPage() {
     } catch {
       /* yok say */
     }
+    notifyMemberAuthChanged(false);
     router.push("/");
     router.refresh();
   };
