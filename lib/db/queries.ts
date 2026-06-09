@@ -641,12 +641,18 @@ export async function getMemberOrders(member: Member): Promise<Order[]> {
     filters.push("LOWER(TRIM(customer_email)) = LOWER(TRIM(?))");
     params.push(email);
   }
-  if (last10) {
+  if (last10.length === 10) {
+    // Son 10 haneye BİREBİR eşitlik. Önceki LIKE %...% yaklaşımı, benzer
+    // numaralı başka müşterilerin siparişlerini de getirebiliyordu (gizlilik).
     filters.push(
-      "REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(customer_phone, ' ', ''), '-', ''), '(', ''), ')', ''), '+', '') LIKE ?",
+      "RIGHT(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(customer_phone, ' ', ''), '-', ''), '(', ''), ')', ''), '+', ''), 10) = ?",
     );
-    params.push(`%${last10}%`);
+    params.push(last10);
   }
+
+  // Geçerli bir eşleştirme ölçütü yoksa (örn. e-posta boş + telefon 10 haneden
+  // kısa) hiç sipariş döndürme — boş WHERE ile yanlış sorgu kurmayı önler.
+  if (filters.length === 0) return [];
 
   const orderRows = await query<Row>(
     `SELECT * FROM orders WHERE ${filters.join(

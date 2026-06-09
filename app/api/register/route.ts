@@ -8,12 +8,21 @@ import {
   MEMBER_COOKIE,
   MEMBER_TTL,
 } from "@/lib/member-auth";
+import { enforceRateLimit } from "@/lib/rate-limit";
 
 /** Public üye kaydı — members tablosuna yazar, oturum açar. */
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 export async function POST(req: Request) {
+  // Spam/abuse koruması: IP başına saatte en fazla 5 kayıt.
+  const limited = enforceRateLimit(req, {
+    name: "register",
+    limit: 5,
+    windowMs: 60 * 60 * 1000,
+  });
+  if (limited) return limited;
+
   try {
     const b = await req.json();
     const name = String(b?.name ?? "").trim();

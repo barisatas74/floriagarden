@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { subscribeNewsletter } from "@/lib/db/queries";
+import { enforceRateLimit } from "@/lib/rate-limit";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -9,6 +10,14 @@ function isValidEmail(email: string): boolean {
 }
 
 export async function POST(req: Request) {
+  // Spam koruması: IP başına saatte en fazla 10 kayıt.
+  const limited = enforceRateLimit(req, {
+    name: "newsletter",
+    limit: 10,
+    windowMs: 60 * 60 * 1000,
+  });
+  if (limited) return limited;
+
   try {
     const body = await req.json();
     const email = String(body?.email ?? "").trim().toLowerCase();

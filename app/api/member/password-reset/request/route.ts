@@ -6,6 +6,7 @@ import {
   createPasswordResetToken,
   getMemberIdByEmail,
 } from "@/lib/db/queries";
+import { rateLimit, clientIp } from "@/lib/rate-limit";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -47,6 +48,18 @@ export async function POST(req: Request) {
   }
 
   if (!email) {
+    return NextResponse.json({ ok: true });
+  }
+
+  // E-posta bombardımanı koruması: IP başına saatte en fazla 5 istek.
+  // Sınır aşılsa bile bilgi sızdırmamak için yanıt yine "ok" döner;
+  // sadece e-posta gönderimi atlanır.
+  const allowed = rateLimit(
+    `reset-request:${clientIp(req)}`,
+    5,
+    60 * 60 * 1000,
+  ).ok;
+  if (!allowed) {
     return NextResponse.json({ ok: true });
   }
 

@@ -7,11 +7,20 @@ import {
   MEMBER_COOKIE,
   MEMBER_TTL,
 } from "@/lib/member-auth";
+import { enforceRateLimit } from "@/lib/rate-limit";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 export async function POST(req: Request) {
+  // Brute-force koruması: IP başına 15 dakikada en fazla 10 deneme.
+  const limited = enforceRateLimit(req, {
+    name: "member-login",
+    limit: 10,
+    windowMs: 15 * 60 * 1000,
+  });
+  if (limited) return limited;
+
   try {
     const b = await req.json();
     const email = String(b?.email ?? "").trim().toLowerCase();

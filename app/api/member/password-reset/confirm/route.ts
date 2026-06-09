@@ -6,6 +6,7 @@ import {
   updateMemberPassword,
 } from "@/lib/db/queries";
 import { hashPassword } from "@/lib/member-auth";
+import { enforceRateLimit } from "@/lib/rate-limit";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -15,6 +16,14 @@ function tokenHash(token: string): string {
 }
 
 export async function POST(req: Request) {
+  // Token tahmin/deneme koruması: IP başına saatte en fazla 20 deneme.
+  const limited = enforceRateLimit(req, {
+    name: "reset-confirm",
+    limit: 20,
+    windowMs: 60 * 60 * 1000,
+  });
+  if (limited) return limited;
+
   try {
     const body = await req.json();
     const token = String(body?.token ?? "").trim();

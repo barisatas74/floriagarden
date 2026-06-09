@@ -10,11 +10,17 @@ export const MEMBER_COOKIE = "floria_member";
 const TTL_SECONDS = 30 * 24 * 60 * 60;
 
 function secret(): string {
-  return (
-    process.env.MEMBER_SECRET ??
-    process.env.ADMIN_SECRET ??
-    "degistir-bu-gizli-anahtari"
-  );
+  const value = process.env.MEMBER_SECRET ?? process.env.ADMIN_SECRET;
+  if (!value) {
+    // Üretimde gizli anahtar yoksa üye oturumları taklit edilebilir.
+    if (process.env.NODE_ENV === "production") {
+      throw new Error(
+        "MEMBER_SECRET (veya ADMIN_SECRET) tanımlı değil. Vercel → Settings → Environment Variables içine en az 32 karakterlik bir değer girin.",
+      );
+    }
+    return "dev-only-insecure-member-secret";
+  }
+  return value;
 }
 
 export function hashPassword(password: string): string {

@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { notifyEmail, sendMail } from "@/lib/mail";
 import { SITE } from "@/lib/constants";
+import { enforceRateLimit } from "@/lib/rate-limit";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -55,6 +56,14 @@ function contactHtml(input: {
 }
 
 export async function POST(req: Request) {
+  // Spam koruması: IP başına saatte en fazla 10 mesaj.
+  const limited = enforceRateLimit(req, {
+    name: "contact",
+    limit: 10,
+    windowMs: 60 * 60 * 1000,
+  });
+  if (limited) return limited;
+
   try {
     const body = await req.json();
     const name = String(body?.name ?? "").trim();

@@ -1,11 +1,20 @@
 import { NextResponse } from "next/server";
 import { getMemberId, hashPassword, verifyPassword } from "@/lib/member-auth";
 import { getMemberAuthById, updateMemberPassword } from "@/lib/db/queries";
+import { enforceRateLimit } from "@/lib/rate-limit";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 export async function POST(req: Request) {
+  // Mevcut şifre deneme koruması: IP başına 15 dakikada en fazla 10 deneme.
+  const limited = enforceRateLimit(req, {
+    name: "password-change",
+    limit: 10,
+    windowMs: 15 * 60 * 1000,
+  });
+  if (limited) return limited;
+
   const memberId = getMemberId();
   if (!memberId) {
     return NextResponse.json({ ok: false }, { status: 401 });

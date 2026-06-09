@@ -2,11 +2,21 @@ import { NextResponse } from "next/server";
 import { getMemberId } from "@/lib/member-auth";
 import { validateDiscountCode } from "@/lib/db/queries";
 import { calculateCouponDiscount, type Coupon } from "@/lib/cart/coupons";
+import { enforceRateLimit } from "@/lib/rate-limit";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 export async function POST(req: Request) {
+  // Kod tahmin/deneme koruması: IP başına dakikada en fazla 20 deneme.
+  const limited = enforceRateLimit(req, {
+    name: "coupon",
+    limit: 20,
+    windowMs: 60 * 1000,
+    bodyKey: "reason",
+  });
+  if (limited) return limited;
+
   let code = "";
   let subtotal = 0;
   try {

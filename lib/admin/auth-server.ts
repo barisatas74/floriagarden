@@ -13,7 +13,18 @@ export const ADMIN_COOKIE = "floria_admin";
 const TTL_SECONDS = 7 * 24 * 60 * 60; // 7 gün
 
 function secret(): string {
-  return process.env.ADMIN_SECRET ?? "degistir-bu-gizli-anahtari";
+  const value = process.env.ADMIN_SECRET;
+  if (!value) {
+    // Üretimde gizli anahtar yoksa oturum token'ları taklit edilebilir.
+    // Sessizce zayıf bir varsayılana düşmek yerine net hata veriyoruz.
+    if (process.env.NODE_ENV === "production") {
+      throw new Error(
+        "ADMIN_SECRET tanımlı değil. Vercel → Settings → Environment Variables içine en az 32 karakterlik bir değer girin.",
+      );
+    }
+    return "dev-only-insecure-admin-secret";
+  }
+  return value;
 }
 
 function sign(payload: string): string {
@@ -39,7 +50,11 @@ export function verifySessionToken(token: string | undefined): boolean {
 export function checkPassword(password: string): boolean {
   const real = process.env.ADMIN_PASSWORD;
   if (!real) return false;
-  return password === real;
+  // Sabit zamanlı karşılaştırma (timing saldırısına kapalı).
+  const a = Buffer.from(password, "utf8");
+  const b = Buffer.from(real, "utf8");
+  if (a.length !== b.length) return false;
+  return crypto.timingSafeEqual(a, b);
 }
 
 /** API route'larında: oturum geçerli mi? */
