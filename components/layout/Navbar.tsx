@@ -81,6 +81,12 @@ export default function Navbar() {
   );
 
   useEffect(() => {
+    const cached = getCachedMemberAuthed();
+    if (cached !== null) {
+      setMemberAuthed(cached);
+      if (pathname === "/hesabim") return;
+    }
+
     let active = true;
     fetch("/api/member/me", { cache: "no-store" })
       .then((r) => (r.ok ? r.json() : { authed: false }))

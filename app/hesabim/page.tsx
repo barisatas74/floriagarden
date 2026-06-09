@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
@@ -25,12 +25,13 @@ import Breadcrumb from "@/components/ui/Breadcrumb";
 import Button from "@/components/ui/Button";
 import { useToast } from "@/components/toast/ToastProvider";
 import { useWishlist } from "@/components/wishlist/WishlistProvider";
-import { useCatalog } from "@/lib/catalog-client";
+import { fetchCatalog } from "@/lib/catalog-client";
 import { notifyMemberAuthChanged } from "@/lib/auth/member-session-client";
 import { orderTotal, STATUS_LABEL, STATUS_STYLE } from "@/lib/admin/orders";
 import { formatPrice } from "@/lib/utils/format";
 import { cn } from "@/lib/utils/cn";
 import type { Member, MemberAddress, Order } from "@/lib/admin/types";
+import type { Product } from "@/lib/data/products";
 
 type AccountData = {
   member: Member;
@@ -109,11 +110,12 @@ export default function AccountPage() {
   const router = useRouter();
   const { toast } = useToast();
   const { ids: favoriteIds } = useWishlist();
-  const { products } = useCatalog();
 
   const [data, setData] = useState<AccountData | null>(null);
   const [loading, setLoading] = useState(true);
   const [accountError, setAccountError] = useState<string | null>(null);
+  const [favoriteProducts, setFavoriteProducts] = useState<Product[]>([]);
+  const [favoritesLoading, setFavoritesLoading] = useState(false);
   const [activeTab, setActiveTab] = useState<TabId>("orders");
   const [profileForm, setProfileForm] = useState<ProfileForm>({
     name: "",
@@ -128,11 +130,6 @@ export default function AccountPage() {
     confirmPassword: "",
   });
   const [busy, setBusy] = useState<string | null>(null);
-
-  const favoriteProducts = useMemo(
-    () => products.filter((product) => favoriteIds.includes(product.id)),
-    [favoriteIds, products],
-  );
 
   const loadAccount = async () => {
     setLoading(true);
@@ -177,6 +174,31 @@ export default function AccountPage() {
     void loadAccount();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    if (activeTab !== "favorites" || favoriteIds.length === 0) {
+      setFavoriteProducts([]);
+      setFavoritesLoading(false);
+      return;
+    }
+
+    let active = true;
+    setFavoritesLoading(true);
+    fetchCatalog()
+      .then(({ products }) => {
+        if (!active) return;
+        setFavoriteProducts(
+          products.filter((product) => favoriteIds.includes(product.id)),
+        );
+      })
+      .finally(() => {
+        if (active) setFavoritesLoading(false);
+      });
+
+    return () => {
+      active = false;
+    };
+  }, [activeTab, favoriteIds]);
 
   const logout = async () => {
     setBusy("logout");
@@ -427,7 +449,7 @@ export default function AccountPage() {
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-8">
           <SummaryCard icon={PackageCheck} label="Sipariş" value={orders.length} />
           <SummaryCard icon={MapPin} label="Adres" value={addresses.length} />
-          <SummaryCard icon={Heart} label="Favori" value={favoriteProducts.length} />
+          <SummaryCard icon={Heart} label="Favori" value={favoriteIds.length} />
           <SummaryCard icon={Ticket} label="Kupon" value={member.codes.length} />
         </div>
 
@@ -705,7 +727,7 @@ export default function AccountPage() {
                 title="Favorilerim"
                 description="Beğendiğiniz ürünlere hesabınızdan hızlıca dönün."
               >
-                {favoriteProducts.length === 0 ? (
+                {favoriteIds.length === 0 ? (
                   <EmptyPanel
                     icon={Heart}
                     title="Favori ürün yok"
@@ -713,6 +735,10 @@ export default function AccountPage() {
                     href="/urunler"
                     cta="Ürünleri keşfet"
                   />
+                ) : favoritesLoading ? (
+                  <div className="min-h-40 flex items-center justify-center">
+                    <span className="h-8 w-8 rounded-full border-2 border-rose-gold/30 border-t-bordo animate-spin" />
+                  </div>
                 ) : (
                   <div className="grid sm:grid-cols-2 gap-3">
                     {favoriteProducts.slice(0, 6).map((product) => (
