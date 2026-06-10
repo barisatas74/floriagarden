@@ -109,7 +109,9 @@ export function Modal({
             transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
             className={cn(
               "relative w-full bg-white shadow-card flex flex-col max-h-[92vh]",
-              "rounded-t-3xl sm:rounded-3xl",
+              // overflow-hidden: yuvarlak köşeler içteki kaydırma çubuğunu kırpar
+              // (çubuğun köşeden taşmasını önler).
+              "rounded-t-3xl sm:rounded-3xl overflow-hidden",
               size === "lg" ? "sm:max-w-2xl" : "sm:max-w-lg",
             )}
           >
