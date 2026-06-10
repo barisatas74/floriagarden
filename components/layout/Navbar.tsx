@@ -11,6 +11,7 @@ import {
   LogIn,
   MessageCircle,
   UserCircle,
+  Lock,
 } from "lucide-react";
 import BrandMark from "./BrandMark";
 import Button from "@/components/ui/Button";
@@ -178,6 +179,16 @@ export default function Navbar() {
               </Link>
             </>
           ) : null}
+
+          {/* Yönetici girişi — sade, dikkat çekmeyen ikon butonu */}
+          <Link
+            href="/yonetim"
+            aria-label="Yönetici Girişi"
+            title="Yönetici Girişi"
+            className="ml-1 inline-flex h-10 w-10 items-center justify-center rounded-full border border-cream/15 bg-cream/5 text-cream/55 hover:bg-rose-gold hover:text-coffee hover:border-rose-gold transition-colors duration-300"
+          >
+            <Lock size={15} strokeWidth={1.7} />
+          </Link>
         </div>
 
         {/* Mobile cart + toggle area */}
@@ -288,6 +299,16 @@ export default function Navbar() {
                 <MessageCircle size={18} strokeWidth={1.7} />
                 <span>WhatsApp&apos;tan Sipariş</span>
               </a>
+
+              {/* Yönetici girişi — menünün en altında, sade */}
+              <Link
+                href="/yonetim"
+                onClick={() => setOpen(false)}
+                className="mt-6 inline-flex items-center gap-1.5 text-xs tracking-wide text-cream/45 hover:text-rose-goldLight transition-colors"
+              >
+                <Lock size={13} strokeWidth={1.7} />
+                <span>Yönetici Girişi</span>
+              </Link>
             </motion.nav>
           </motion.div>
         )}
