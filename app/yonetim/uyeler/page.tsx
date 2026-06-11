@@ -354,7 +354,7 @@ export default function UyelerPage() {
                   id="d-code"
                   value={codeValue}
                   onChange={(e) => setCodeValue(e.target.value.toUpperCase())}
-                  placeholder="Örn. EZGI15"
+                  placeholder="Örn. FLORIA15"
                   autoComplete="off"
                   className={`${adminInput} uppercase placeholder:normal-case`}
                   required
