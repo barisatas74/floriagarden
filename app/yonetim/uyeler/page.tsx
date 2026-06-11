@@ -33,7 +33,6 @@ import {
 } from "@/components/admin/AdminUI";
 import Button from "@/components/ui/Button";
 import { useToast } from "@/components/toast/ToastProvider";
-import { generateMemberCode } from "@/lib/admin/store";
 import { formatPrice } from "@/lib/utils/format";
 import type { Member, MemberCode } from "@/lib/admin/types";
 
@@ -100,7 +99,8 @@ export default function UyelerPage() {
     setDetailId(id);
   };
 
-  // Kod üretim formu
+  // Kod formu — kod elle yazılır (otomatik üretilmez)
+  const [codeValue, setCodeValue] = useState("");
   const [discountType, setDiscountType] = useState<"percent" | "fixed">(
     "percent",
   );
@@ -122,17 +122,40 @@ export default function UyelerPage() {
   const onGenerate = (e: FormEvent) => {
     e.preventDefault();
     if (!member) return;
+
+    const normalized = codeValue.trim().toUpperCase();
+    if (!normalized) {
+      toast({ title: "Önce bir kod yazın", tone: "warning" });
+      return;
+    }
+
+    // Çakışma kontrolü: aynı kod başka üyede veya genel kodlarda olmasın.
+    const exists =
+      data.members.some((m) =>
+        m.codes.some((c) => c.code.toUpperCase() === normalized),
+      ) ||
+      data.generalCodes.some((c) => c.code.toUpperCase() === normalized);
+    if (exists) {
+      toast({
+        title: "Bu kod zaten kullanılıyor",
+        description: "Lütfen farklı bir kod yazın.",
+        tone: "warning",
+      });
+      return;
+    }
+
     const value = Math.max(0, Math.round(Number(discountValue) || 0));
     const code: MemberCode = {
-      code: generateMemberCode(member.name),
+      code: normalized,
       discountType,
       discountValue: value,
       createdAt: new Date().toISOString(),
       note: note.trim() || undefined,
     };
     addMemberCode(member.id, code);
+    setCodeValue("");
     setNote("");
-    toast({ title: "Kişiye özel kod üretildi", tone: "success" });
+    toast({ title: "Kişiye özel kod kaydedildi", tone: "success" });
   };
 
   return (
@@ -321,8 +344,22 @@ export default function UyelerPage() {
             >
               <h3 className="flex items-center gap-2 text-sm font-medium text-coffee">
                 <Sparkles size={16} strokeWidth={1.8} className="text-rose-gold" />
-                Yeni kişiye özel kod üret
+                Yeni kişiye özel kod ekle
               </h3>
+              <div>
+                <label htmlFor="d-code" className={adminLabel}>
+                  Kod
+                </label>
+                <input
+                  id="d-code"
+                  value={codeValue}
+                  onChange={(e) => setCodeValue(e.target.value.toUpperCase())}
+                  placeholder="Örn. EZGI15"
+                  autoComplete="off"
+                  className={`${adminInput} uppercase placeholder:normal-case`}
+                  required
+                />
+              </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
                   <label htmlFor="d-type" className={adminLabel}>
@@ -375,7 +412,7 @@ export default function UyelerPage() {
                 className="self-start"
               >
                 <Plus size={16} strokeWidth={2} />
-                Kod üret
+                Kodu kaydet
               </Button>
             </form>
 
