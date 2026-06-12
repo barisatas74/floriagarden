@@ -2,14 +2,14 @@
 
 import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
-import { X, Plus, Minus, Trash2, MessageCircle, ShoppingBag } from "lucide-react";
+import { X, Plus, Minus, Trash2, ShoppingBag } from "lucide-react";
 import { useCart } from "./CartProvider";
 import CouponInput from "./CouponInput";
 import CartItemDetails from "./CartItemDetails";
+import WhatsAppCheckoutButton from "./WhatsAppCheckoutButton";
 import FloralPlaceholder from "@/components/ui/FloralPlaceholder";
 import Button from "@/components/ui/Button";
 import { formatPrice } from "@/lib/utils/format";
-import { whatsappLink } from "@/lib/constants";
 
 export default function CartDrawer() {
   const {
@@ -17,32 +17,11 @@ export default function CartDrawer() {
     subtotal,
     discount,
     total,
-    coupon,
     totalQuantity,
     closeDrawer,
     setQuantity,
     removeItem,
   } = useCart();
-
-  // WhatsApp checkout mesajı
-  const buildWhatsAppMessage = () => {
-    if (state.items.length === 0) return "Merhaba Floria Garden,";
-    const lines = [
-      "Merhaba Floria Garden, aşağıdaki siparişimi vermek istiyorum:",
-      "",
-      ...state.items.map(
-        (i, idx) =>
-          `${idx + 1}. ${i.name} × ${i.quantity} — ${formatPrice(i.price * i.quantity)}`,
-      ),
-      "",
-      `Ara toplam: ${formatPrice(subtotal)}`,
-    ];
-    if (coupon && discount > 0) {
-      lines.push(`Kupon (${coupon.code}): −${formatPrice(discount)}`);
-    }
-    lines.push(`Toplam: ${formatPrice(total)}`);
-    return lines.join("\n");
-  };
 
   return (
     <AnimatePresence>
@@ -214,17 +193,10 @@ export default function CartDrawer() {
                 </div>
 
                 <div className="flex flex-col gap-2">
-                  <a
-                    href={whatsappLink(buildWhatsAppMessage())}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    onClick={closeDrawer}
-                  >
-                    <Button variant="gold" size="lg" className="w-full">
-                      <MessageCircle size={18} strokeWidth={1.7} />
-                      <span>WhatsApp ile Siparişi Tamamla</span>
-                    </Button>
-                  </a>
+                  <WhatsAppCheckoutButton
+                    className="w-full"
+                    onDone={closeDrawer}
+                  />
                   <Link href="/sepet" onClick={closeDrawer}>
                     <Button variant="outline" size="md" className="w-full">
                       Sepeti Görüntüle

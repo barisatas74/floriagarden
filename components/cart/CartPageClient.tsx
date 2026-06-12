@@ -2,14 +2,14 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { Trash2, Plus, Minus, ShoppingBag, MessageCircle, Truck, ShieldCheck } from "lucide-react";
+import { Trash2, Plus, Minus, ShoppingBag, Truck, ShieldCheck } from "lucide-react";
 import Button from "@/components/ui/Button";
 import FloralPlaceholder from "@/components/ui/FloralPlaceholder";
 import CouponInput from "./CouponInput";
 import CartItemDetails from "./CartItemDetails";
+import WhatsAppCheckoutButton from "./WhatsAppCheckoutButton";
 import { useCart } from "./CartProvider";
 import { formatPrice } from "@/lib/utils/format";
-import { whatsappLink } from "@/lib/constants";
 
 export default function CartPageClient() {
   const {
@@ -45,44 +45,6 @@ export default function CartPageClient() {
       </div>
     );
   }
-
-  const message = (() => {
-    const lines = [
-      "Merhaba Floria Garden, aşağıdaki siparişimi vermek istiyorum:",
-      "",
-      ...state.items.map((i, idx) => {
-        const parts = [
-          `${idx + 1}. ${i.name} × ${i.quantity} — ${formatPrice(i.price * i.quantity)}`,
-        ];
-        if (i.cardNote) parts.push(`   Kart notu: "${i.cardNote}"`);
-        if (i.deliveryRegion) {
-          const regionLabel =
-            i.deliveryRegion === "gemlik"
-              ? "Gemlik içi"
-              : i.deliveryRegion === "bursa"
-                ? "Bursa"
-                : `Şehir dışı (kargo)${i.deliveryCity ? ` — ${i.deliveryCity}` : ""}`;
-          parts.push(`   Bölge: ${regionLabel}`);
-        }
-        if (i.deliveryRegion === "sehir-disi") {
-          if (i.deliveryDate) parts.push(`   Gönderim günü: ${i.deliveryDate}`);
-        } else if (i.deliveryDate) {
-          parts.push(`   Teslimat: ${i.deliveryDate} (${i.deliverySlot ?? "—"})`);
-        }
-        if (i.giftWrap && i.giftWrap !== "standart") {
-          parts.push(`   Paket: ${i.giftWrap === "premium" ? "Premium" : "Lüks kutu"}`);
-        }
-        return parts.join("\n");
-      }),
-      "",
-      `Ara toplam: ${formatPrice(subtotal)}`,
-    ];
-    if (coupon && discount > 0) {
-      lines.push(`Kupon (${coupon.code}): −${formatPrice(discount)}`);
-    }
-    lines.push(`Toplam: ${formatPrice(total)}`);
-    return lines.join("\n");
-  })();
 
   return (
     <div className="grid lg:grid-cols-12 gap-8">
@@ -195,16 +157,10 @@ export default function CartPageClient() {
 
           <CouponInput variant="dark" />
 
-          <a
-            href={whatsappLink(message)}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Button variant="gold" size="lg" className="w-full">
-              <MessageCircle size={18} strokeWidth={1.7} />
-              <span>WhatsApp ile Tamamla</span>
-            </Button>
-          </a>
+          <WhatsAppCheckoutButton
+            label="WhatsApp ile Tamamla"
+            className="w-full"
+          />
 
           <Link href="/urunler">
             <Button variant="outline" size="md" className="w-full">
