@@ -21,6 +21,7 @@ type CheckoutItem = {
   deliveryRegion?: unknown;
   deliveryDate?: unknown;
   deliverySlot?: unknown;
+  deliveryAddress?: unknown;
   deliveryCity?: unknown;
   giftWrap?: unknown;
 };
@@ -81,6 +82,8 @@ function normalizeItems(raw: unknown): {
     const detailLines: string[] = [];
     const region = text(item.deliveryRegion);
     if (region) detailLines.push(`Bölge: ${deliveryRegionLabel(region)}`);
+    const address = text(item.deliveryAddress);
+    if (address) detailLines.push(`Adres: ${address}`);
     const city = text(item.deliveryCity);
     if (city) detailLines.push(`Şehir/adres notu: ${city}`);
     const date = text(item.deliveryDate);
@@ -195,7 +198,8 @@ export async function POST(req: Request) {
   const member = memberId ? await getMemberById(memberId) : null;
   const firstRegion = text(first?.deliveryRegion);
   const deliveryZone = deliveryRegionLabel(firstRegion);
-  const deliveryCity = text(first?.deliveryCity);
+  const deliveryAddress =
+    text(first?.deliveryAddress) || text(first?.deliveryCity);
   const customerName = member?.name || "WhatsApp müşterisi";
   const customerPhone = member?.phone || "";
   const customerEmail = member?.email || undefined;
@@ -227,7 +231,7 @@ export async function POST(req: Request) {
     customerEmail,
     recipientName: customerKnown ? customerName : "WhatsApp üzerinden netleşecek",
     recipientPhone: customerKnown ? customerPhone : "",
-    address: deliveryCity || "WhatsApp üzerinden netleşecek",
+    address: deliveryAddress || "WhatsApp üzerinden netleşecek",
     surprise: false,
     items,
     deliveryZone,

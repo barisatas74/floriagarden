@@ -7,13 +7,17 @@ export type CartItem = {
   /** Hediye kartı notu */
   cardNote?: string;
   /** Teslimat bölgesi */
-  deliveryRegion?: "gemlik" | "bursa" | "sehir-disi";
+  deliveryRegion?: "gemlik" | "sehir-disi";
   /** Teslimat günü (ISO tarih) */
   deliveryDate?: string;
   /** Teslimat saat aralığı */
   deliverySlot?: string;
-  /** Şehir dışı için il/ilçe + adres notu */
-  deliveryCity?: string;
+  /** Açık teslimat adresi (her bölgede zorunlu) */
+  deliveryAddress?: string;
+  /** Alıcı adı (opsiyonel) */
+  recipientName?: string;
+  /** Alıcı telefonu (opsiyonel) */
+  recipientPhone?: string;
   /** Paket seviyesi */
   giftWrap?: "standart" | "premium" | "luks";
 };
