@@ -298,6 +298,386 @@ export const LANDING_PAGES: LandingPageData[] = [
       { label: "İletişim", href: "/iletisim" },
     ],
   },
+
+  /* ════════════ /kursunlu-cicekci ════════════ */
+  {
+    slug: "kursunlu-cicekci",
+    title: "Kurşunlu Çiçekçi — Çiçek Teslimatı | Floria Garden",
+    description:
+      "Kurşunlu'ya çiçek mi göndereceksiniz? Gemlik merkezli Floria Garden ile taze buket ve aranjmanları özenle teslim ediyoruz. Hemen sipariş verin.",
+    eyebrow: "Kurşunlu Çiçekçi",
+    h1: "Kurşunlu Çiçekçi — Floria Garden",
+    intro:
+      "Floria Garden, Gemlik merkezli butik çiçekçi olarak Kurşunlu ve çevresine taze çiçek, buket ve özel tasarım aranjmanlar ulaştırır. Sahil kasabasındaki sevdiklerinize zarif bir sürpriz yapmak artık çok kolay.",
+    sections: [
+      {
+        heading: "Kurşunlu'ya çiçek teslimatı",
+        paragraphs: [
+          "Kurşunlu, Gemlik'in sevilen sahil mahallelerinden biri ve özellikle yaz aylarında oldukça hareketli. Gemlik'teki atölyemizde günlük taze malzemelerle hazırladığımız çiçekleri Kurşunlu'daki adreslere özenle ulaştırıyoruz. Doğum günü, yıl dönümü, kutlama veya sadece bir 'iyi ki varsın' demek için taze bir buket göndermek mümkün.",
+          "Tüm aranjmanlarımız sipariş üzerine hazırlanır ve ısı kontrollü şekilde taşınır; böylece sıcak yaz günlerinde bile çiçeğiniz tazeliğini korur.",
+        ],
+      },
+      {
+        heading: "Hizmet verdiğimiz bölgeler",
+        paragraphs: [
+          "Kurşunlu başta olmak üzere Gemlik merkez, Kumla (Küçük ve Büyük Kumla), Umurbey ve çevre mahallelere teslimat yapıyoruz. Yazlık siteler ve tatil bölgelerine teslimatta adresi olabildiğince ayrıntılı (site adı, blok, daire) yazmanız süreci hızlandırır.",
+          "Teslimat bölgenizden emin değilseniz WhatsApp hattımızdan konum paylaşarak hızlıca teyit alabilirsiniz.",
+        ],
+      },
+      {
+        heading: "Yazlık ve tatil dönemi siparişleri",
+        paragraphs: [
+          "Tatil sezonunda Kurşunlu'daki misafirlerinize hoş geldin çiçeği, doğum günü sürprizi veya özel gün düzenlemesi gönderebilirsiniz. Otel, pansiyon ve yazlık adreslerine teslimatta deneyimliyiz; uygun teslim saatini birlikte planlıyoruz.",
+        ],
+      },
+      {
+        heading: "Nasıl sipariş verilir?",
+        paragraphs: [
+          "Web sitemizden ürünü seçip teslimat bölgesi olarak Gemlik içini işaretleyebilir, açık adres alanına Kurşunlu adresinizi yazabilirsiniz. Alternatif olarak WhatsApp hattımızdan da kolayca sipariş verebilir, ürün seçimi ve teslimat konusunda destek alabilirsiniz.",
+        ],
+      },
+    ],
+    faqs: [
+      {
+        q: "Kurşunlu'ya aynı gün teslimat yapıyor musunuz?",
+        a: "Konuma göre çoğu zaman mümkündür. Uygun teslim saatini sipariş sırasında WhatsApp üzerinden teyit ediyoruz.",
+      },
+      {
+        q: "Yazlık site adresine teslimat yapılır mı?",
+        a: "Evet. Site adı, blok ve daire bilgisini eklerseniz teslimat çok daha hızlı tamamlanır.",
+      },
+      {
+        q: "Sürpriz teslimat mümkün mü?",
+        a: "Elbette. Gönderen bilgisini gizli tutarak sürpriz teslimat yapabiliriz.",
+      },
+      {
+        q: "Kurşunlu siparişi nasıl veririm?",
+        a: "Siteden ürünü seçip açık adrese Kurşunlu adresinizi yazabilir ya da doğrudan WhatsApp hattımızdan sipariş verebilirsiniz.",
+      },
+    ],
+    related: [
+      { label: "Gemlik Çiçekçi", href: "/gemlik-cicekci" },
+      { label: "Kumla Çiçekçi", href: "/kumla-cicekci" },
+      { label: "Aynı Gün Teslimat", href: "/gemlik-ayni-gun-cicek-teslimati" },
+      { label: "Tüm Ürünler", href: "/urunler" },
+    ],
+  },
+
+  /* ════════════ /gemlik-orkide-siparisi ════════════ */
+  {
+    slug: "gemlik-orkide-siparisi",
+    title: "Gemlik Orkide Siparişi — Saksı Orkide | Floria Garden",
+    description:
+      "Gemlik'te orkide siparişi: tek ve çift dallı, saksıda orkideler özel ambalajla. Aynı gün teslimat ile Floria Garden'dan zarif bir hediye.",
+    eyebrow: "Gemlik Orkide Siparişi",
+    h1: "Gemlik Orkide Siparişi",
+    intro:
+      "Orkide, zarafeti ve uzun ömrüyle en sevilen hediye çiçeklerinden biridir. Floria Garden olarak Gemlik'te tek dallı, çift dallı ve çoklu saksı orkideleri özel ambalajla hazırlıyor, aynı gün adrese teslim ediyoruz.",
+    sections: [
+      {
+        heading: "Orkide çeşitlerimiz",
+        paragraphs: [
+          "Beyaz, mor ve pembe tonlarda; tek dallı, çift dallı ve çoklu dal seçenekleriyle saksı orkideler sunuyoruz. Her orkideyi şık bir saksı ve doğal dokulu ambalajla hazırlıyor, hediye olarak gönderilmeye hazır hâle getiriyoruz.",
+          "Ofis, ev açılışı, doğum günü veya teşekkür hediyesi olarak orkide hem uzun ömürlü hem de zarif bir tercihtir.",
+        ],
+      },
+      {
+        heading: "Hediye olarak orkide",
+        paragraphs: [
+          "Kesme çiçeklerin aksine orkide haftalarca, doğru bakımla aylarca canlı kalır. Bu yüzden 'kalıcı bir hediye' arayanların ilk tercihidir. Kart notunuzu ekleyerek orkideyi tamamen kişisel bir hediyeye dönüştürebilirsiniz.",
+        ],
+      },
+      {
+        heading: "Kısaca orkide bakımı",
+        paragraphs: [
+          "Orkideler doğrudan güneş yerine aydınlık bir ortamı sever. Çoğu orkide için haftada bir kez, kökleri boğmayacak şekilde sulama yeterlidir. Saksıda su biriktirmemeye özen gösterin. Teslimat sırasında bakım önerilerimizi de paylaşıyoruz.",
+        ],
+      },
+      {
+        heading: "Teslimat ve sipariş",
+        paragraphs: [
+          "Gemlik içi orkide siparişlerini aynı gün, ısı kontrollü kuryeyle teslim ediyoruz. Kumla, Kurşunlu ve Umurbey gibi çevre bölgelere teslimat süresi konuma göre değişebilir. Siparişinizi siteden verebilir veya WhatsApp hattımızdan iletebilirsiniz.",
+        ],
+      },
+    ],
+    faqs: [
+      {
+        q: "Orkide ne kadar dayanır?",
+        a: "Doğru bakımla orkide çiçekleri haftalarca, bitki ise aylarca canlı kalır. Bu yüzden kalıcı bir hediye arayanların favorisidir.",
+      },
+      {
+        q: "Orkideyi ne sıklıkla sulamalıyım?",
+        a: "Çoğu orkide için haftada bir, kökleri boğmayacak ölçüde sulama yeterlidir. Saksıda su biriktirmemeye dikkat edin.",
+      },
+      {
+        q: "Aynı gün orkide teslimatı var mı?",
+        a: "Gemlik içinde saat 17:00 öncesi verilen orkide siparişlerini aynı gün teslim ediyoruz.",
+      },
+      {
+        q: "Orkideye kart notu ekleyebilir miyim?",
+        a: "Evet, sipariş sırasında ekleyeceğiniz kart notunu el yazısıyla hazırlıyoruz.",
+      },
+    ],
+    related: [
+      { label: "Gemlik Çiçekçi", href: "/gemlik-cicekci" },
+      { label: "Tüm Ürünler", href: "/urunler" },
+      { label: "Aynı Gün Teslimat", href: "/gemlik-ayni-gun-cicek-teslimati" },
+      { label: "İletişim", href: "/iletisim" },
+    ],
+  },
+
+  /* ════════════ /dogum-gunu-cicegi ════════════ */
+  {
+    slug: "dogum-gunu-cicegi",
+    title: "Gemlik Doğum Günü Çiçeği — Aynı Gün | Floria Garden",
+    description:
+      "Gemlik'te doğum günü çiçeği: rengârenk buketler, kutuda çiçekler ve sürpriz teslimat. Aynı gün, ısı kontrollü teslimat ile Floria Garden.",
+    eyebrow: "Doğum Günü Çiçeği",
+    h1: "Gemlik'te Doğum Günü Çiçeği",
+    intro:
+      "Doğum günleri, sevdiklerimize değer verdiğimizi göstermenin en güzel fırsatlarından biri. Floria Garden olarak Gemlik'te doğum günü için neşeli, rengârenk buketler ve şık kutuda çiçekler hazırlıyor, aynı gün sürpriz teslimat sunuyoruz.",
+    sections: [
+      {
+        heading: "Doğum günü için doğru çiçeği seçmek",
+        paragraphs: [
+          "Doğum günü çiçeğinde renk ve enerji önemlidir. Canlı renkli güller, gerbera, lilyum ve mevsim çiçeklerinden oluşan neşeli buketler hazırlıyoruz. Daha sade bir zevk için pastel tonlu aranjmanlar da öneriyoruz.",
+          "Kimin için seçtiğinizi ve bütçenizi söylemeniz yeterli; size en uygun seçeneği birlikte belirliyoruz.",
+        ],
+      },
+      {
+        heading: "Buket mi, kutuda çiçek mi?",
+        paragraphs: [
+          "Klasik ve zarif bir görünüm için el buketleri; modern ve kalıcı bir sunum için kutuda çiçekler idealdir. Kutuda çiçekler taşıması kolay olduğu için iş yerine veya kalabalık ortamlara gönderilen sürprizlerde de pratiktir.",
+        ],
+      },
+      {
+        heading: "Kişisel kart notu ile fark yaratın",
+        paragraphs: [
+          "Bir doğum günü mesajını çiçeğin yanına iliştirmek, hediyeyi unutulmaz kılar. Sipariş sırasında yazacağınız kart notunu el yazısıyla hazırlıyoruz.",
+        ],
+      },
+      {
+        heading: "Aynı gün ve sürpriz teslimat",
+        paragraphs: [
+          "Gemlik içinde saat 17:00 öncesi verilen doğum günü siparişlerini aynı gün teslim ediyoruz. Gönderen bilgisini gizleyerek sürpriz teslimat yapabilir; mümkünse belirli bir saate denk getirebiliriz.",
+        ],
+      },
+    ],
+    faqs: [
+      {
+        q: "Doğum günü için aynı gün teslimat var mı?",
+        a: "Evet, Gemlik içinde 17:00 öncesi verilen siparişleri aynı gün teslim ediyoruz.",
+      },
+      {
+        q: "Sürpriz doğum günü teslimatı yapabilir misiniz?",
+        a: "Tabii. Gönderen bilgisini gizli tutar, mümkünse istediğiniz saate denk getiririz.",
+      },
+      {
+        q: "Hangi çiçek doğum gününe uygun?",
+        a: "Canlı renkli güller, gerbera ve mevsim çiçekleri doğum günleri için idealdir. Sade bir zevk için pastel aranjmanlar öneriyoruz.",
+      },
+      {
+        q: "İş yerine doğum günü çiçeği gönderebilir miyim?",
+        a: "Evet, kutuda çiçekler iş yeri teslimatları için pratik ve şık bir tercihtir.",
+      },
+    ],
+    related: [
+      { label: "Gemlik Çiçekçi", href: "/gemlik-cicekci" },
+      { label: "Tüm Ürünler", href: "/urunler" },
+      { label: "Aynı Gün Teslimat", href: "/gemlik-ayni-gun-cicek-teslimati" },
+      { label: "Gemlik Çiçek Siparişi", href: "/gemlik-cicek-siparisi" },
+    ],
+  },
+
+  /* ════════════ /sevgililer-gunu-cicegi ════════════ */
+  {
+    slug: "sevgililer-gunu-cicegi",
+    title: "Gemlik Sevgililer Günü Çiçeği — 14 Şubat | Floria Garden",
+    description:
+      "Gemlik sevgililer günü çiçeği: kırmızı gül buketleri, kutuda güller ve özel tasarımlar. Aynı gün teslimat için erken sipariş — Floria Garden.",
+    eyebrow: "Sevgililer Günü",
+    h1: "Gemlik Sevgililer Günü Çiçeği",
+    intro:
+      "14 Şubat yaklaşırken sevgilinize en güzel sürprizi Floria Garden ile hazırlayın. Gemlik'te sevgililer günü için kırmızı gül buketleri, kutuda güller ve romantik özel tasarımlar sunuyor, aynı gün teslimat sağlıyoruz.",
+    sections: [
+      {
+        heading: "Sevgililer günü için özel tasarımlar",
+        paragraphs: [
+          "Klasik kırmızı güllerin yanında; bordo, beyaz ve pastel tonlarda romantik aranjmanlar, kutuda güller ve sonsuz gül seçenekleri hazırlıyoruz. Çikolata ve küçük hediyelerle tamamlanmış setler de oluşturabiliyoruz.",
+          "Tarzına göre, sade ve zarif ya da gösterişli ve büyük bir düzenleme arasından seçim yapabilirsiniz.",
+        ],
+      },
+      {
+        heading: "Neden erken sipariş önemli?",
+        paragraphs: [
+          "Sevgililer günü, yılın en yoğun günlerinden biridir. Hem ürün çeşidinden rahat seçim yapabilmek hem de istediğiniz saatte teslimat alabilmek için siparişinizi birkaç gün önceden vermenizi öneririz.",
+          "Erken sipariş verseniz bile teslimatı 14 Şubat'a planlayabiliriz; sadece sipariş sırasında teslim gününü belirtmeniz yeterli.",
+        ],
+      },
+      {
+        heading: "Aynı gün ve sürpriz teslimat",
+        paragraphs: [
+          "Gemlik içinde aynı gün, ısı kontrollü teslimat sunuyoruz. Sürpriz yapmak isterseniz gönderen bilgisini gizli tutuyor, mümkün olduğunca istediğiniz saate denk getiriyoruz.",
+        ],
+      },
+      {
+        heading: "Nasıl sipariş verilir?",
+        paragraphs: [
+          "Web sitemizden ürünü seçip teslimat gününü 14 Şubat olarak ayarlayabilir, kart notunuzu ekleyebilirsiniz. Seçimde destek isterseniz WhatsApp hattımız her zaman açık.",
+        ],
+      },
+    ],
+    faqs: [
+      {
+        q: "Sevgililer günü için ne zaman sipariş vermeliyim?",
+        a: "Ürün çeşidi ve teslim saati için birkaç gün önceden sipariş vermenizi öneririz; teslimatı 14 Şubat'a planlarız.",
+      },
+      {
+        q: "Kırmızı gül dışında seçenek var mı?",
+        a: "Evet; bordo, beyaz ve pastel aranjmanlar, kutuda güller, sonsuz gül ve çikolatalı setler sunuyoruz.",
+      },
+      {
+        q: "Aynı gün teslimat mümkün mü?",
+        a: "Gemlik içinde 17:00 öncesi siparişlerde aynı gün teslimat yapıyoruz; yoğun gün olduğundan erken sipariş daha güvenlidir.",
+      },
+      {
+        q: "Sürpriz teslimat yapabilir misiniz?",
+        a: "Evet, gönderen bilgisini gizleyerek sürpriz teslimat yapıyoruz.",
+      },
+    ],
+    related: [
+      { label: "Gemlik Çiçekçi", href: "/gemlik-cicekci" },
+      { label: "Tüm Ürünler", href: "/urunler" },
+      { label: "Aynı Gün Teslimat", href: "/gemlik-ayni-gun-cicek-teslimati" },
+      { label: "Doğum Günü Çiçeği", href: "/dogum-gunu-cicegi" },
+    ],
+  },
+
+  /* ════════════ /anneler-gunu-cicegi ════════════ */
+  {
+    slug: "anneler-gunu-cicegi",
+    title: "Gemlik Anneler Günü Çiçeği | Floria Garden",
+    description:
+      "Gemlik anneler günü çiçeği: zarif buketler, orkideler ve kutuda çiçekler. Aynı gün, ısı kontrollü teslimat ile annenize özel sürpriz — Floria Garden.",
+    eyebrow: "Anneler Günü",
+    h1: "Gemlik Anneler Günü Çiçeği",
+    intro:
+      "Anneler günü, anneye duyduğumuz sevgiyi göstermenin en özel günü. Floria Garden olarak Gemlik'te anneler günü için zarif buketler, uzun ömürlü orkideler ve şık kutuda çiçekler hazırlıyor, aynı gün teslimat sunuyoruz.",
+    sections: [
+      {
+        heading: "Anneye en yakışan çiçekler",
+        paragraphs: [
+          "Anneler günü için pastel tonlu güller, lilyum ve mevsim çiçeklerinden oluşan zarif buketler; kalıcı bir hediye isteyenler için saksı orkideler öne çıkıyor. Annenizin sevdiği renkleri söylerseniz, ona özel bir düzenleme hazırlarız.",
+        ],
+      },
+      {
+        heading: "Kalıcı hediye: orkide",
+        paragraphs: [
+          "Uzun süre canlı kalan orkide, anneler gününde sıkça tercih edilen zarif bir seçenektir. Şık bir saksı ve özel ambalajla, bakım önerileriyle birlikte teslim ediyoruz.",
+        ],
+      },
+      {
+        heading: "Erken sipariş ve teslimat",
+        paragraphs: [
+          "Anneler günü yoğun bir dönemdir; rahat seçim ve istediğiniz teslim saati için birkaç gün önceden sipariş vermenizi öneririz. Gemlik içinde aynı gün, ısı kontrollü teslimat sağlıyoruz.",
+          "Anneniz başka bir şehirdeyse, anlaşmalı kargoyla takip numaralı gönderim de yapabiliriz.",
+        ],
+      },
+      {
+        heading: "Kart notu ile dokunuş",
+        paragraphs: [
+          "Birkaç içten kelime, hediyeyi unutulmaz kılar. Sipariş sırasında yazacağınız kart notunu el yazısıyla hazırlayıp çiçeğe iliştiriyoruz.",
+        ],
+      },
+    ],
+    faqs: [
+      {
+        q: "Anneler günü için hangi çiçek uygun?",
+        a: "Pastel buketler ve uzun ömürlü orkideler en sevilen tercihlerdir. Annenizin sevdiği renge göre özel düzenleme yapıyoruz.",
+      },
+      {
+        q: "Başka şehirdeki anneme gönderebilir miyim?",
+        a: "Evet, şehir dışına anlaşmalı kargoyla takip numaralı gönderim yapıyoruz.",
+      },
+      {
+        q: "Aynı gün teslimat var mı?",
+        a: "Gemlik içinde 17:00 öncesi siparişlerde aynı gün teslimat yapıyoruz; yoğun dönem olduğundan erken sipariş öneririz.",
+      },
+      {
+        q: "Kart notu ekleyebilir miyim?",
+        a: "Elbette, kart notunuzu el yazısıyla hazırlayıp çiçeğe iliştiriyoruz.",
+      },
+    ],
+    related: [
+      { label: "Gemlik Çiçekçi", href: "/gemlik-cicekci" },
+      { label: "Gemlik Orkide Siparişi", href: "/gemlik-orkide-siparisi" },
+      { label: "Tüm Ürünler", href: "/urunler" },
+      { label: "Aynı Gün Teslimat", href: "/gemlik-ayni-gun-cicek-teslimati" },
+    ],
+  },
+
+  /* ════════════ /acilis-cicegi ════════════ */
+  {
+    slug: "acilis-cicegi",
+    title: "Gemlik Açılış Çiçeği & Ferforje | Floria Garden",
+    description:
+      "Gemlik açılış çiçeği: ferforje, ayaklı aranjman ve kutlama çiçekleri. İş yeri ve mağaza açılışlarına aynı gün, özenli teslimat — Floria Garden.",
+    eyebrow: "Açılış Çiçeği",
+    h1: "Gemlik Açılış Çiçeği & Ferforje",
+    intro:
+      "Yeni bir iş yeri, mağaza veya ofis açılışı için gönderilen çiçek, hem tebrik hem de zarif bir görünüm sunar. Floria Garden olarak Gemlik'te açılışlara özel ferforje, ayaklı aranjman ve kutlama çiçekleri hazırlıyoruz.",
+    sections: [
+      {
+        heading: "Açılışlara özel düzenlemeler",
+        paragraphs: [
+          "Mekânın önünde göz alıcı duran ferforje (ayaklı) çiçekler, açılış kutlamalarının klasiğidir. Bunun yanında masa aranjmanları, orkide grupları ve kutuda çiçeklerle daha sade kutlamalar da hazırlıyoruz.",
+          "Üzerine iliştirilecek kurdele/kart üzerine firma adı ve tebrik mesajınızı ekliyoruz.",
+        ],
+      },
+      {
+        heading: "Kurumsal siparişler",
+        paragraphs: [
+          "Birden fazla adrese gönderim, fatura ve toplu sipariş gibi kurumsal ihtiyaçlarınızda yanınızdayız. İhtiyacınızı WhatsApp üzerinden iletmeniz yeterli; size uygun teklif ve teslim planını hazırlarız.",
+        ],
+      },
+      {
+        heading: "Aynı gün teslimat",
+        paragraphs: [
+          "Gemlik içi açılış çiçeği siparişlerini aynı gün teslim ediyoruz. Açılış saatine yetişmesi için teslim gününü ve saat aralığını sipariş sırasında belirtmeniz önemlidir.",
+        ],
+      },
+      {
+        heading: "Nasıl sipariş verilir?",
+        paragraphs: [
+          "Açılış çiçekleri çoğunlukla mekâna özel hazırlandığı için, en sağlıklı yol WhatsApp hattımızdan yazmaktır. Bütçenizi, açılış adresini ve tarihini iletin; uygun ferforje ve aranjman seçeneklerini paylaşalım.",
+        ],
+      },
+    ],
+    faqs: [
+      {
+        q: "Açılış için ferforje çiçek yapıyor musunuz?",
+        a: "Evet, ayaklı (ferforje) açılış çiçekleri en çok tercih edilen kutlama düzenlemelerimizdendir.",
+      },
+      {
+        q: "Aynı gün açılış çiçeği teslim edebilir misiniz?",
+        a: "Gemlik içinde aynı gün teslimat yapıyoruz; açılış saatine yetişmesi için teslim gününü ve saatini belirtmeniz yeterli.",
+      },
+      {
+        q: "Kurumsal/toplu sipariş alıyor musunuz?",
+        a: "Evet, birden fazla adrese gönderim, fatura ve toplu siparişlerde destek veriyoruz. WhatsApp'tan ihtiyacınızı iletebilirsiniz.",
+      },
+      {
+        q: "Çiçeğe firma adı yazılır mı?",
+        a: "Tabii, kurdele veya kart üzerine firma adınızı ve tebrik mesajınızı ekliyoruz.",
+      },
+    ],
+    related: [
+      { label: "Gemlik Çiçekçi", href: "/gemlik-cicekci" },
+      { label: "Tüm Ürünler", href: "/urunler" },
+      { label: "Aynı Gün Teslimat", href: "/gemlik-ayni-gun-cicek-teslimati" },
+      { label: "İletişim", href: "/iletisim" },
+    ],
+  },
 ];
 
 export function getLandingPage(slug: string): LandingPageData | undefined {

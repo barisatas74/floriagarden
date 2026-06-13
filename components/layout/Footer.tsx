@@ -139,7 +139,7 @@ export default function Footer() {
           className="mt-12 flex flex-wrap items-center gap-x-3 gap-y-1.5 text-xs text-cream/45"
         >
           <span className="text-rose-gold/70">Popüler:</span>
-          {LANDING_PAGES.map((p, i) => (
+          {LANDING_PAGES.slice(0, 5).map((p, i) => (
             <span key={p.slug} className="inline-flex items-center gap-3">
               {i > 0 && <span aria-hidden className="text-cream/20">·</span>}
               <Link
