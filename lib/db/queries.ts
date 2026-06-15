@@ -1,7 +1,7 @@
 import { query, execute } from "./mysql";
 import { seedDelivery } from "@/lib/admin/seed";
 import { CATEGORIES } from "@/lib/data/categories";
-import { PRODUCTS } from "@/lib/data/products";
+import { PRODUCTS, DEFAULT_IMAGE_SETTING } from "@/lib/data/products";
 import type {
   AdminData,
   AdminCategory,
@@ -15,7 +15,7 @@ import type {
   Order,
   OrderItem,
 } from "@/lib/admin/types";
-import type { Product } from "@/lib/data/products";
+import type { Product, ImageSetting } from "@/lib/data/products";
 import type { Category } from "@/lib/data/categories";
 
 /* ════════════════════════════════════════════════
@@ -50,6 +50,45 @@ function productImagesFromStored(value: unknown): string[] {
   return [raw].slice(0, MAX_PRODUCT_IMAGES);
 }
 
+/** Sayıyı güvenli aralığa sıkıştırır. */
+function clampNum(v: unknown, min: number, max: number, fallback: number): number {
+  const num = Number(v);
+  if (!Number.isFinite(num)) return fallback;
+  return Math.min(max, Math.max(min, num));
+}
+
+/** Tek bir görsel ayarını güvenli ImageSetting'e çevirir. */
+function toImageSetting(raw: unknown): ImageSetting {
+  const o = (raw ?? {}) as Record<string, unknown>;
+  return {
+    dx: clampNum(o.dx, 0, 100, DEFAULT_IMAGE_SETTING.dx),
+    dy: clampNum(o.dy, 0, 100, DEFAULT_IMAGE_SETTING.dy),
+    dz: clampNum(o.dz, 1, 3, DEFAULT_IMAGE_SETTING.dz),
+    mx: clampNum(o.mx, 0, 100, DEFAULT_IMAGE_SETTING.mx),
+    my: clampNum(o.my, 0, 100, DEFAULT_IMAGE_SETTING.my),
+    mz: clampNum(o.mz, 1, 3, DEFAULT_IMAGE_SETTING.mz),
+  };
+}
+
+/** DB'deki image_settings JSON'unu ImageSetting dizisine çevirir. */
+function parseImageSettings(value: unknown): ImageSetting[] {
+  if (value == null || value === "") return [];
+  try {
+    const parsed = JSON.parse(String(value));
+    return Array.isArray(parsed) ? parsed.map(toImageSetting) : [];
+  } catch {
+    return [];
+  }
+}
+
+/** ImageSetting dizisini DB'ye yazılacak JSON'a çevirir (boşsa null). */
+function storedImageSettings(
+  settings: ImageSetting[] | undefined,
+): string | null {
+  if (!settings || settings.length === 0) return null;
+  return JSON.stringify(settings.map(toImageSetting));
+}
+
 function storedProductImages(product: Pick<AdminProduct, "image" | "images">) {
   const images = (product.images?.length ? product.images : product.image ? [product.image] : [])
     .map((image) => image.trim())
@@ -73,6 +112,7 @@ function toCategory(r: Row): AdminCategory {
 
 function toProduct(r: Row): AdminProduct {
   const images = productImagesFromStored(r.image);
+  const settings = parseImageSettings(r.image_settings);
   return {
     id: s(r.id),
     slug: s(r.slug),
@@ -87,6 +127,7 @@ function toProduct(r: Row): AdminProduct {
     gradient: s(r.gradient),
     image: images[0],
     images: images.length ? images : undefined,
+    imageSettings: settings.length ? settings : undefined,
   };
 }
 
@@ -165,6 +206,28 @@ function toMemberAddress(r: Row): MemberAddress {
 
 function phoneDigits(value: string): string {
   return value.replace(/\D/g, "");
+}
+
+let productImageSettingsColumnReady: boolean | null = null;
+
+/** products.image_settings kolonu yoksa otomatik ekler (manuel migration gerekmez). */
+async function ensureProductImageSettingsColumn(): Promise<boolean> {
+  if (productImageSettingsColumnReady !== null)
+    return productImageSettingsColumnReady;
+  try {
+    const rows = await query<Row>(
+      "SHOW COLUMNS FROM products LIKE 'image_settings'",
+    );
+    if (rows.length === 0) {
+      await execute(
+        "ALTER TABLE products ADD COLUMN image_settings TEXT NULL AFTER image",
+      );
+    }
+    productImageSettingsColumnReady = true;
+  } catch {
+    productImageSettingsColumnReady = false;
+  }
+  return productImageSettingsColumnReady;
 }
 
 let ordersEmailColumnReady: boolean | null = null;
@@ -351,6 +414,7 @@ function publicProductImageUrls(id: string, storedImage: unknown): string[] {
 function toFullProduct(r: Row): Product {
   const id = s(r.id);
   const images = publicProductImageUrls(id, r.image);
+  const settings = parseImageSettings(r.image_settings);
   return {
     id,
     slug: s(r.slug),
@@ -365,6 +429,7 @@ function toFullProduct(r: Row): Product {
     gradient: s(r.gradient),
     image: images[0],
     images: images.length ? images : undefined,
+    imageSettings: settings.length ? settings : undefined,
     galleryGradients: undefined,
     pairings: arr(r.pairings),
     dimensions: opt(r.dimensions),
@@ -495,6 +560,28 @@ export async function deleteCategory(slug: string) {
 
 export async function createProduct(p: AdminProduct) {
   const image = storedProductImages(p);
+  const hasSettings = await ensureProductImageSettingsColumn();
+  if (hasSettings) {
+    await execute(
+      "INSERT INTO products (id,slug,name,short_description,long_description,contents,price,category,badge,gradient,image,image_settings,stock) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)",
+      [
+        p.id,
+        p.slug,
+        p.name,
+        p.shortDescription,
+        p.longDescription ?? "",
+        JSON.stringify(p.contents ?? []),
+        p.price,
+        p.category,
+        p.badge ?? null,
+        p.gradient,
+        image,
+        storedImageSettings(p.imageSettings),
+        p.stock,
+      ],
+    );
+    return;
+  }
   await execute(
     "INSERT INTO products (id,slug,name,short_description,long_description,contents,price,category,badge,gradient,image,stock) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)",
     [
@@ -516,6 +603,28 @@ export async function createProduct(p: AdminProduct) {
 
 export async function updateProduct(id: string, p: AdminProduct) {
   const image = storedProductImages(p);
+  const hasSettings = await ensureProductImageSettingsColumn();
+  if (hasSettings) {
+    await execute(
+      "UPDATE products SET slug=?, name=?, short_description=?, long_description=?, contents=?, price=?, category=?, badge=?, gradient=?, image=?, image_settings=?, stock=? WHERE id=?",
+      [
+        p.slug,
+        p.name,
+        p.shortDescription,
+        p.longDescription ?? "",
+        JSON.stringify(p.contents ?? []),
+        p.price,
+        p.category,
+        p.badge ?? null,
+        p.gradient,
+        image,
+        storedImageSettings(p.imageSettings),
+        p.stock,
+        id,
+      ],
+    );
+    return;
+  }
   await execute(
     "UPDATE products SET slug=?, name=?, short_description=?, long_description=?, contents=?, price=?, category=?, badge=?, gradient=?, image=?, stock=? WHERE id=?",
     [

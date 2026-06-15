@@ -31,7 +31,8 @@ CREATE TABLE IF NOT EXISTS products (
   category          VARCHAR(120),
   badge             VARCHAR(80),
   gradient          VARCHAR(160) NOT NULL DEFAULT '',
-  image             MEDIUMTEXT,         -- URL veya base64
+  image             MEDIUMTEXT,         -- URL veya base64 (çoklu görsel JSON dizi)
+  image_settings    TEXT,               -- JSON: görsel konum/zoom ayarları (images ile index hizalı)
   gallery           TEXT,               -- JSON dizi (string)
   pairings          TEXT,               -- JSON dizi ürün id (string)
   dimensions        VARCHAR(160),

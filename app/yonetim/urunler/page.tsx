@@ -18,6 +18,7 @@ import { slugify, makeId } from "@/lib/admin/store";
 import { DEFAULT_GRADIENT } from "@/lib/admin/gradients";
 import { formatPrice } from "@/lib/utils/format";
 import type { AdminProduct, StockState } from "@/lib/admin/types";
+import type { ImageSetting } from "@/lib/data/products";
 
 const STOCK_LABELS: Record<StockState, string> = {
   var: "Stokta",
@@ -61,6 +62,7 @@ export default function UrunlerPage() {
   const [contents, setContents] = useState(""); // satır satır → dizi
   const [gradient, setGradient] = useState(DEFAULT_GRADIENT);
   const [images, setImages] = useState<string[]>([]);
+  const [imageSettings, setImageSettings] = useState<ImageSetting[]>([]);
 
   const categoryName = (slug: string) =>
     data.categories.find((c) => c.slug === slug)?.name ?? "—";
@@ -77,6 +79,7 @@ export default function UrunlerPage() {
     setContents("");
     setGradient(DEFAULT_GRADIENT);
     setImages([]);
+    setImageSettings([]);
     setFormOpen(true);
   };
 
@@ -92,6 +95,7 @@ export default function UrunlerPage() {
     setContents((p.contents ?? []).join("\n"));
     setGradient(p.gradient);
     setImages(productImages(p));
+    setImageSettings(p.imageSettings ?? []);
     setFormOpen(true);
   };
 
@@ -115,6 +119,7 @@ export default function UrunlerPage() {
       gradient,
       image: images[0],
       images: images.slice(0, MAX_PRODUCT_IMAGES),
+      imageSettings: imageSettings.slice(0, MAX_PRODUCT_IMAGES),
     };
 
     if (editTarget) {
@@ -372,6 +377,10 @@ export default function UrunlerPage() {
             values={images}
             onImagesChange={(nextImages) =>
               setImages(nextImages.slice(0, MAX_PRODUCT_IMAGES))
+            }
+            settings={imageSettings}
+            onSettingsChange={(next) =>
+              setImageSettings(next.slice(0, MAX_PRODUCT_IMAGES))
             }
             maxImages={MAX_PRODUCT_IMAGES}
             gradient={gradient}

@@ -23,6 +23,20 @@
   }
 }
 
+/* Ürün kartı görseli — konum/zoom CSS değişkenleriyle (mobil + masaüstü ayrı).
+   Değişken yoksa varsayılan: ortalı (50%) ve zoom yok (cover, center center). */
+.product-card-img {
+  object-fit: cover;
+  object-position: var(--mx, 50%) var(--my, 50%);
+  transform: scale(var(--mz, 1));
+}
+@media (min-width: 640px) {
+  .product-card-img {
+    object-position: var(--dx, 50%) var(--dy, 50%);
+    transform: scale(var(--dz, 1));
+  }
+}
+
 @layer base {
   :root {
     --color-bordo: 142 31 63;

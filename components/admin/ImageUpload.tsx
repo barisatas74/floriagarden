@@ -3,9 +3,10 @@
 import { useCallback, useEffect, useRef, useState, type ChangeEvent } from "react";
 import Cropper, { type Area } from "react-easy-crop";
 import "react-easy-crop/react-easy-crop.css";
-import { Upload, Pencil, Trash2, Check, X, RefreshCw, ImagePlus } from "lucide-react";
+import { Upload, Pencil, Trash2, Check, X, RefreshCw, ImagePlus, Move, ZoomIn } from "lucide-react";
 import GradientPicker from "./GradientPicker";
 import { adminLabel } from "./AdminUI";
+import { DEFAULT_IMAGE_SETTING, type ImageSetting } from "@/lib/data/products";
 
 type Props = {
   /** Yüklenen görsel (WebP data URL) — yoksa gradient kullanılır */
@@ -15,12 +16,27 @@ type Props = {
   values?: string[];
   onImagesChange?: (images: string[]) => void;
   maxImages?: number;
+  /** Görsel başına konum/zoom ayarları (values ile index hizalı) */
+  settings?: ImageSetting[];
+  onSettingsChange?: (settings: ImageSetting[]) => void;
   /** Görsel yokken kullanılacak yer tutucu gradient */
   gradient: string;
   onGradientChange: (gradient: string) => void;
   /** Kırpma oranı (genişlik/yükseklik) */
   aspect?: number;
 };
+
+/** Önizleme için tek cihaza ait object-position + scale stilini üretir. */
+function previewStyle(setting: ImageSetting, device: "desktop" | "mobile") {
+  const x = device === "desktop" ? setting.dx : setting.mx;
+  const y = device === "desktop" ? setting.dy : setting.my;
+  const z = device === "desktop" ? setting.dz : setting.mz;
+  return {
+    objectFit: "cover" as const,
+    objectPosition: `${x}% ${y}%`,
+    transform: `scale(${z})`,
+  };
+}
 
 const MAX_OUTPUT_WIDTH = 1000;
 const WEBP_QUALITY = 0.82;
@@ -58,6 +74,8 @@ export default function ImageUpload({
   onChange,
   values,
   onImagesChange,
+  settings,
+  onSettingsChange,
   maxImages = DEFAULT_MAX_IMAGES,
   gradient,
   onGradientChange,
@@ -83,6 +101,24 @@ export default function ImageUpload({
       : [];
   const activeImage = imageList[selectedIndex] ?? imageList[0];
   const canAdd = imageList.length < imageLimit;
+
+  // ── Görsel konum/zoom ayarları (images ile index hizalı) ──
+  const settingsEnabled = multiMode && Boolean(onSettingsChange);
+  const [device, setDevice] = useState<"desktop" | "mobile">("desktop");
+
+  const getSetting = (index: number): ImageSetting => ({
+    ...DEFAULT_IMAGE_SETTING,
+    ...(settings?.[index] ?? {}),
+  });
+  const normalizedSettings = (): ImageSetting[] =>
+    imageList.map((_, index) => getSetting(index));
+  const updateSetting = (index: number, patch: Partial<ImageSetting>) => {
+    if (!onSettingsChange) return;
+    const next = normalizedSettings();
+    next[index] = { ...next[index], ...patch };
+    onSettingsChange(next);
+  };
+  const activeSetting = getSetting(selectedIndex);
 
   useEffect(() => {
     if (!multiMode) return;
@@ -137,6 +173,8 @@ export default function ImageUpload({
           next[targetIndex] = webp;
           const clean = next.filter(Boolean).slice(0, imageLimit);
           onImagesChange(clean);
+          // Ayarları yeni görsel listesiyle hizala (yeni eklenen = varsayılan)
+          onSettingsChange?.(clean.map((_, i) => getSetting(i)));
           setSelectedIndex(Math.min(targetIndex, clean.length - 1));
         }
       } else {
@@ -163,6 +201,9 @@ export default function ImageUpload({
     if (multiMode && onImagesChange) {
       const next = imageList.filter((_, imageIndex) => imageIndex !== index);
       onImagesChange(next);
+      onSettingsChange?.(
+        normalizedSettings().filter((_, i) => i !== index),
+      );
       setSelectedIndex(next.length === 0 ? 0 : Math.min(index, next.length - 1));
       return;
     }
@@ -176,6 +217,8 @@ export default function ImageUpload({
       ...imageList.filter((_, imageIndex) => imageIndex !== index),
     ].filter(Boolean);
     onImagesChange(next);
+    const cur = normalizedSettings();
+    onSettingsChange?.([cur[index], ...cur.filter((_, i) => i !== index)]);
     setSelectedIndex(0);
   };
 
@@ -266,10 +309,12 @@ export default function ImageUpload({
                 <img
                   src={activeImage}
                   alt={`Ürün görseli ${selectedIndex + 1}`}
-                  className="absolute inset-0 h-full w-full object-cover object-center"
+                  style={previewStyle(activeSetting, device)}
+                  className="absolute inset-0 h-full w-full"
                 />
                 <span className="absolute left-3 top-3 rounded-full bg-white/90 px-3 py-1 text-[0.65rem] uppercase tracking-wider2 text-bordo shadow-soft">
                   {selectedIndex === 0 ? "Ana görsel" : `Görsel ${selectedIndex + 1}`}
+                  {settingsEnabled ? ` · ${device === "desktop" ? "Masaüstü" : "Mobil"} önizleme` : ""}
                 </span>
               </div>
 
@@ -283,7 +328,8 @@ export default function ImageUpload({
                     <img
                       src={activeImage}
                       alt=""
-                      className="absolute inset-0 h-full w-full object-cover object-center"
+                      style={previewStyle(activeSetting, "mobile")}
+                      className="absolute inset-0 h-full w-full"
                     />
                   </div>
                 </div>
@@ -296,12 +342,92 @@ export default function ImageUpload({
                     <img
                       src={activeImage}
                       alt=""
-                      className="absolute inset-0 h-full w-full object-cover object-center"
+                      style={previewStyle(activeSetting, "desktop")}
+                      className="absolute inset-0 h-full w-full"
                     />
                   </div>
                 </div>
               </div>
             </div>
+
+            {/* ── Konum & zoom ayarı (seçili görsel) ── */}
+            {settingsEnabled && (
+              <div className="rounded-2xl border border-rose-gold/20 bg-cream-soft/50 p-4 flex flex-col gap-4">
+                <div className="flex items-center justify-between gap-3 flex-wrap">
+                  <span className="text-[0.7rem] uppercase tracking-wider2 text-rose-goldDark">
+                    Görsel konumu — {selectedIndex === 0 ? "Ana görsel" : `Görsel ${selectedIndex + 1}`}
+                  </span>
+                  <div className="inline-flex rounded-full border border-rose-gold/25 bg-white p-0.5">
+                    {(["desktop", "mobile"] as const).map((d) => (
+                      <button
+                        key={d}
+                        type="button"
+                        onClick={() => setDevice(d)}
+                        aria-pressed={device === d}
+                        className={`rounded-full px-3 h-8 text-xs font-medium transition-colors ${
+                          device === d
+                            ? "bg-bordo text-cream"
+                            : "text-coffee/60 hover:text-bordo"
+                        }`}
+                      >
+                        {d === "desktop" ? "Masaüstü" : "Mobil"}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {(() => {
+                  const xKey = device === "desktop" ? "dx" : "mx";
+                  const yKey = device === "desktop" ? "dy" : "my";
+                  const zKey = device === "desktop" ? "dz" : "mz";
+                  return (
+                    <div className="flex flex-col gap-3">
+                      <Slider
+                        icon={<Move size={13} strokeWidth={1.8} />}
+                        label="Yatay (sol ↔ sağ)"
+                        min={0}
+                        max={100}
+                        step={1}
+                        value={activeSetting[xKey]}
+                        onChange={(v) => updateSetting(selectedIndex, { [xKey]: v })}
+                      />
+                      <Slider
+                        icon={<Move size={13} strokeWidth={1.8} className="rotate-90" />}
+                        label="Dikey (yukarı ↕ aşağı)"
+                        min={0}
+                        max={100}
+                        step={1}
+                        value={activeSetting[yKey]}
+                        onChange={(v) => updateSetting(selectedIndex, { [yKey]: v })}
+                      />
+                      <Slider
+                        icon={<ZoomIn size={13} strokeWidth={1.8} />}
+                        label="Yakınlaştırma"
+                        min={1}
+                        max={3}
+                        step={0.05}
+                        value={activeSetting[zKey]}
+                        onChange={(v) => updateSetting(selectedIndex, { [zKey]: v })}
+                        suffix={`${activeSetting[zKey].toFixed(2)}×`}
+                      />
+                      <button
+                        type="button"
+                        onClick={() =>
+                          updateSetting(selectedIndex, {
+                            [xKey]: 50,
+                            [yKey]: 50,
+                            [zKey]: 1,
+                          })
+                        }
+                        className="self-start text-xs text-coffee/55 hover:text-bordo transition-colors"
+                      >
+                        Bu cihaz için sıfırla (ortala)
+                      </button>
+                    </div>
+                  );
+                })()}
+              </div>
+            )}
 
             <div className="grid grid-cols-4 gap-2">
               {imageList.map((image, index) => (
@@ -522,5 +648,48 @@ export default function ImageUpload({
         </div>
       )}
     </div>
+  );
+}
+
+function Slider({
+  icon,
+  label,
+  min,
+  max,
+  step,
+  value,
+  onChange,
+  suffix,
+}: {
+  icon: React.ReactNode;
+  label: string;
+  min: number;
+  max: number;
+  step: number;
+  value: number;
+  onChange: (v: number) => void;
+  suffix?: string;
+}) {
+  return (
+    <label className="flex items-center gap-3">
+      <span className="inline-flex items-center gap-1.5 w-44 flex-shrink-0 text-xs text-coffee/70">
+        <span className="text-rose-goldDark">{icon}</span>
+        {label}
+      </span>
+      <input
+        type="range"
+        min={min}
+        max={max}
+        step={step}
+        value={value}
+        onChange={(e) => onChange(Number(e.target.value))}
+        className="flex-1 accent-bordo cursor-pointer"
+      />
+      {suffix && (
+        <span className="w-12 flex-shrink-0 text-right text-xs tabular-nums text-coffee/55">
+          {suffix}
+        </span>
+      )}
+    </label>
   );
 }

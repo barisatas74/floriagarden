@@ -2,6 +2,8 @@
  * Admin paneli ile veritabanı/API katmanının ortak veri tipleri.
  */
 
+import type { ImageSetting } from "@/lib/data/products";
+
 export type AdminCategory = {
   slug: string;
   name: string;
@@ -35,6 +37,8 @@ export type AdminProduct = {
   image?: string;
   /** Ürün galerisindeki görseller. İlk görsel ana görsel olarak kullanılır. */
   images?: string[];
+  /** Görsel konum/zoom ayarları (images ile index hizalı). */
+  imageSettings?: ImageSetting[];
 };
 
 /** Üyeye özel üretilen kod — hem indirim hem takip için */

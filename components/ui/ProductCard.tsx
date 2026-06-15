@@ -5,7 +5,7 @@ import { MessageCircle } from "lucide-react";
 import BotanicalArt from "./BotanicalArt";
 import WishlistButton from "@/components/wishlist/WishlistButton";
 import AddToCartIconButton from "@/components/cart/AddToCartIconButton";
-import type { Product } from "@/lib/data/products";
+import { imageSettingVars, type Product } from "@/lib/data/products";
 import { whatsappLink } from "@/lib/constants";
 import { formatPrice } from "@/lib/utils/format";
 import { cn } from "@/lib/utils/cn";
@@ -45,7 +45,8 @@ export default function ProductCard({ product, index }: Props) {
                 alt={product.name}
                 loading="lazy"
                 decoding="async"
-                className="absolute inset-0 h-full w-full object-cover object-center"
+                style={imageSettingVars(product.imageSettings?.[0])}
+                className="absolute inset-0 h-full w-full object-cover product-card-img"
               />
             ) : (
               <BotanicalArt seed={product.id} label={product.name} />
