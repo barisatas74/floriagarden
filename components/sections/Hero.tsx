@@ -166,20 +166,26 @@ export default function Hero() {
                 </g>
               </svg>
 
+              {/* Açılış fotoğrafı — yoksa (dosya gelmemişse) panel bordo+botanik kalır */}
+              <div
+                aria-label="Floria Garden açılışı — Gemlik"
+                role="img"
+                className="absolute inset-0 bg-cover bg-center"
+                style={{ backgroundImage: "url('/hero-acilis.webp')" }}
+              />
+
+              {/* Alt koyu geçiş — monogramın okunması için */}
+              <div
+                aria-hidden
+                className="absolute inset-x-0 bottom-0 h-2/5 bg-gradient-to-t from-bordo-dark/90 via-bordo-dark/40 to-transparent"
+              />
+
               {/* Monogram */}
               <div className="absolute inset-x-0 bottom-10 flex flex-col items-center text-cream/85">
                 <span className="font-display text-5xl tracking-tight">FG</span>
                 <span className="mt-2 h-px w-10 bg-rose-gold/60" />
                 <span className="mt-2 text-[0.6rem] uppercase tracking-ultra-wide text-rose-gold/80">
                   Est. Gemlik
-                </span>
-              </div>
-
-              {/* Görsel blok içi: imza koleksiyon etiketi — mobilde gizli */}
-              <div className="absolute top-4 left-4 hidden md:inline-flex items-center gap-2 rounded-full bg-white/90 backdrop-blur px-3 py-1.5 shadow-soft">
-                <Sparkles size={13} strokeWidth={1.7} className="text-bordo" />
-                <span className="text-[0.65rem] uppercase tracking-wider2 text-coffee">
-                  Kahve & Çiçek Setleri
                 </span>
               </div>
 
