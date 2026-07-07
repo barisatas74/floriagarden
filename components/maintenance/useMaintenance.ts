@@ -11,7 +11,7 @@ let cache: Promise<boolean> | null = null;
 function fetchMaintenance(): Promise<boolean> {
   if (ENV_MAINTENANCE) return Promise.resolve(true);
   if (!cache) {
-    cache = fetch("/api/maintenance", { cache: "no-store" })
+    cache = fetch("/api/maintenance")
       .then((r) => (r.ok ? r.json() : { maintenance: false }))
       .then((j) => Boolean(j?.maintenance))
       .catch(() => false);

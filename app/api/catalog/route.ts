@@ -18,7 +18,7 @@ export async function GET() {
       { products, categories },
       {
         headers: {
-          "Cache-Control": "public, s-maxage=300, stale-while-revalidate=3600",
+          "Cache-Control": "public, max-age=120, s-maxage=300, stale-while-revalidate=3600",
         },
       },
     );

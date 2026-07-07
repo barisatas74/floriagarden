@@ -11,7 +11,7 @@ let cache: Promise<Catalog> | null = null;
 
 export function fetchCatalog(): Promise<Catalog> {
   if (!cache) {
-    cache = fetch("/api/catalog", { cache: "no-store" })
+    cache = fetch("/api/catalog")
       .then((r) => (r.ok ? r.json() : { products: [], categories: [] }))
       .catch(() => ({ products: [], categories: [] }));
   }

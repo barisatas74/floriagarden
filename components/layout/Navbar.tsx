@@ -81,14 +81,17 @@ export default function Navbar() {
   );
 
   useEffect(() => {
+    // Önbellekte durum varsa sunucuya HİÇ gitme (her gezinmede istek atmayı
+    // önler → Edge Request tasarrufu). Giriş/çıkışta cache zaten güncelleniyor.
     const cached = getCachedMemberAuthed();
     if (cached !== null) {
       setMemberAuthed(cached);
-      if (pathname === "/hesabim") return;
+      return;
     }
 
+    // Önbellek yoksa oturumda yalnızca bir kez doğrula.
     let active = true;
-    fetch("/api/member/me", { cache: "no-store" })
+    fetch("/api/member/me")
       .then((r) => (r.ok ? r.json() : { authed: false }))
       .then((j) => {
         const authed = Boolean(j?.authed);
@@ -102,7 +105,7 @@ export default function Navbar() {
     return () => {
       active = false;
     };
-  }, [pathname]);
+  }, []);
 
   return (
     <>
