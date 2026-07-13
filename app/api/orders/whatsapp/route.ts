@@ -8,9 +8,13 @@ import { formatPrice } from "@/lib/utils/format";
 import { whatsappLink } from "@/lib/constants";
 import { sendMail, notifyEmail } from "@/lib/mail";
 import { buildBusinessEmail, buildCustomerEmail } from "@/lib/order-mail";
+import { enforceRateLimit } from "@/lib/rate-limit";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
+
+/** Geçerli TR cep telefonu: 11 hane, 05 ile başlar. */
+const TR_MOBILE = /^05\d{9}$/;
 
 type CheckoutItem = {
   productId?: unknown;
@@ -157,6 +161,14 @@ async function notifyOrder(order: Order) {
 }
 
 export async function POST(req: Request) {
+  // Sipariş spam'ini engelle: IP başına saatte en fazla 15 sipariş.
+  const limited = enforceRateLimit(req, {
+    name: "order-create",
+    limit: 15,
+    windowMs: 60 * 60 * 1000,
+  });
+  if (limited) return limited;
+
   let body: any;
   try {
     body = await req.json();
@@ -201,9 +213,17 @@ export async function POST(req: Request) {
     text(first?.deliveryAddress) ||
     text(first?.deliveryCity);
   const cPhoneDigits = cPhone.replace(/\D/g, "");
-  if (!cName || cPhoneDigits.length !== 11 || !cAddress) {
+  // Ad en az 2 kelime/3 harf, telefon geçerli TR cep, adres dolu olmalı.
+  if (
+    cName.length < 3 ||
+    !TR_MOBILE.test(cPhoneDigits) ||
+    cAddress.length < 10
+  ) {
     return NextResponse.json(
-      { error: "Ad Soyad, telefon (0 5XX...) ve teslimat adresi zorunludur." },
+      {
+        error:
+          "Geçerli Ad Soyad, telefon (0 5XX XXX XX XX) ve açık teslimat adresi zorunludur.",
+      },
       { status: 400 },
     );
   }

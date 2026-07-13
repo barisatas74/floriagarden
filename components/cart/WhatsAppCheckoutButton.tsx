@@ -38,24 +38,28 @@ export default function WhatsAppCheckoutButton({
   const submit = async () => {
     if (pending || state.items.length === 0) return;
 
-    // Zorunlu bilgi kontrolü — eksikse sipariş oluşturulmaz.
+    // Zorunlu bilgi kontrolü — eksik/geçersizse sipariş oluşturulmaz.
     const name = customer.name.trim();
     const address = customer.address.trim();
     const phoneDigits = customer.phone.replace(/\D/g, "");
-    if (!name) {
-      toast({ title: "Ad Soyad gerekli", tone: "warning" });
+    if (name.length < 3) {
+      toast({ title: "Ad Soyad girin", tone: "warning" });
       return;
     }
-    if (phoneDigits.length !== 11 || !phoneDigits.startsWith("05")) {
+    if (!/^05\d{9}$/.test(phoneDigits)) {
       toast({
         title: "Geçerli telefon girin",
-        description: "Örn. 0 (555) 555 55 55",
+        description: "0 ile başlayan 11 haneli cep no — örn. 0 (555) 555 55 55",
         tone: "warning",
       });
       return;
     }
-    if (!address) {
-      toast({ title: "Teslimat adresi gerekli", tone: "warning" });
+    if (address.length < 10) {
+      toast({
+        title: "Açık teslimat adresi girin",
+        description: "Alıcı adı, mahalle, sokak, no dahil.",
+        tone: "warning",
+      });
       return;
     }
 
